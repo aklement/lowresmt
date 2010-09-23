@@ -1,0 +1,128 @@
+%
+% File acl2010.tex
+%
+% Contact  jshin@csie.ncnu.edu.tw or pkoehn@inf.ed.ac.uk
+%%
+%% Based on the style files for ACL-IJCNLP-2009, which were, in turn,
+%% based on the style files for EACL-2009 and IJCNLP-2008...
+
+%% Based on the style files for EACL 2006 by 
+%%e.agirre@ehu.es or Sergi.Balari@uab.es
+%% and that of ACL 08 by Joakim Nivre and Noah Smith
+
+\documentclass[11pt]{article}
+\usepackage{acl2010}
+\usepackage{times}
+\usepackage{url}
+\usepackage{latexsym}
+\usepackage{color}
+%\setlength\titlebox{6.5cm}    % You can expand the title box if you
+% really have to
+
+\newcommand{\tab}{\hspace*{0.5em}}
+
+\definecolor{red}{rgb}{1,0,0}
+
+\newcommand{\mnote}[1]{\marginpar{%
+  \vskip-\baselineskip
+  \raggedright\footnotesize
+  \itshape\hrule\smallskip\tiny{#1}\par\smallskip\hrule}}  
+
+\newcommand{\mtodo}[1]{\mnote{\textcolor{red}{#1}}}
+
+\newcommand{\todo}[1]{\textcolor{red}{TODO: #1}}
+
+\newcommand{\secref}[1]{Section~\ref{#1}}
+\newcommand{\tabref}[1]{Table~\ref{#1}}
+\newcommand{\figref}[1]{Figure~\ref{#1}}
+\def\bs#1{\boldsymbol{#1}}
+
+\title{Statistical Machine Translation without Parallel Corpora}
+
+\author{Person\\
+  University of Awesome\\
+  Location\\
+  {\tt person@email}  \And
+  Person\\
+  University of Awesome\\
+  Location\\
+  {\tt  person@email}   \And
+  Person\\
+  University of Awesome\\
+  Location\\
+  {\tt  person@email}}
+
+\date{}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+\end{abstract}
+
+\section{Introduction} \label{sect:intro}
+
+
+\section{Related work} \label{sect:relwork}
+
+SMT state of the art: phrase-based \cite{Koehn:2003}, hierarchical \cite{Chiang:2005}, etc.  Will review the phrase-based pipeline in greater detail in \secref{sect:bckg}, and describe our extensions in \secref{sect:mono}. For a recent thorough review of statistical machine translation we refer the reader to \cite{Lopez:2008}.\\
+
+A lot of related work in lexicon induction (e.g. \cite{Rapp:1995,Fung:1998,Koehn:2000,Haghighi:2008,Mimno:2009}).  Although often motivated by the resource constrained machine translation, it was never used in MT.  In this work, we make direct use of these methods in the machine translation pipeline.
+
+\section{Background} \label{sect:bckg}
+
+Review the MT pipeline, emphasizing: phrase scoring and ordering.
+
+\section{Reducing the Parallel Data requirement / Estimating Parameters from Monolingual Data} \label{sect:mono}
+
+\subsection{Phrase extraction}
+
+If we get it to work.
+
+\subsection{Phrase scoring}
+
+Describe how we compute monolingual similarity instead of estimating scores from alignments.
+
+\subsection{Reordering}
+
+\todo{Reordering figure}\\
+Describe the algorithm for estimating orientation probabilities.  Talk about the issue of too much weight on out-of-order orientation.
+
+\section{Experiments} \label{sect:exp}
+
+\subsection{Data}
+Describe data we use in the experiments:  Europarl \cite{Koehn:2005}, Gigaword, our own crawls\footnote{Promise to distribute after publication.}.
+
+\subsection{Single language}
+
+\begin{enumerate}
+\item {\em Phrase features}.  (a) Augment phrase scores with mono features.  If we see better performance, reduce the amount of parallel data until it matches the performance of the original system.  Make the tradeoff argument.  (b) ({\bf lesion experiments}) See how well we do with mono features alone.
+\item {\em Orientation features}. Use mono orientation features.
+\item {\em Induce phrase table}.
+\item {\em Put everything together}.  Run the entire pipeline.
+\end{enumerate}
+
+\subsection{Big experiment}
+
+Now, run the entire pipeline on a handful of languages extracting monolingual features from the Gigaword and our crawls.
+
+\section{Discussion} \label{sect:disc}
+
+\section{Conclusions and Future Work} \label{sect:conc}
+
+First to make use of plentiful monolingual data to reduce the dependence on expensive parallel data.  In particular:
+
+\begin{itemize}
+\item Showed that augmenting standard pipeline with monolingual features helps.
+\item Demonstrated that monolingual features are informative enough on their own for a competitive system.
+\item Proposed an algorithm for estimating orientation probabilities from monolingual data alone.
+\item Build complete systems for X low-resource languages.
+\end{itemize}
+
+%\section*{Acknowledgments}
+%The authors would like each other and their parents.
+
+\bibliographystyle{acl}
+% you bib file should really go here 
+\bibliography{lowresmt}
+
+\end{document}
