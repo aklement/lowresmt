@@ -16,6 +16,9 @@
 \usepackage{url}
 \usepackage{latexsym}
 \usepackage{color}
+\usepackage{amsmath}
+\usepackage[vlined,figure]{algorithm2e}
+
 %\setlength\titlebox{6.5cm}    % You can expand the title box if you
 % really have to
 
@@ -29,12 +32,12 @@
   \itshape\hrule\smallskip\tiny{#1}\par\smallskip\hrule}}  
 
 \newcommand{\mtodo}[1]{\mnote{\textcolor{red}{#1}}}
-
 \newcommand{\todo}[1]{\textcolor{red}{TODO: #1}}
-
 \newcommand{\secref}[1]{Section~\ref{#1}}
 \newcommand{\tabref}[1]{Table~\ref{#1}}
 \newcommand{\figref}[1]{Figure~\ref{#1}}
+\newcommand{\code}[1]{{\small \tt #1}}
+\newcommand{\bm}{\boldsymbol}
 \def\bs#1{\boldsymbol{#1}}
 
 \title{Statistical Machine Translation without Parallel Corpora}
@@ -74,18 +77,75 @@ Review the MT pipeline, emphasizing: phrase scoring and ordering.
 
 \section{Reducing the Parallel Data requirement / Estimating Parameters from Monolingual Data} \label{sect:mono}
 
-\subsection{Phrase extraction}
+\subsection{Phrase extraction}  \label{sect:extract}
 
-If we get it to work.
+Talk about how we get the phrases and alignments (if we get it to work).
 
-\subsection{Phrase scoring}
+\subsection{Phrase scoring} \label{sect:score}
 
-Describe how we compute monolingual similarity instead of estimating scores from alignments.
+In place of phrase translation probabilities estimated from bilingual alignments, we propose to compute similarity scores computed (almost) solely from monolingual resources.\\
 
-\subsection{Reordering}
+\noindent\emph{Contextual similarity}.  We extend the vector space approach of \cite{Rapp:1999} to compute similarity between \emph{phrases} in source and target language.  More formally, assume that $(f_{1}, f_{2}, \dots f_{N})$ and $(e_{1}, e_{2}, \dots e_{M})$ are (arbitrarily indexed) source and target vocabularies, respectively.  A source phrase $f$ (target phrase $e$) is represented with an $N$ ($M$) dimensional vector.  Only the components corresponding to words that appear in the context of $f$ ($e$) in data take on non-zero values, which typically measure how ``unique'' a word is to the context in the dataset.  Next, $f$'s contextual vector is projected by mapping each component to a component in the target space corresponding to its translation (taken from a small seed dictionary), but retaining the source component value.  Finally, the pair ($f, e$) is scored by computing similarity between the (projected) source and target vectors.  Various means of computing the component values and vector similarity measures have been proposed in literature (e.g. \cite{Rapp:1999,Fung:1998}).  While the quality of the resulting induced lexicon depends on the data, we found the following to work best in our experiments.  We compute the value of the $k$-th component of $f$'s contextual vector  as follows: 
+
+\begin{equation*}
+w_{k}^{(i)} = n_{i,k} \times (log( {n / n_{i}}) + 1)
+\end{equation*}
+
+\noindent where $n_{i,k}$ and $f_{k}$ are the number of times $f_{k}$ appears in the context of $f_{i}$ and in the entire corpus, and $n$ is the maximum number of occurrences of any word in the data.  Intuitively, the more frequently $f_{k}$ appears with $f_{i}$ and the less common it is in the corpus in general, the higher its component value.  Similarity between two resulting vectors is measured as a cosine of the angle between them.\\
+
+\noindent\emph{Temporal similarity}. Online content is often published along with temporal information: news feeds, for example, are comprised of news stories annotated with date and time of publication.  The feeds are specialized for the target geographical locations and vary in content across languages.  Still, many events are deemed relevant to multiple audiences and the news stories related to them appear in several languages, although rarely as direct translations of one another.  Phrases associated with these events will appear with increased frequency in multiple languages around the dates when these events are reported.  Such weak synchronicity provides a cue about the relatedness of phrases across the two languages.  In order to score a pair of phrases across languages, we can compute the similarity of their temporal signatures. To generate a time sequence for a given word, we first sort the set of (time-stamped) documents of our corpus into a sequence of equally sized temporal bins.  We then count the number of occurrences of a phrase in each bin.  Changing the size of the bin or computing counts in a sliding window instead can recover some accuracy if the temporal alignment between two languages in our dataset is poor \cite{Klementiev:2006b}.  Finally, we normalize the sequence and use either the cosine measure to score similarity. \\
+
+\noindent\emph{Orthographic / phonetic similarity.} Etymologically related words often retain similar spelling across languages with the same writing system, and the edit distance can be used to measure their orthographic similarity.  We extend this idea to phrases by using word alignments within a phrase pair (see \secref{sect:extract}): we score pairs of aligned words and normalize by their average length. \mtodo{Make sure it is correct.}
+
+We can further extend this idea to language pairs not sharing the same writing system, since many cognates and transliterated words are phonetically similar.  Following \cite{Virga:2003,Irvine:2010a}, we treat transliteration as a monotone character translation task and use a generative model\mtodo{Argue that enough training data is easy to get} to propose a transliteration of tokens in a source phrase.  Once the source words are mapped to the target writing system, the phrase similarity is computed as before.\\
+
+Depending on the available monolingual data (and its associated metadata), various other similarity scores can be computed and added to the list (see, e.g. \cite{Schafer:2002}).
+
+\subsection{Reordering} \label{sect:order}
 
 \todo{Reordering figure}\\
-Describe the algorithm for estimating orientation probabilities.  Talk about the issue of too much weight on out-of-order orientation.
+Describe the algorithm for estimating orientation probabilities.  Talk about the issue of too much weight on out-of-order orientation.  Talk about where $w$ comes from.
+
+\begin{algorithm}[t]
+\vskip 0.1in
+%\dontprintsemicolon
+  \KwIn{Source and target phrases $f$ and $e$, source and target corpora $\emph{C}_f$ and $\emph{C}_e$.}
+  \KwOut{Reordering features $(p_m, p_s, p_o)$.}
+  \BlankLine
+  
+  Find all sentences $\emph{S}_f$ containing $f$ in $\emph{C}_f$\;
+  Find all sentences $\emph{S}_e$ containing $e$ in $\emph{C}_e$\;
+  $c_m = c_s = s_o = 0$\;
+  
+  \ForEach{$S_f$} {
+    
+    \ForEach{phrase $f_p$ preceding $f$ in $S_f$} {
+
+      \ForEach{translation $e^{*}$ of $f_p$} {
+    
+        \ForEach{$S_e$ containing $e^{*}$} {
+
+          $w = p(e^{*} | f)$\;
+        
+          \If {$e^{*}$ precedes $e$  in $S_e$} {
+            $c_m += w$\; 
+          } \ElseIf{$e^{*}$ follows $e$ in $S_e$} {
+            $c_s += w$\;
+          } \Else {
+            $c_o += w$\;
+          }
+       
+          c += w\;
+      }
+    }
+  }
+}
+\Return{$({c_m \over c}, {c_s \over c}, {c_o \over c})$}
+
+\caption{Estimating reordering probabilities from monolingual data.}
+\label{fig:reorder}
+%\vskip -0.2in
+\end{algorithm}
 
 \section{Experiments} \label{sect:exp}
 
