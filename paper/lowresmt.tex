@@ -79,7 +79,17 @@ Review the MT pipeline, emphasizing: phrase scoring and ordering.
 
 \subsection{Phrase extraction}  \label{sect:extract}
 
-Talk about how we get the phrases and alignments (if we get it to work).
+Building on the many successful efforts in bilingual lexicon induction from monolingual corpora, we compile a table of {\it phrasal} translations from monolingual corpora. Current methods for inducing a bilingual lexicon, or, equivalently, a unigram phrase translation table, are computationally expensive as each source and target word pair must be scored. That is, the models must  compute $|V_s| * |V_t|$ similarity scores, where $|V_s|$ and $|V_t|$ are the sizes of the source and target vocabularies, respectively. As we search for longer phrase pairs, this search space increases exponentially with the size of the  {\it n}-grams. Exhaustively scoring all phrase pairs up to length three requires $|V_s|^3 * |V_t|^3 $ score computations. We prune the phrase pair search space using methods from Information Retrieval, like that used in \newcite{Uszkoreit:2010}. 
+
+First, we compose a set of all {\it n}-grams up to length three in the source side monolingual corpus and in the target side monolingual corpus. We store each source side {\it n}-gram's frequency along with the phrase. We also store each target side {\it n}-gram in a frequency inverted index. We index target side phrases by frequencies within a band of their actual observed frequency in the monolingual corpus. Additionally, for the target side {\it n}-grams, we look up each word in the phrase in our bilingual dictionary, and we store a set of source side words that translate into any word in the phrase. \mtodo{discuss dictionary(ies)}
+
+These sets of observed phrases, frequencies, and the bilingual dictionary together allow us to effectively filter our search space using combinations of inverted indices. Given a source side test set, we collect  {\it n}-grams up to length three, as we did for the monolingual corpora. We then look up each source side phrase's monolingual corpus frequency and consult the target side inverted index to find a list of target side phrases that occur in the same frequency band. Of those target side phrases, we keep only the ones with at least one \mtodo{discuss dictionary parameters} word translating into a word in the source side phrase. 
+
+This method of pruning the phrase pair search space involves two manually tuned parameters: discuss Moses trace function and findability metrics. 
+
+Tables of unpruned search space, pruned search space with only frequencies and with frequencies + dictionary, and findable types and tokens.
+
+Second round of pruning: after monolingual feature extraction, before re-ordering estimation. Needs to be discussed after explanation of those methods? 
 
 \subsection{Phrase scoring} \label{sect:score}
 
