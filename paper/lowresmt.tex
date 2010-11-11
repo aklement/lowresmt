@@ -83,11 +83,30 @@ Building on the many successful efforts in bilingual lexicon induction from mono
 
 First, we compose a set of all {\it n}-grams up to length three in the source side monolingual corpus and in the target side monolingual corpus. We store each source side {\it n}-gram's frequency along with the phrase. We also store each target side {\it n}-gram in a frequency inverted index. We index target side phrases by frequencies within a band of their actual observed frequency in the monolingual corpus. Additionally, for the target side {\it n}-grams, we look up each word in the phrase in our bilingual dictionary, and we store a set of source side words that translate into any word in the phrase. \mtodo{discuss dictionary(ies)}
 
-These sets of observed phrases, frequencies, and the bilingual dictionary together allow us to effectively filter our search space using combinations of inverted indices. Given a source side test set, we collect  {\it n}-grams up to length three, as we did for the monolingual corpora. We then look up each source side phrase's monolingual corpus frequency and consult the target side inverted index to find a list of target side phrases that occur in the same frequency band. Of those target side phrases, we keep only the ones with at least one \mtodo{discuss dictionary parameters} word translating into a word in the source side phrase. 
+These sets of observed phrases, frequencies, and the bilingual dictionary together allow us to effectively filter our search space using combinations of inverted indices. Given a source side test set, we collect  {\it n}-grams up to length three (in our Urdu test set, there are 36,423 phrases), as we did for the monolingual corpora. We then look up each source side phrase's monolingual corpus frequency and consult the target side inverted index to find a list of target side phrases that occur in the same frequency band. Of those target side phrases, we keep only the ones with at least one \mtodo{discuss dictionary parameters} word translating into a word in the source side phrase. 
 
-This method of pruning the phrase pair search space involves two manually tuned parameters: discuss Moses trace function and findability metrics. 
+This method of pruning the phrase pair search space involves two manually tuned parameters. In order to evaluate the filtered phrase tables and tune the parameters, we used the Moses decoder's trace function to find the set of phrases used in decoding an Urdu test set. \mtodo{data details?} We compare our filtered phrase tables to this set of phrase translation rules and attempt to maintain as many of them as possible, while pruning the set of phrase pairs down to manageable size. 
 
-Tables of unpruned search space, pruned search space with only frequencies and with frequencies + dictionary, and findable types and tokens.
+Our baseline phrase table is generated using a bilingual dictionary. For each Urdu test set phrase up to length three, we generated English phrases from all combinations of dictionary translations and all possible reorderings. For the baseline and our pruning methods, the number of filtered phrase pairs and the percent of phrases used by the Moses decoder not pruned away are given in Table \ref{table:prune}.  
+
+\begin{table*}
+\small
+\begin{center}
+\label{table:prune}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Pruning filters & Phrase Pairs & Percent of total search space & Findable types & Findable tokens \\
+\hline
+Unpruned phrase table & 37,322,465,985 & 100\% & 100\% & 100\% \\
+Baseline phrase pairs & 29245036 & 0.08\% & 15.37 & 25.07 \\
+Frequency-based pruning & 4,450,429,494 & 11.92\% & 85.21\% & 87.48\% \\
+Frequency and Dictionary pruning & 1,436,823,109 & 3.85\% & 57.79\% & 58.76\% \\
+\hline
+\end{tabular}
+\caption{This shows the tradeoff between pruning the phrase pair search space and the accuracy of the final set of phrase pairs. The findable types and tokens measures refer to the percent of phrase types and tokens used by Moses to decode a test set that are not pruned away.}
+\end{center}
+\end{table*}
+
 
 Second round of pruning: after monolingual feature extraction, before re-ordering estimation. Needs to be discussed after explanation of those methods? 
 
