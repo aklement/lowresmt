@@ -1,28 +1,23 @@
 %
-% File acl2010.tex
+% File acl-hlt2011.tex
 %
-% Contact  jshin@csie.ncnu.edu.tw or pkoehn@inf.ed.ac.uk
+% Contact: gdzhou@suda.edu.cn
 %%
-%% Based on the style files for ACL-IJCNLP-2009, which were, in turn,
-%% based on the style files for EACL-2009 and IJCNLP-2008...
+%% Based on the style files for ACL2008 by Joakim Nivre and Noah Smith
+%% and that of ACL2010 by Jing-Shin Chang and Philipp Koehn
 
-%% Based on the style files for EACL 2006 by 
-%%e.agirre@ehu.es or Sergi.Balari@uab.es
-%% and that of ACL 08 by Joakim Nivre and Noah Smith
 
 \documentclass[11pt]{article}
-\usepackage{acl2010}
+\usepackage{acl-hlt2011}
 \usepackage{times}
-\usepackage{url}
 \usepackage{latexsym}
-\usepackage{color}
 \usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{color}
 \usepackage[vlined,figure]{algorithm2e}
 
-%\setlength\titlebox{6.5cm}    % You can expand the title box if you
-% really have to
-
-\newcommand{\tab}{\hspace*{0.5em}}
+\DeclareMathOperator*{\argmax}{arg\,max}
 
 \definecolor{red}{rgb}{1,0,0}
 
@@ -39,6 +34,8 @@
 \newcommand{\code}[1]{{\small \tt #1}}
 \newcommand{\bm}{\boldsymbol}
 \def\bs#1{\boldsymbol{#1}}
+
+\setlength\titlebox{6.5cm}    % Expanding the titlebox
 
 \title{Statistical Machine Translation without Parallel Corpora}
 
