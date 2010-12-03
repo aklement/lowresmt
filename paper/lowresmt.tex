@@ -16,6 +16,7 @@
 \usepackage{url}
 \usepackage{color}
 \usepackage[vlined,figure]{algorithm2e}
+\usepackage{graphicx} 
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 
@@ -129,48 +130,79 @@ Depending on the available monolingual data (and its associated metadata), vario
 
 \subsection{Reordering} \label{sect:order}
 
-\todo{Reordering figure}\\
-Describe the algorithm for estimating orientation probabilities.  Talk about the issue of too much weight on out-of-order orientation.  Talk about where $w$ comes from.
+\begin{figure}[ht]
+\vskip 0.1in
+\begin{center}
+\centerline{\includegraphics[scale=0.5]{../figures/reorderfeats/reorderfeats.pdf}} %[width=\columnwidth]
+\caption{Example alignment along with three kinds of orientations: monotone (m), swap (s), and discontinuous (d). }
+\label{fig:reorderfeats}
+\end{center}
+%\vskip -0.2in
+\end{figure}
+
+Describe the algorithm for estimating orientation probabilities.  Talk about the issue of too much weight on out-of-order orientation.  Talk about where $w$ comes from.  Mention that it is not as expensive as it looks.  The intuition is simple - see if translated phrases tend to keep the order.
+
+ \footnote{$\#_{S}(x)$ returns the count of object x in multiset S.}
+
+\SetAlFnt{\relsize{-1.5}}
 
 \begin{algorithm}[t]
-\vskip 0.1in
-%\dontprintsemicolon
-  \KwIn{Source and target phrases $f$ and $e$, source and target corpora $\emph{C}_f$ and $\emph{C}_e$.}
-  \KwOut{Reordering features $(p_m, p_s, p_o)$.}
-  \BlankLine
-  
-  Find all sentences $\emph{S}_f$ containing $f$ in $\emph{C}_f$\;
-  Find all sentences $\emph{S}_e$ containing $e$ in $\emph{C}_e$\;
-  $c_m = c_s = s_o = 0$\;
-  
-  \ForEach{$S_f$} {
-    
-    \ForEach{phrase $f_p$ preceding $f$ in $S_f$} {
 
-      \ForEach{translation $e^{*}$ of $f_p$} {
-    
-        \ForEach{$S_e$ containing $e^{*}$} {
+ \SetKwFunction{CollectOccurs}{CollectOccurs}
+ \SetKwBlock{Body}{}{}
+ \SetCommentSty{text}
+ \SetFuncSty{text}
 
-          $w = p(e^{*} | f)$\;
-        
-          \If {$e^{*}$ precedes $e$  in $S_e$} {
-            $c_m += w$\; 
-          } \ElseIf{$e^{*}$ follows $e$ in $S_e$} {
-            $c_s += w$\;
-          } \Else {
-            $c_o += w$\;
-          }
-       
-          c += w\;
-      }
+ \hrule \vskip 0.2cm
+
+  \KwIn{Source and target phrases $f$ and $e$, source and target corpora $\emph{C}_f$ and $\emph{C}_e$, phrase table pairs $\emph{T} = \{(f^{(i)}, e^{(i)})\}_{i=1}^{N}$.}
+  \KwOut{Orientation features $(p_m, p_s, p_d)$.}
+  
+  \vskip 0.2cm \hrule \vskip 0.2cm
+
+  $S_f \leftarrow$ sentences containing $f$ in $\emph{C}_f$\;
+  $S_e \leftarrow$ sentences containing $e$ in $\emph{C}_e$\;
+  
+  $(B_f, -, -) \leftarrow \CollectOccurs(f, \cup_{i=1}^{N} f^{(i)}, S_f)$\;
+  $(B_e, A_e, D_e) \leftarrow \CollectOccurs(e, \cup_{i=1}^{N} e^{(i)}, S_e)$\;
+    
+  $c_m = c_s = c_d = 0$\;
+  
+  \vskip 0.1cm 
+
+  \ForEach{$f_b \in B_f$} {
+    \ForEach{translation $e^{*}$ of $f_b$ in $\emph{T}$} {
+
+      $c_m = c_m + \#_{B_e}(e^{*})$\; 
+       $c_s = c_s + \#_{A_e}(e^{*})$\; 
+       $c_d = c_d + \#_{D_e}(e^{*})$\; 
     }
   }
-}
-\Return{$({c_m \over c}, {c_s \over c}, {c_o \over c})$}
+  
+  $c \leftarrow c_m + c_s + c_d$;
+    
+  \Return{$({c_m \over c}, {c_s \over c}, {c_d \over c})$}
 
-\caption{Estimating reordering probabilities from monolingual data.}
-\label{fig:reorder}
-%\vskip -0.2in
+  \vskip 0.2cm \hrule \vskip 0.2cm
+
+  \CollectOccurs{$r$, $R$, $S$} \Body{
+   $B \leftarrow ()$; $A \leftarrow ()$; $D \leftarrow ()$\;
+
+    \ForEach{sentence $s \in S$} {
+      \ForEach{occurrence of phrase $r$ in $s$} {
+        $B \leftarrow B$ + $($longest preceding and in $R)$\;
+        $A \leftarrow A$ + $($longest following and in $R)$\;
+        $D \leftarrow D$ + $($longest discontinuous and in $R)$\;
+      }
+    }
+    
+    \Return{($B$, $A$, $D$)}\;
+  }
+  
+  \vskip 0.2cm \hrule \vskip 0.2cm
+
+  \caption{Estimating reordering probabilities from monolingual data.} \label{fig:reorder}
+  %\vskip -0.2in
 \end{algorithm}
 
 \section{Experiments} \label{sect:exp}
