@@ -59,7 +59,9 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-Current statistical machine translation methods rely on very large parallel corpora to achieve state of the art performance.  However, such resources are only available for very few language pairs as they are very expensive to obtain.  On the other hand, monolingual data (such as newswire) is widely available and cheap to collect.  In this work, we propose a set of cues derived from monolingual resources and systematically introduce them in a phrase-based machine translation pipeline \emph{in place} of features induced from parallel data.  We show on two language pairs that monolingual data can take us a long way toward  inducing a high quality machine translation system.\mtodo{Need a more concrete statement.}
+The parameters of statistical translation models of are estimated from bilingual parallel corpora.    Large volumes of parallel text are required before translation models produce high quality translations, but sufficiently large corpora are available for  very few language pairs.  On the other hand, monolingual data is widely available and cheap to collect.  In this work, we propose a set of cues derived from monolingual resources and systematically introduce them in a phrase-based machine translation pipeline \emph{in place} of features induced from parallel data.  We show on two language pairs that monolingual data can take us a long way toward  inducing a high quality machine translation system.
+
+%Current statistical machine translation methods rely on very large parallel corpora to achieve state of the art performance.  However, such resources are only available for very few language pairs as they are very expensive to obtain.  On the other hand, monolingual data (such as newswire) is widely available and cheap to collect.  In this work, we propose a set of cues derived from monolingual resources and systematically introduce them in a phrase-based machine translation pipeline \emph{in place} of features induced from parallel data.  We show on two language pairs that monolingual data can take us a long way toward  inducing a high quality machine translation system.\mtodo{Need a more concrete statement.}
 \end{abstract}
 
 % ------------------------------------------------
@@ -69,13 +71,23 @@ Current statistical machine translation (SMT) methods (e.g. \cite{Koehn:2003,Chi
 
 In this work, we approach the problem from an entirely different perspective: we use monolingual resources directly to induce an end-to-end statistical machine translation system.  In particular, we extend a long line of work on inducing translation lexicons (e.g. \cite{Rapp:1995,Fung:1998,Koehn:2000,Klementiev:2006b,Haghighi:2008,Mimno:2009}) to induce translation features, and propose a novel algorithm for estimating reordering features for the phrase-based machine translation framework \cite{Koehn:2003}.  Much of the prior work on lexicon induction is motivated by the resource constrained SMT, however, to the best of our knowledge, this work is the first attempt to extend and apply these ideas in an end-to-end machine translation pipeline.
 
-The rest of the paper is organized as follows.  \secref{sect:bckg} begins with the relevant background on the phrase-based SMT framework we will use in the rest of the paper and continues to give a brief overview of the existing work on inducing translation lexicons.
- \secref{sect:mono} motivates and introduces translation and reordering features induced from monolingual data alone.   \secref{sect:exp} studies the informativeness of these features as they are added to the Machine Translation pipeline.  Finally, \secref{sect:conc} concludes and discusses directions for future work.
+%The rest of the paper is organized as follows.  \secref{sect:bckg} begins with the relevant background on the phrase-based SMT framework we will use in the rest of the paper and continues to give a brief overview of the existing work on inducing translation lexicons. \secref{sect:mono} motivates and introduces translation and reordering features induced from monolingual data alone.   \secref{sect:exp} studies the informativeness of these features as they are added to the Machine Translation pipeline.  Finally, \secref{sect:conc} concludes and discusses directions for future work.
+
+In this paper we:
+\begin{itemize}
+\item Analyze the challenge of using bilingual lexicon induction for statistical machine translation (performance on low frequency items, moving from words to phrases, and $n^2$ comparisons).
+\item Extend bilingual lexicon induction to phrasal translations, and scale it to extract translations for 30,000 phrases (which naively require tens of billions of phrase comparisons). 
+\item Perform a set of lesion experiments where all feature functions are dropped from from a phrase table, and then replaced with monolingually estimated equivalents.
+\item Report end-to-end translation quality with a fixed phrase-table with monolingually estimated parameters and for a fully monolingually induced system.
+\end{itemize}
+
+% ------------------------------------------------
+\section{Related Work} \label{sect:related-work}
 
 % ------------------------------------------------
 
 \section{Background} \label{sect:bckg}
-\subsection{Phrase-Based SMT} \label{sect:bckg:smt}
+\subsection{Parameters of phrase-based SMT} \label{sect:bckg:smt}
 
 Review phrase-based setup a-la \cite{Koehn:2003}.
 
