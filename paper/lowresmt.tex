@@ -38,40 +38,95 @@
 
 \setlength\titlebox{6.5cm}    % Expanding the titlebox
 
-\title{Statistical Machine Translation without Parallel Corpora}
+\title{Toward Statistical Machine Translation without Parallel Corpora}
 
-\author{Person\\
-  University of Awesome\\
-  Location\\
-  {\tt person@email}  \And
-  Person\\
-  University of Awesome\\
-  Location\\
-  {\tt  person@email}   \And
-  Person\\
-  University of Awesome\\
-  Location\\
-  {\tt  person@email}}
+\author{}
+%\author{Person\\
+%  University of Awesome\\
+%  Location\\
+%  {\tt person@email}  \And
+%  Person\\
+%  University of Awesome\\
+%  Location\\
+%  {\tt  person@email}   \And
+%  Person\\
+%  University of Awesome\\
+%  Location\\
+%  {\tt  person@email}}
 
 \date{}
 
 \begin{document}
 \maketitle
 \begin{abstract}
+Current statistical machine translation methods rely on very large parallel corpora to achieve state of the art performance.  However, such resources are only available for very few language pairs as they are very expensive to obtain.  On the other hand, monolingual data (such as newswire) is widely available and cheap to collect.  In this work, we propose a set of cues derived from monolingual resources and systematically introduce them in a phrase-based machine translation pipeline \emph{in place} of features induced from parallel data.  We show on two language pairs that monolingual data can take us a long way toward  inducing a high quality machine translation system.\mtodo{Need a more concrete statement.}
 \end{abstract}
 
+% ------------------------------------------------
+
 \section{Introduction} \label{sect:intro}
+Current statistical machine translation (SMT) methods (e.g. \cite{Koehn:2003,Chiang:2005}) crucially rely on vast amounts of sentence aligned translations in order to achieve state of the art performance.  These resources are only available for very few language pairs because producing them in sufficient quantities is an expensive and time consuming endeavor.  Moreover, the SMT system performance tends to drop if test data comes from a different domain then the parallel data used in training\mtodo{Need a good MT adaptation reference}.  One general idea to deal with data sparsity is to attempt to collect (more) parallel data automatically (e.g. \cite{Munteanu:2006,Smith:2010,Uszkoreit:2010}).\mtodo{Need a better "however" sentence.}  However, some assumptions are typically made about the comparable bilingual corpus (such as document level alignment) used for mining near parallel text fragments.
 
+In this work, we approach the problem from an entirely different perspective: we use monolingual resources directly to induce an end-to-end statistical machine translation system.  In particular, we extend a long line of work on inducing translation lexicons (e.g. \cite{Rapp:1995,Fung:1998,Koehn:2000,Klementiev:2006b,Haghighi:2008,Mimno:2009}) to induce translation features, and propose a novel algorithm for estimating reordering features for the phrase-based machine translation framework \cite{Koehn:2003}.  Much of the prior work on lexicon induction is motivated by the resource constrained SMT, however, to the best of our knowledge, this work is the first attempt to extend and apply these ideas in an end-to-end machine translation pipeline.
 
-\section{Related work} \label{sect:relwork}
+The rest of the paper is organized as follows.  \secref{sect:bckg} begins with the relevant background on the phrase-based SMT framework we will use in the rest of the paper and continues to give a brief overview of the existing work on inducing translation lexicons.
+ \secref{sect:mono} motivates and introduces translation and reordering features induced from monolingual data alone.   \secref{sect:exp} studies the informativeness of these features as they are added to the Machine Translation pipeline.  Finally, \secref{sect:conc} concludes and discusses directions for future work.
 
-SMT state of the art: phrase-based \cite{Koehn:2003}, hierarchical \cite{Chiang:2005}, etc.  Will review the phrase-based pipeline in greater detail in \secref{sect:bckg}, and describe our extensions in \secref{sect:mono}. For a recent thorough review of statistical machine translation we refer the reader to \cite{Lopez:2008}.\\
-
-A lot of related work in lexicon induction (e.g. \cite{Rapp:1995,Fung:1998,Koehn:2000,Haghighi:2008,Mimno:2009}).  Although often motivated by the resource constrained machine translation, it was never used in MT.  In this work, we make direct use of these methods in the machine translation pipeline.
+% ------------------------------------------------
 
 \section{Background} \label{sect:bckg}
+\subsection{Phrase-Based SMT} \label{sect:bckg:smt}
 
-Review the MT pipeline, emphasizing: phrase scoring and ordering.
+Review phrase-based setup a-la \cite{Koehn:2003}.
+
+\begin{itemize}
+\item Log linear formulation:
+  \begin{eqnarray*}
+    p(\mathbf{e} | \mathbf{f}) & \propto & \exp \sum_{i=1}^{n}{\lambda_i h_i (\mathbf{e}, \mathbf{f})} \label{log-linear-formulation}\\
+    \hat{e} & = & \argmax_{e}{p(\mathbf{e} | \mathbf{f}) }
+  \end{eqnarray*}
+
+\item \emph{Phrase extraction}.  Size of the phrase table and maximum phrase length: show our plot of performance vs. max phrase length.  Mention what we choose max phrase length 3 for our experiments.
+
+\item \emph{Phrase features}.  Phrase translation probability and lexical translation probability.
+
+\item \emph{Lexicalized reordering features}.  See \figref{fig:reorderfeats}.
+
+\item \emph{Other features}. Language model, penalties.
+
+\end{itemize}
+
+\begin{figure}[t]
+\vskip 0.1in
+\begin{center}
+\centerline{\includegraphics[scale=0.5]{../figures/reorderfeats/reorderfeats.pdf}} %[width=\columnwidth]
+\caption{Example alignment along with three kinds of orientations: monotone (m), swap (s), and discontinuous (d). }
+\label{fig:reorderfeats}
+\end{center}
+%\vskip -0.2in
+\end{figure}
+
+In this work, we will use the same general mathematical formulation, but propose alternative features derived directly from monolingual data.
+
+ \subsection{Lexicon Induction} \label{sect:bckg:lexind}
+ 
+Let us now briefly review relevant prior work on lexicon induction.  In \secref{sect:mono} we will build on this this work specifically to propose alternatives to some of the types of features we outlined in \secref{sect:bckg:smt}.
+
+\todo{Alex: Fill in.}
+
+Most of the previous work evaluates results on a small set of hand selected words (e.g. 100 nouns in \cite{Rapp:1995}).  However, if the objective is to induce large translation tables, as it is in our work, the reported results can be misleading. \todo{Describe \figref{fig:lexinduct}}. \mtodo{Diss prev work, but make sure that it comes across that these features are informative.}
+
+\begin{figure}[t]
+\vskip 0.1in
+\begin{center}
+\centerline{\includegraphics[scale=0.45]{../figures/lexinduct/lexinduct.pdf}} %[width=\columnwidth]
+\caption{Accuracy on wikipedia for most frequent and random 1000 source words. }
+\label{fig:lexinduct}
+\end{center}
+%\vskip -0.2in
+\end{figure}
+ 
+% ------------------------------------------------
 
 \section{Reducing the Parallel Data requirement / Estimating Parameters from Monolingual Data} \label{sect:mono}
 
@@ -130,19 +185,7 @@ Depending on the available monolingual data (and its associated metadata), vario
 
 \subsection{Reordering} \label{sect:order}
 
-\begin{figure}[ht]
-\vskip 0.1in
-\begin{center}
-\centerline{\includegraphics[scale=0.5]{../figures/reorderfeats/reorderfeats.pdf}} %[width=\columnwidth]
-\caption{Example alignment along with three kinds of orientations: monotone (m), swap (s), and discontinuous (d). }
-\label{fig:reorderfeats}
-\end{center}
-%\vskip -0.2in
-\end{figure}
-
-Describe the algorithm for estimating orientation probabilities.  Talk about the issue of too much weight on out-of-order orientation.  Talk about where $w$ comes from.  Mention that it is not as expensive as it looks.  The intuition is simple - see if translated phrases tend to keep the order.
-
- \footnote{$\#_{S}(x)$ returns the count of object x in multiset S.}
+Describe the algorithm (\figref{fig:algoreorder}) for estimating orientation probabilities\footnote{$\#_{S}(x)$ returns the count of object x in multiset S.}.  Talk about the issue of too much weight on out-of-order orientation.  Talk about where $w$ comes from.  Mention that it is not as expensive as it looks.  The intuition is simple - see if translated phrases tend to keep the order.
 
 \SetAlFnt{\relsize{-1.5}}
 
@@ -201,9 +244,11 @@ Describe the algorithm for estimating orientation probabilities.  Talk about the
   
   \vskip 0.2cm \hrule \vskip 0.2cm
 
-  \caption{Estimating reordering probabilities from monolingual data.} \label{fig:reorder}
+  \caption{Estimating reordering probabilities from monolingual data.} \label{fig:algoreorder}
   %\vskip -0.2in
 \end{algorithm}
+
+% ------------------------------------------------
 
 \section{Experiments} \label{sect:exp}
 
@@ -223,7 +268,11 @@ Describe data we use in the experiments:  Europarl \cite{Koehn:2005}, Gigaword, 
 
 Now, run the entire pipeline on a handful of languages extracting monolingual features from the Gigaword and our crawls.
 
+% ------------------------------------------------
+
 \section{Discussion} \label{sect:disc}
+
+% ------------------------------------------------
 
 \section{Conclusions and Future Work} \label{sect:conc}
 
