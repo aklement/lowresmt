@@ -33,6 +33,7 @@
 \newcommand{\tabref}[1]{Table~\ref{#1}}
 \newcommand{\figref}[1]{Figure~\ref{#1}}
 \newcommand{\code}[1]{{\small \tt #1}}
+\newcommand{\emq}[1]{\emph{``#1''}}
 \newcommand{\bm}{\boldsymbol}
 \def\bs#1{\boldsymbol{#1}}
 
@@ -99,12 +100,12 @@ Review phrase-based setup a-la \cite{Koehn:2003}.
 \begin{figure}[t]
 \vskip 0.1in
 \begin{center}
-\centerline{\includegraphics[scale=0.5]{../figures/reorderfeats/reorderfeats.pdf}} %[width=\columnwidth]
+\centerline{\includegraphics[width=\columnwidth]{../figures/reorderfeats/reorderfeats.pdf}}
 \caption{Example alignment along with three kinds of orientations: monotone (m), swap (s), and discontinuous (d). }
-\label{fig:reorderfeats}
+\label{fig:reorderfeats} 
 \end{center}
 %\vskip -0.2in
-\end{figure}
+\end{figure}\mtodo{\figref{fig:reorderfeats}: switch rows and columns to be consistent with \figref{fig:monoreord}?}
 
 In this work, we will use the same general mathematical formulation, but propose alternative features derived directly from monolingual data.
 
@@ -117,13 +118,13 @@ Let us now briefly review relevant prior work on lexicon induction.  In \secref{
 Most of the previous work evaluates results on a small set of hand selected words (e.g. 100 nouns in \cite{Rapp:1995}).  However, if the objective is to induce large translation tables, as it is in our work, the reported results can be misleading. \todo{Describe \figref{fig:lexinduct}}. \mtodo{Diss prev work, but make sure that it comes across that these features are informative.}
 
 \begin{figure}[t]
-\vskip 0.1in
+%\vskip 0.1in
 \begin{center}
 \centerline{\includegraphics[scale=0.45]{../figures/lexinduct/lexinduct.pdf}} %[width=\columnwidth]
 \caption{Accuracy on wikipedia for most frequent and random 1000 source words. }
 \label{fig:lexinduct}
 \end{center}
-%\vskip -0.2in
+\vskip -0.2in
 \end{figure}
  
 % ------------------------------------------------
@@ -185,6 +186,21 @@ Depending on the available monolingual data (and its associated metadata), vario
 
 \subsection{Reordering} \label{sect:order}
 
+In the phrase-based SMT pipeline we reviewed in \secref{sect:bckg:smt}, phrase pair orientation statistics were collected from induced word alignments.  We keep a similar lexicalized reordering model formulation, but infer its parameters from monolingual data instead.  The orientation information for a phrase pair is collected from source and target sentences containing the two phrases as well as other hypothesized translation pairs.  Given a phrase pair ($f$, $e$), the idea is to estimate the probability that other phrases preceding $f$ will precede, follow, or become discontinuous with $e$ in target sentences when translated.  Contextual phrases used to estimate these orientation features for ($f$, $e$) will be all entries in the phrase table.  Consider a simple example on \figref{fig:monoreord}: the phrase pair is ($f =$ \emq{leckte}, $e =$ \emq{leaked}), and a given pair of unaligned sentences also contains a phrase table entry ($f_{b} =$ \emq{Das undichte Rohr}, \emq{from the broken plumbing}).  In this example, the phrase $f_{b}$ preceding $f$ in the source sentence swaps order with $e$ in the target.  When collected a over large unaligned bilingual corpora, we expect the swap, monotone, and discontinuous counts to provide good estimates for the orientation features.  Note that multiple phrases may immediately precede $f$ and appear in the phrase table; however, we only use the longest one to collect reordering counts.\mtodo{Explain why?}
+
+\begin{figure}[t]
+%\vskip 0.1in
+\begin{center}
+\centerline{\includegraphics[width=\columnwidth]{../figures/monoreord/monoreord.pdf}}
+\caption{Collecting phrase ordering statistics for a de-en phrase pair (\emq{leckte}, \emq{leaked}).  The longest preceding phrase \emq{Das undichte Rohr} in source, has a phrase table translation \emq{from the broken plumbing} appearing after the target phrase.}
+\label{fig:monoreord}
+\end{center}
+\vskip -0.2in
+\end{figure}
+
+The algorithm on \figref{fig:algoreorder} estimates monotone, swap, and discontinuous orientation features $(p_m, p_s, p_d)$ for a phrase pair ($f, e$).  It begins by calling {\tt \small CollectOccurs()} to collect counts for the longest phrase table phrases preceding $f$ in source monolingual data, and preceding, following, and discontinuous with $e$ in target data.  It then proceeds to 
+
+
 Describe the algorithm (\figref{fig:algoreorder}) for estimating orientation probabilities\footnote{$\#_{S}(x)$ returns the count of object x in multiset S.}.  Talk about the issue of too much weight on out-of-order orientation.  Talk about where $w$ comes from.  Mention that it is not as expensive as it looks.  The intuition is simple - see if translated phrases tend to keep the order.
 
 \SetAlFnt{\relsize{-1.5}}
@@ -198,8 +214,8 @@ Describe the algorithm (\figref{fig:algoreorder}) for estimating orientation pro
 
  \hrule \vskip 0.2cm
 
-  \KwIn{Source and target phrases $f$ and $e$, source and target corpora $\emph{C}_f$ and $\emph{C}_e$, phrase table pairs $\emph{T} = \{(f^{(i)}, e^{(i)})\}_{i=1}^{N}$.}
-  \KwOut{Orientation features $(p_m, p_s, p_d)$.}
+  \KwIn{Source and target phrases $f$ and $e$, \\source and target monolingual corpora $\emph{C}_f$ and $\emph{C}_e$, \\phrase table pairs $\emph{T} = \{(f^{(i)}, e^{(i)})\}_{i=1}^{N}$.}
+  \KwOut{Orientation features ($p_m, p_s, p_d$).}
   
   \vskip 0.2cm \hrule \vskip 0.2cm
 
