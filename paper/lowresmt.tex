@@ -134,7 +134,7 @@ Review phrase-based setup a-la \cite{Koehn:2003}.
 
 \item \emph{Phrase extraction}.  Size of the phrase table and maximum phrase length: show our plot of performance vs. max phrase length.  Mention what we choose max phrase length 3 for our experiments.
 
-\item \emph{Phrase features}.  Phrase translation probability and lexical translation probability.
+\item \emph{Phrase features}.  Phrase translation probabilities and lexical features.
 
 \item \emph{Lexicalized reordering features}.  See \figref{fig:reorderfeats}.
 
@@ -174,7 +174,7 @@ Most of the previous work evaluates results on a small set of hand selected word
  
 % ------------------------------------------------
 
-\section{Parameter Estimation from Monolingual Data} \label{sect:mono}
+\section{Monolingual Parameter Estimation} \label{sect:mono}
 
 \subsection{Phrase extraction}  \label{sect:extract}
 
@@ -207,19 +207,21 @@ Frequency and Dictionary pruning & 1,436,823,109 & 3.85\% & 57.79\% & 58.76\% \\
 \end{table*}
 
 
-Second round of pruning: after monolingual feature extraction, before re-ordering estimation. Needs to be discussed after explanation of those methods? 
+Second round of pruning: after monolingual feature extraction, before re-ordering estimation. \todo{Needs to be discussed after explanation of those methods?}
 
 \subsection{Phrase scoring} \label{sect:score}
 
-In place of phrase translation probabilities estimated from bilingual alignments, we propose to compute similarity scores computed (almost) solely from monolingual resources.\\
+In place of phrase scores estimated from bilingual alignments, we propose similarity scores computed (almost) solely from monolingual resources.  In this section, we introduce two kinds of scores we call {\em phrasal} and {\em lexical similarity} features.  The former score the entire phrases, while the latter use alignments across phrases pairs, if available, to score at the lexical level.  The motivation is similar to the two kinds of features we introduced in \secref{sect:bckg}: lexical similarity features are informative for rare phrases with less reliable phrasal similarity scores.
+
+\subsubsection{Phrasal similarity features} \label{sect:phrasalfeats}
 
 \begin{figure}
 \includegraphics[width=\linewidth]{../figures/contextual/contextual}
-\caption{Lexicon induction using contextual information. First, contextual vectors are projected using a small seed dictionary and then compared with the target language candidates.}
+\caption{Scoring contextual similarity: first, contextual vectors are projected using a small seed dictionary and then compared with the target language candidates.}
 \label{fig:contextual}
 \end{figure}
 
-\noindent\emph{Contextual similarity}.  We extend the vector space approach of \cite{Rapp:1999} to compute similarity between \emph{phrases} in source and target language.  More formally, assume that $(f_{1}, f_{2}, \dots f_{N})$ and $(e_{1}, e_{2}, \dots e_{M})$ are (arbitrarily indexed) source and target vocabularies, respectively.  A source phrase $f$ (target phrase $e$) is represented with an $N$ ($M$) dimensional vector.  Only the components corresponding to words that appear in the context of $f$ ($e$) in data take on non-zero values, which typically measure how ``unique'' a word is to the context in the dataset.  Next, $f$'s contextual vector is projected by mapping each component to a component in the target space corresponding to its translation (taken from a small seed dictionary), but retaining the source component value.  Finally, the pair ($f, e$) is scored by computing similarity between the (projected) source and target vectors.  Various means of computing the component values and vector similarity measures have been proposed in literature (e.g. \cite{Rapp:1999,Fung:1998}).  While the quality of the resulting induced lexicon depends on the data, we found the following to work best in our experiments.  We compute the value of the $k$-th component of $f$'s contextual vector  as follows: 
+\noindent\emph{Contextual similarity.}  We extend the vector space approach of \cite{Rapp:1999} to compute similarity between \emph{phrases} in source and target language.  More formally, assume that $(f_{1}, f_{2}, \dots f_{N})$ and $(e_{1}, e_{2}, \dots e_{M})$ are (arbitrarily indexed) source and target vocabularies, respectively (see \figref{fig:contextual}).  A source phrase $f$ (target phrase $e$) is represented with an $N$ ($M$) dimensional vector.  Only the components corresponding to words that appear in the context of $f$ ($e$) in data take on non-zero values, which typically measure how ``unique'' a word is to the context in the dataset.  Next, $f$'s contextual vector is projected by mapping each component to a component in the target space corresponding to its translation (taken from a small seed dictionary), but retaining the source component value.  Finally, the pair ($f, e$) is scored by computing similarity between the (projected) source and target vectors.  Various means of computing the component values and vector similarity measures have been proposed in literature (e.g. \cite{Rapp:1999,Fung:1998}).  While the quality of the resulting induced lexicon depends on the data, we found the following to work best in our experiments.  We compute the value of the $k$-th component of $f$'s contextual vector  as follows: 
 
 \begin{equation*}
 w_{k}^{(i)} = n_{i,k} \times (log( {n / n_{i}}) + 1)
@@ -233,13 +235,15 @@ w_{k}^{(i)} = n_{i,k} \times (log( {n / n_{i}}) + 1)
 \label{fig:temporal}
 \end{figure}
 
-\noindent\emph{Temporal similarity}. Online content is often published along with temporal information: news feeds, for example, are comprised of news stories annotated with date and time of publication.  The feeds are specialized for the target geographical locations and vary in content across languages.  Still, many events are deemed relevant to multiple audiences and the news stories related to them appear in several languages, although rarely as direct translations of one another.  Phrases associated with these events will appear with increased frequency in multiple languages around the dates when these events are reported.  Such weak synchronicity provides a cue about the relatedness of phrases across the two languages.  In order to score a pair of phrases across languages, we can compute the similarity of their temporal signatures. To generate a time sequence for a given word, we first sort the set of (time-stamped) documents of our corpus into a sequence of equally sized temporal bins.  We then count the number of occurrences of a phrase in each bin.  Changing the size of the bin or computing counts in a sliding window instead can recover some accuracy if the temporal alignment between two languages in our dataset is poor \cite{Klementiev:2006b}.  Finally, we normalize the sequence and use either the cosine measure to score similarity. \\
+\noindent\emph{Temporal similarity.} Online content is often published along with temporal information: news feeds, for example, are comprised of news stories annotated with date and time of publication.  The feeds are specialized for the target geographical locations and vary in content across languages.  Still, many events are deemed relevant to multiple audiences and the news stories related to them appear in several languages, although rarely as direct translations of one another.  Phrases associated with these events will appear with increased frequency in multiple languages around the dates when these events are reported (see \figref{fig:temporal}).  Such weak synchronicity provides a cue about the relatedness of phrases across the two languages.  In order to score a pair of phrases across languages, we can compute the similarity of their temporal signatures. To generate a time sequence for a given word, we first sort the set of (time-stamped) documents of our corpus into a sequence of equally sized temporal bins.  We then count the number of occurrences of a phrase in each bin.  Changing the size of the bin or computing counts in a sliding window instead can recover some accuracy if the temporal alignment between two languages in our dataset is poor \cite{Klementiev:2006b}.  Finally, we normalize the sequence and use the cosine measure to score similarity. 
 
-\noindent\emph{Orthographic / phonetic similarity.} Etymologically related words often retain similar spelling across languages with the same writing system, and the edit distance can be used to measure their orthographic similarity.  We extend this idea to phrases by using word alignments within a phrase pair (see \secref{sect:extract}): we score pairs of aligned words and normalize by their average length. \mtodo{Make sure it is correct.}
+\subsubsection{Lexical similarity features}  \label{sect:lexfeats}
 
-We can further extend this idea to language pairs not sharing the same writing system, since many cognates and transliterated words are phonetically similar.  Following \cite{Virga:2003,Irvine:2010a}, we treat transliteration as a monotone character translation task and use a generative model\mtodo{Argue that enough training data is easy to get} to propose a transliteration of tokens in a source phrase.  Once the source words are mapped to the target writing system, the phrase similarity is computed as before.\\
+\noindent\emph{Contextual and Temporal similarity.}  If word alignments within a phrase pair are available, we can use them to compute a lexical similarity score for the pair.  We first compute an average similarity score (contextual or temporal) over all aligned words across the two phrases.  We then scale the score by the proportion of aligned words in the two phrases, effectively penalizing poorly aligned phrase pairs.\mtodo{A (trivial) equation here?}\\
 
-Depending on the available monolingual data (and its associated metadata), various other similarity scores can be computed and added to the list (see, e.g. \cite{Schafer:2002}).
+\noindent\emph{Orthographic / phonetic similarity.} Etymologically related words often retain similar spelling across languages with the same writing system, and the edit distance can be used to measure their similarity.  We use word alignments as before to score entire phrases for orthographic similarity.\mtodo{Not done quite the same as above but will glance over it.} We can also extend this idea to language pairs not sharing the same writing system, since many cognates and transliterated words remain phonetically similar.  Transliterations can be generated for tokens in a source phrase (e.g. \cite{Virga:2003,Irvine:2010a}), with phrase similarity computed as before.\\
+
+In our experiments in \secref{sect:exp}, we will focus on the phrase scores introduced in this section.  However, note that various other similarity scores can be computed depending on the available monolingual data (and its associated metadata), (see, e.g. \cite{Schafer:2002}).
 
 \subsection{Reordering} \label{sect:order}
 
@@ -352,6 +356,7 @@ First to make use of plentiful monolingual data to reduce the dependence on expe
 
 \begin{itemize}
 \item We plan to run this on real data for low resource languages.  We are have been actively collecting newswire data, which we plan to make available to the community.
+\item Language pairs with different writing system: use transliteration for edit distance features (as suggested in \secref{sect:phrasalfeats}).
 \item Showed that augmenting standard pipeline with monolingual features helps.
 \item Demonstrated that monolingual features are informative enough on their own for a competitive system.
 \item Proposed an algorithm for estimating orientation probabilities from monolingual data alone.
