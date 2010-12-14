@@ -174,7 +174,7 @@ we compare phrases in the same frequency bands \cite{Uszkoreit:2010}, require th
 
 To determine whether our pruning parameters were reasonable, we evaluated what percent of the items from a bilingually induced phrase table were retained.  Rather than consider all items from the phrase table (since many of them are bad), we considered only those phrase-pairs that were used by the decoder when translating a test set.\footnote{To determine which phrase pairs were used by the decoder, we used Moses decoder's trace function to find the set of phrases used in decoding our test set} We compare our filtered phrase tables to this set of phrase translation rules and attempt to maintain as many of them as possible, while pruning the set of phrase pairs down to manageable size. 
 
-\emph{Dictionary-composed phrase table}\mtodo{Chris had a citation for this method} We compose the table by enumerating all combinations of all translations of each word in a given source side phrase and then producing all word order permutations. Our available \mtodo{citation from this? it's a combination of some of David's dictionaries, I think} Spanish--English dictionary has over 300,000 entries and the resulting phrase table has a large amount of overlap with the decoder table, as shown in Table \ref{table:prune}. However, low-resource languages, dictionaries, in the cases that they even exist, are not as complete. We expect the performance of our dictionary-composed phrase table to be the upper bound for the performance of an induced-dictionary-composed table for truly low-resource languages. 
+\emph{Dictionary-composed phrase table}\mtodo{Chris had a citation for this method} We compose the table by enumerating all combinations of all translations of each word in a given source side phrase and then producing all word order permutations. Our available \mtodo{citation from this? it's a combination of some of David's dictionaries, I think} Spanish--English dictionary has over 300,000 entries and the resulting phrase table has a large amount of overlap with the decoder table, as shown in Table \ref{table:prune}. However, low-resource languages, dictionaries, in the cases that they even exist, are not as complete. We expect the performance of our dictionary-composed phrase table to be an upper bound for the performance of an induced-dictionary-composed table for truly low-resource languages. 
 
 %Our baseline phrase table is generated using a bilingual dictionary. For each Urdu test set phrase up to length three, we generated English phrases from all combinations of dictionary translations and all possible reorderings. For the baseline and our pruning methods, the number of filtered phrase pairs and the percent of phrases used by the Moses decoder not pruned away are given in Table \ref{table:prune}.  
 
@@ -352,6 +352,31 @@ Next, we replace the feature functions with their monolingual equivalents.
 
 \subsection{Monolingual features}
 
+
+\subsection{Extracted phrase tables}
+We score both the induced phrase table and the dictionary-composed table with monolingual features. In the case of the induced phrase table, we use the monolingual feature scores to prune the table from over 500 million phrase pairs to 1.2 million\mtodo{get final number}. We use the dictionary-compose table's inherent alignments to compute its alignment-based monolingual features [and automatic alignments on induced table if time]. We use random reordering features for both. 
+
+We tune our feature weights using a dictionary-composed development set phrase table.\mtodo{Hopefully we show that those weights aren't much different from any other set of weights? Justify just using those for the induced table decode}. BLEU scores are given in \ref{table:new-phrase-tables}
+
+\begin{table}
+\small
+\begin{center}
+\label{table:new-phrase-tables}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Phrase 	& Monolinual	& Reordering & 	BLEU \\
+Table	& Features	&  Features &  \\
+\hline
+Dict-composed & None & Random & 9.09 \\
+Dict-composed & Mono & Random & 11.52 \\
+Dict-composed & Align-Mono & Random & 11.63 \\
+Induced & Mono & Random & X \\
+Induced & Align-Mono & Random & If-time \\
+\hline
+\end{tabular}
+\caption{Decoding with induced and dictionary-composed phrase tables}
+\end{center}
+\end{table}
 
 
 
