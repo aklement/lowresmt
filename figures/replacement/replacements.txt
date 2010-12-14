@@ -1,0 +1,10 @@
+BLEU	Title	Comment
+5.50	-.-	
+9.89	-.M	
+13.22	P.-	REDOREDO
+16.14	L.-	
+16.48	PL.-	
+15.20	PL.M	REDOREDO
+21.87	A.A	
+22.90	APL.A	
+

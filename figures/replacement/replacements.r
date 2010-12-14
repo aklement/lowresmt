@@ -1,17 +1,17 @@
-c <- read.table(file="lesions.txt", sep = "\t", head=TRUE)
+c <- read.table(file="replacements.txt", sep = "\t", head=TRUE)
 
 x <- c$BLEU
 names(x) <- c$Title
 
-colorz <- c("green", "blue", "orange", "red")
-fillz <- c(15, 15, 15, 15)
-anglez <- c(45, 45, 45, 45)
+colorz <- c("red", "orange", "blue", "blue", "blue", "green", "green", "green")
+fillz <- c(15, 15, 15, 15, 15, 15, 15, 15)
+anglez <- c(45, 135, 135, 135, 135, 135, 45, 135)
 
 saxis <- 1.3
 slabels <- 1.3
 snames <- 1.3
 
-pdf(file="lesions.pdf", height=6, width=7, onefile=TRUE, family='Helvetica', pointsize=12)
+pdf(file="replacements.pdf", height=6, width=7, onefile=TRUE, family='Helvetica', pointsize=12)
 par(mar=c(4.5,4.5,3.5,0.5), new=FALSE, cex.lab=slabels)
 
 bp <-barplot(x, density=fillz, col=colorz, angle=anglez, ylab="BLEU", cex.lab=slabels, cex.axis=saxis, cex.names=snames, ylim=c(0, 25), legend=F)
