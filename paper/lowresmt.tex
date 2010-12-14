@@ -91,7 +91,7 @@ Much of the prior work on lexicon induction is motivated with the idea that it c
 In this paper we:
 \begin{itemize}
 \item Analyze the challenges of using bilingual lexicon induction for statistical machine translation (performance on low frequency items, moving from words to phrases, and $n^2$ comparisons).
-\item Extend bilingual lexicon induction to phrases, and scale it to extract translations of tens of thousands of  phrases (which naively requires tens of billions of phrase comparisons). 
+\item Extend bilingual lexicon induction to phrases, and scale it to extract translations of tens of thousands of  phrases (which naively requires trillions of phrase comparisons). 
 \item Perform a set of lesion experiments where all feature functions are dropped from from a phrase table, and then replaced with monolingually estimated equivalents.
 \item Propose a novel algorithm for estimating reordering features from independent monolingual texts.
 \item Report end-to-end translation quality with a fixed phrase-table with monolingually estimated parameters and for a phrase-table created without any parallel data.
@@ -376,28 +376,39 @@ Note that just adding phrasal and lexical monolingual similarity scores ({\bf AP
 \end{figure}
 
 \subsection{Extracted phrase tables}
-We score both the induced phrase table and the dictionary-composed table with monolingual features. In the case of the induced phrase table, we use the monolingual feature scores to prune the table from over 500 million phrase pairs to 1.2 million\mtodo{get final number}. We use the dictionary-compose table's inherent alignments to compute its alignment-based monolingual features [and automatic alignments on induced table if time]. We use random reordering features for both. 
+We score both the induced phrase table and the dictionary-composed table with monolingual features. In the case of the induced phrase table, we use the monolingual feature scores to prune the table from over 500 million phrase pairs to 1.2 million\mtodo{get final number}. We use the dictionary-composed table's inherent alignments to compute its alignment-based monolingual features [and automatic alignments on induced table if time]. We use random reordering features for both. 
 
-We tune our feature weights using a dictionary-composed development set phrase table.\mtodo{Hopefully we show that those weights aren't much different from any other set of weights? Justify just using those for the induced table decode}. BLEU scores are given in Table \ref{table:new-phrase-tables}.
+We tune our feature weights using a dictionary-composed development set phrase table.\mtodo{Hopefully we show that those weights aren't much different from any other set of weights? Justify just using those for the induced table decode}. BLEU scores are given in Figure \ref{fig:phrasetable}.
 
-\begin{table}
-\small
+\begin{figure}[h]
+%\vskip 0.1in
 \begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hline
-Phrase 	& Monolinual	& Reordering & 	BLEU \\
-Table	& Features	&  Features &  \\
-\hline
-Dict-composed & None & Random & 9.09 \\
-Dict-composed & Mono & Random & 11.52 \\
-Dict-composed & Align-Mono & Random & 11.63 \\
-Induced & Mono & Random & X \\
-Induced & Align-Mono & Random & If-time \\
-\hline
-\end{tabular}
-\caption{Decoding with induced and dictionary-composed phrase tables}\label{table:new-phrase-tables}
+\includegraphics[width=\linewidth]{../figures/phrasetable/phrasetable.pdf}
+\caption{MT performance using extracted phrase tables: dictionary-composed table with no features ({\bf DictC.-.-.}), dictionary-composed tables with phrasal monolingual scores ({\bf DictC.P.-}), dictionary-composed table with lexical monolingual scores ({\bf DictC.L.-}), induced table with phrasal monolingual scores ({\bf Induc.P.-}), and induced table with lexical monolingual scores ({\bf Induc.L.-}).}
+\label{fig:phrasetable}
 \end{center}
-\end{table}
+\vskip -0.2in
+\end{figure}
+
+
+%\begin{table}
+%\small
+%\begin{center}
+%\begin{tabular}{|c|c|c|c|}
+%\hline
+%Phrase 	& Monolinual	& Reordering & 	BLEU \\
+%Table	& Features	&  Features &  \\
+%\hline
+%Dict-composed & None & Random & 9.09 \\
+%Dict-composed & Mono & Random & 11.52 \\
+%Dict-composed & Align-Mono & Random & 11.63 \\
+%Induced & Mono & Random & X \\
+%Induced & Align-Mono & Random & If-time \\
+%\hline
+%\end{tabular}
+%\caption{Decoding with induced and dictionary-composed phrase tables}\label{table:new-phrase-tables}
+%\end{center}
+%\end{table}
 
 
 
