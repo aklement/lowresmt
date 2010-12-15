@@ -435,17 +435,24 @@ We tune our feature weights using a dictionary-composed development set phrase t
 
 \section{Conclusions and Future Work} \label{sect:conc}
 
-First to make use of plentiful monolingual data to reduce the dependence on expensive parallel data.  In particular:
+In the future we plan to build complete systems for low resource languages. In the case that very little or no parallel text is available, we expect to significantly outperform state-of-the-art MT. We have been actively collecting newswire data for many languages, which we will use to build phrase tables and estimate monolingual features, and we will make this available to the research community.
 
-\begin{itemize}
-\item Show that simply adding mono features => over a BLEU point gain.
-\item We plan to run this on real data for low resource languages.  We are have been actively collecting newswire data, which we plan to make available to the community.
-\item Language pairs with different writing system: use transliteration for edit distance features (as suggested in \secref{sect:phrasalfeats}).
-\item Showed that augmenting standard pipeline with monolingual features helps.
-\item Demonstrated that monolingual features are informative enough on their own for a competitive system.
-\item Proposed an algorithm for estimating orientation probabilities from monolingual data alone.
-\item Build complete systems for X low-resource languages.
-\end{itemize}
+In moving from Spanish--English translation to translation from other, less-similar languages, we expect to face new challenges. Estimating orientation probabilities, for example, for languages with very different grammars may demand a more sophisticated algorithm. However, our work here lays the foundation for this important future work.
+
+In this paper we have made use of plentiful monolingual data to perform machine translation, which paves the way for MT systems to reduce dependence on expensive parallel data.  In particular, we have demonstrated that monolingual features on phrase translations are informative enough on their own to be used in a competitive system. In addition to monolingual feature estimates similar to those used for bilingual lexicon induction, we proposed an algorithm for estimating orientation probabilities from monolingual data. Finally, we have proposed methods for generating phrase translation pairs from monolingual data, which replace the phrase table derived from aligned parallel sentences.
+
+In addition to proving to be competitive in {\it replacing} elements of the standard phrase-based MT pipeline, we have shown that using features derived from monolingual data to {\it augment} MT systems significantly improves performance. Simply adding our monolingual features to the phrase table results in over a BLEU point performance increase.
+
+
+%\begin{itemize}
+%\item Show that simply adding mono features => over a BLEU point gain.
+%\item We plan to run this on real data for low resource languages.  We are have been actively collecting newswire data, which we plan to make available to the community.
+%\item Language pairs with different writing system: use transliteration for edit distance features (as suggested in \secref{sect:phrasalfeats}).
+%\item Showed that augmenting standard pipeline with monolingual features helps.
+%\item Demonstrated that monolingual features are informative enough on their own for a competitive system.
+%\item Proposed an algorithm for estimating orientation probabilities from monolingual data alone.
+%\item Build complete systems for X low-resource languages.
+%\end{itemize}
 
 %\section*{Acknowledgments}
 %The authors would like each other and their parents.
