@@ -4,7 +4,7 @@ x <- c$BLEU
 names(x) <- c$Title
 
 colorz <- c("red", "orange", "blue", "blue", "blue", "green", "green", "green")
-fillz <- c(15, 15, 15, 15, 15, 15, 15, 15)
+fillz <- c(15, 25, 25, 25, 25, 25, 15, 25)
 anglez <- c(45, 135, 135, 135, 135, 135, 45, 135)
 
 saxis <- 1.3

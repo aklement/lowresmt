@@ -1,8 +1,7 @@
-Portion	BLEU
-1	
-5	
-10	
-20	
-30	
-40	
-50	
+Size	BLEU	Comment
+21	10.15	1K_lines
+103	14.15	5K_lines
+412		20K_lines
+619		30K_lines
+825		40K_lines
+1034	18.52	50K_lines
