@@ -18,6 +18,6 @@ grid(col="black", lty="dotted", lwd=1.3, equilogs=T)
 #legend("topleft", cex=1, names, col=colors, lty=types, pch=pts, lwd=3, bty="y", bg="white");
 
 title(ylab="BLEU")
-#title(xlab="Subset of Europarl")
+title(xlab="Number of tokens (x 1,000)")
 
 dev.off()

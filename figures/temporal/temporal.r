@@ -70,7 +70,10 @@ for (i in c(from:to)) {
 
 colors <- c("red", "blue")
 
-pdf(file="temporal.pdf", height=6, width=7, onefile=TRUE, family='Helvetica', pointsize=12)
+saxis <- 1.3
+slabels <- 1.3
+
+pdf(file="temporal.pdf", height=6, width=7, onefile=TRUE, family='Helvetica', pointsize=14)
 
 k = c(1,1,1,1,1,1,1)#1,1,1)#,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)            # k is the vector of weights
 k = k/sum(k)
@@ -87,7 +90,7 @@ par(mar=c(0.25,2,0.25,0.5), mfrow=c(3,1), oma=c(2,0,0.25,0))
 plot(d[,1], ylim = c(-0.015,0.015),  type="h", lwd=1.5, col=colors[1], xaxt='n', yaxt='n', ann = FALSE)
 lines(d[,2], type="h", col=colors[2], lty=1, lwd=1.5)
 
-legend("topright", cex=1.2, c("terrorist (en)","terrorista (es)"), col=colors, lty=c(1,1), lwd=1.5, bty="n");
+legend("topright", cex=slabels, c("terrorist (en)","terrorista (es)"), col=colors, lty=c(1,1), lwd=1.5, bty="n");
 
 mtext("Occurrences", side=2,line=0.5,font=1)
 
@@ -96,7 +99,7 @@ par(mar=c(0.25,2,0.25,0.5))
 plot(d[,1], ylim = c(-0.015,0.015),  type="h", lwd=1.5, col=colors[1], xaxt='n', yaxt='n', ann = FALSE)
 lines(d[,3], type="h", col=colors[2], lty=1, lwd=1.5)
 
-legend("topright", cex=1.2, c("terrorist (en)","ataques (es)"), col=colors, lty=c(1,1), lwd=1.5, bty="n");
+legend("topright", cex=slabels, c("terrorist (en)","ataques (es)"), col=colors, lty=c(1,1), lwd=1.5, bty="n");
 
 mtext("Occurrences", side=2,line=0.5,font=1)
 #mtext("Time", side=1,line=0.5,font=1)
@@ -106,7 +109,7 @@ par(mar=c(0.25,2,0.25,0.5))
 plot(d[,1], ylim = c(-0.015,0.015),  type="h", lwd=1.5, col=colors[1], xaxt='n', yaxt='n', ann = FALSE)
 lines(d[,4], type="h", col=colors[2], lty=1, lwd=1.5)
 
-legend("topright", cex=1.2, c("terrorist (en)","riqueza (es)"), col=colors, lty=c(1,1), lwd=1.5, bty="n");
+legend("topright", cex=slabels, c("terrorist (en)","riqueza (es)"), col=colors, lty=c(1,1), lwd=1.5, bty="n");
 
 mtext("Occurrences", side=2,line=0.5,font=1)
 mtext("Time", side=1,line=0.5,font=1)
