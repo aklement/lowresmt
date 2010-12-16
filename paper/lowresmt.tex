@@ -62,7 +62,7 @@
 \maketitle
 \begin{abstract}
 The parameters of statistical translation models are typically estimated from bilingual parallel corpora.   In this paper we explore the idea of estimating the parameters of a phrase-based statistical machine translation system from monolingual corpora.  Existing research on inducing bilingual dictionaries from monolingual texts has largely focused on learning the translations of individual, high frequency words.   We extend the concept so that it can be used to estimate all the parameters of phrase-based translation: phrase translation pairs, lexical and phrasal translation probabilities, and re-ordering probabilities.  We begin with a fixed phrase-table and perform lesion experiments that show how much translation performance decreases when model parameters are removed, and how much of that loss can be restored when monolingually-estimated equivalents are added.  We analyze challenges of  inducing the phrase table from monolingual texts (which includes $n^2$ comparisons for a very large $n$), and suggest ways of of pruning the space.
-
+\todo{Brag about (1) most lost performance regained and (2) extra BLUE point}
 % Large volumes of parallel text are required before translation models produce high quality translations, but sufficiently large corpora are available for  very few language pairs.  On the other hand, monolingual data is widely available and cheap to collect.  In this work, we propose a set of cues derived from monolingual resources and systematically introduce them in a phrase-based machine translation pipeline \emph{in place} of features induced from parallel data.  We show on two language pairs that monolingual data can take us a long way toward  inducing a high quality machine translation system.
 
 %The parameters of statistical translation models of are estimated from bilingual parallel corpora.    Large volumes of parallel text are required before translation models produce high quality translations, but sufficiently large corpora are available for  very few language pairs.  On the other hand, monolingual data is widely available and cheap to collect.  In this work, we propose a set of cues derived from monolingual resources and systematically introduce them in a phrase-based machine translation pipeline \emph{in place} of features induced from parallel data.  We show on two language pairs that monolingual data can take us a long way toward  inducing a high quality machine translation system.
@@ -318,10 +318,19 @@ The algorithm on \figref{fig:algoreorder} estimates monotone, swap, and disconti
 
 \section{Experiments} \label{sect:exp}
 
-We use the Spanish-English\mtodo{Add German if done in time.} subset of the Europarl version 5 corpus \cite{Koehn:2005} in all of the experiments below.  However, we treat the two sides of the corpus as two independent {\em monolingual} corpora.  We use the Moses SMT toolkit\mtodo{Add a moses citation} and a language model trained on the English side of Europarl.  With the exception of maximum phrase length (set to 3 in our experiments\mtodo{Add our curve?}), default values were used for all of the parameters.
-\todo{A brief outline of the experiments}
+We use the Spanish-English\mtodo{Add German if done in time.} subset of the Europarl version 5 corpus \cite{Koehn:2005} in all of the experiments below.  However, we treat the two sides of the corpus as two independent {\em monolingual} corpora.  We use the Moses SMT toolkit\mtodo{Add a moses citation} and a language model trained on the English side of Europarl.  With the exception of maximum phrase length (set to 3 in our experiments\mtodo{Add our curve?}), default values were used for all of the parameters.  We begin with a brief analysis of the challenges of exploiting monolingual scores in statistical machine translation.   Next, we run a series of lesion experiments in which we drop feature functions estimated from parallel data.  We then add equivalent but monolingually estimated features in reverse order to see how much of the lost performance can be regained.  Finally, we move on to phrase table induction experiments.
 
 \subsection{Bilingual lexicon induction for SMT}
+
+There are a few inherent challenges in extending lexicon induction methods to statistical machine translation.  First, results reported in most of the previous literature tend to be misleading when these methods are scaled to large translation lexicons.  While the reported accuracy can be high on a small set of source language words (e.g. 100 nouns in \cite{Rapp:1995}, or 1000 most frequent words in \cite{Koehn:2002}), it drops significantly when large translation dictionaries are needed.  In an experiment on figure \figref{fig:lexinduct}, we used the contextual cue to collect ranked lists of 500 most similar single token candidates for 1000 most frequent and 1000 random source language words in English and Spanish Wikipedia articles\footnote{These accuracy estimates are conservative, since a only correct translations present in our seed dictionary were counted.}.  Unsurprisingly, frequent terms have a substantially better chance of being paired up with the correct translation.
+
+Second, these concerns are exacerbated when we move to multi-token phrases.  As with phrase translation features estimated from parallel data, phrasal counts are sparse and similarity scores are less reliable.  Lexical similarity features should provide  
+
+\todo{Alex:Continue here}
+
+If we have phrasal alignments -> we back off to lexical features.
+
+* Nevertheless, we will show them to be informative.  See 1 BLEU point.
 
 \todo{Fill in.}
 
@@ -329,7 +338,7 @@ We use the Spanish-English\mtodo{Add German if done in time.} subset of the Euro
 %\vskip 0.1in
 \begin{center}
 \includegraphics[width=\linewidth]{../figures/lexinduct/lexinduct.pdf}
-\caption{Accuracy on wikipedia for most frequent and random 1000 source words. }
+\caption{Accuracy on English and Spanish Wikipedia articles for most frequent and random 1000 source words.  Accuracy is the proportion of the source words with at least one correct translation in the induced top-k list of candidates.}
 \label{fig:lexinduct}
 \end{center}
 \vskip -0.2in
