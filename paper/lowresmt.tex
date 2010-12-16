@@ -320,7 +320,7 @@ Freq + Dict & 566 M & $<$.04\% & 49\% & 55\% \\
 
 We use the Spanish-English\mtodo{Add German if done in time.} subset of the Europarl version 5 corpus \cite{Koehn:2005} in all of the experiments below.  However, we treat the two sides of the corpus as two independent {\em monolingual} corpora.  We use the Moses SMT toolkit\mtodo{Add a moses citation} and a language model trained on the English side of Europarl.  With the exception of maximum phrase length (set to 3 in our experiments\mtodo{Add the phrase length vs. performance curve?}), default values were used for all of the parameters.  We also prune the preceding, following, and discontinues phrases collected by {\tt \small CollectOccurs()} (see \figref{fig:algoreorder}) to contain at most 1,000, 1,000, and 3,000 least frequent phrases phrases, respectively.
 
-We begin with a brief analysis of the challenges of exploiting monolingual scores in statistical machine translation.   Next, we run a series of lesion experiments in which we drop feature functions estimated from parallel data.  We then add equivalent but monolingually estimated features in reverse order to see how much of the lost performance can be regained.  Finally, we move on to phrase table induction experiments.
+We begin with a series of lesion experiments in which we drop feature functions estimated from parallel data.  We then add equivalent but monolingually estimated features in reverse order to see how much of the lost performance can be regained.  Finally, we move on to phrase table induction experiments.
 
 \begin{figure}[t]
 %\vskip 0.1in
