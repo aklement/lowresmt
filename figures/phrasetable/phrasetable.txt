@@ -1,6 +1,6 @@
-BLEU	Title	Comment
-9.09	DictC.-.-	None
-11.52	DictC.P.-	Mono
-11.63	DictC.L.-	Align-Mono
-0.0	Induc.P.-	Mono
-0.0	Induc.L.-	Align-Mono
+BLEU	Source	Comment
+9.09	DC_N	None
+11.52	DC_M	Mono
+8.97	I_M	Mono
+12.25	DC.I_M.A	Mono+AlignM
+12.65	DC.I.L_M.A	Mono+AlignM
