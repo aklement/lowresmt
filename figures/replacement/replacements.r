@@ -8,8 +8,8 @@ fillz <- c(15, 25, 25, 25, 25, 25, 15, 25)
 anglez <- c(45, 135, 135, 135, 135, 135, 45, 135)
 
 saxis <- 1.3
-slabels <- 1.3
-snames <- 1.3
+slabels <- 1
+snames <- 1
 
 pdf(file="replacements.pdf", height=6, width=7, onefile=TRUE, family='Helvetica', pointsize=12)
 par(mar=c(4.5,4.5,3.5,0.5), new=FALSE, cex.lab=slabels)
