@@ -1,9 +1,9 @@
 c <- read.table(file="phrasetable.txt", sep = "\t", head=TRUE)
 
 x <- c$BLEU
-names(x) <- c$Title
+names(x) <- c$Source
 
-colorz <- c("red", "blue", "blue", "blue", "blue")
+colorz <- c("red", "blue", "blue", "blue", "blue","blue")
 fillz <- c(15, 15, 15, 15, 15, 15, 15, 15)
 anglez <- c(45, 135, 135, 135, 135, 135, 45, 135)
 
