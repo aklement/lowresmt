@@ -196,7 +196,7 @@ w_{k}^{(i)} = n_{i,k} \times (log( {n / n_{i}}) + 1)
 
 \subsubsection{Lexical similarity features}  \label{sect:lexfeats}
 
-\noindent\emph{Contextual and Temporal similarity.}  If word alignments within a phrase pair are available, we can use them to compute a lexical similarity score for the pair.  We first compute an average similarity score (contextual or temporal) over all aligned words across the two phrases.  We then scale the score by the proportion of aligned words in the two phrases, effectively penalizing poorly aligned phrase pairs.\mtodo{Mention that it is the average of both forward and backward alignments?}\\
+\noindent\emph{Contextual and Temporal similarity.}  Another way to estimate the quality of a phrasal translation is to score the similarity of individual words within the phrases.  To compute these lexical similarity features, we first average similarity scores (contextual or temporal) over all aligned words across the two phrases.  We then scale the score by the proportion of aligned words in the two phrases, effectively penalizing poorly aligned phrase pairs.\mtodo{Mention that it is the average of both forward and backward alignments?}\\
 
 \noindent\emph{Orthographic / phonetic similarity.} Etymologically related words often retain similar spelling across languages with the same writing system, and the edit distance can be used to measure their similarity.  We use word alignments as before to score entire phrases for orthographic similarity.\mtodo{Not done quite the same as above but will glance over it.} We can also extend this idea to language pairs not sharing the same writing system, since many cognates and transliterated words remain phonetically similar.  Transliterations can be generated for tokens in a source phrase (e.g. \cite{Virga:2003,Irvine:2010a}), with phrase similarity computed as before.\\
 
@@ -321,19 +321,11 @@ Freq + Dict & 566 M & $<$.04\% & 49\% & 55\% \\
 
 We use the Spanish-English\mtodo{Add German if done in time.} subset of the Europarl version 5 corpus \cite{Koehn:2005} in all of the experiments below.  However, we treat the two sides of the corpus as two independent {\em monolingual} corpora.  We use the Moses SMT toolkit\mtodo{Add a moses citation} and a language model trained on the English side of Europarl.  With the exception of maximum phrase length (set to 3 in our experiments\mtodo{Add our curve?}), default values were used for all of the parameters.  We begin with a brief analysis of the challenges of exploiting monolingual scores in statistical machine translation.   Next, we run a series of lesion experiments in which we drop feature functions estimated from parallel data.  We then add equivalent but monolingually estimated features in reverse order to see how much of the lost performance can be regained.  Finally, we move on to phrase table induction experiments.
 
-\subsection{Bilingual lexicon induction for SMT}
+\subsection{Bilingual lexicon induction for SMT} \label{sect:exp:induction}
 
-There are a few inherent challenges in extending lexicon induction methods to statistical machine translation.  First, results reported in most of the previous literature tend to be misleading when these methods are scaled to large translation lexicons.  While the reported accuracy can be high on a small set of source language words (e.g. 100 nouns in \cite{Rapp:1995}, or 1000 most frequent words in \cite{Koehn:2002}), it drops significantly when large translation dictionaries are needed.  In an experiment on figure \figref{fig:lexinduct}, we used the contextual cue to collect ranked lists of 500 most similar single token candidates for 1000 most frequent and 1000 random source language words in English and Spanish Wikipedia articles\footnote{These accuracy estimates are conservative, since a only correct translations present in our seed dictionary were counted.}.  Unsurprisingly, frequent terms have a substantially better chance of being paired up with the correct translation.
+There are inherent challenges in extending lexicon induction methods to statistical machine translation.  Results reported in most of the previous literature tend to be misleading when these methods are scaled to large translation lexicons.  While the reported accuracy can be high on a small set of source language words (e.g. 100 nouns in \cite{Rapp:1995}, or 1,000 most frequent words in \cite{Koehn:2002}), it drops significantly when large translation dictionaries are needed.  In an experiment on figure \figref{fig:lexinduct}, we used the contextual cue to collect ranked lists of 500 most similar single token candidates for 1,000 most frequent and 1,000 random source language words in English and Spanish Wikipedia articles\footnote{These accuracy estimates are conservative, since a only correct translations present in our seed dictionary were counted.}.  Unsurprisingly, frequent terms have a substantially better chance of being paired up with the correct translation.  These concerns are exacerbated when we move to multi-token phrases.  As with phrase translation features estimated from parallel data, phrasal counts are sparse and similarity scores are less reliable.  Monolingually estimated lexical similarity features we introduced provide additional similarity estimates less prone to these sparseness issues.  Nevertheless, in \secref{sect:exp:replacement} we show that monolingual features are very informative in our setting; even when added alongside the feature functions derived from parallel data, the account for over a BLEU point improvement in performance (see \figref{fig:remplacement}).
 
-Second, these concerns are exacerbated when we move to multi-token phrases.  As with phrase translation features estimated from parallel data, phrasal counts are sparse and similarity scores are less reliable.  Lexical similarity features should provide  
-
-\todo{Alex:Continue here}
-
-If we have phrasal alignments -> we back off to lexical features.
-
-* Nevertheless, we will show them to be informative.  See 1 BLEU point.
-
-\todo{Fill in.}
+Second, inducing translation lexicons over entire language vocabularies involves scoring each source with all target lexemes.  The quadratic number of computations becomes prohibitive when we move from tokens to multi word phrases.  \todo{Same argument as in \secref{sect:extract}: Maybe move relevant part of \secref{sect:extract} and \secref{sect:exp:induction} to \secref{sect:bckg:lexind}?}
 
 \begin{figure}[t]
 %\vskip 0.1in
@@ -345,11 +337,11 @@ If we have phrasal alignments -> we back off to lexical features.
 \vskip -0.2in
 \end{figure}
 
-\subsection{Dropping features}
+\subsection{Dropping features}  \label{sect:exp:lesions}
 
 We begin with a series of experiments where we remove individual features in order to get a sense of the relative contribution to the overall system performance on the English-Spanish language pair. Four rightmost bars on \figref{fig:lesion} summarize the results.  When both phrase and orientation features are derived from word alignments ({\bf A.A}, the standard features functions defined in \secref{sect:bckg:smt}), the system reaches 21.87 BLEU.  Next we replace orientation features with random values ({\bf A.--}) and drop phrase table features ({\bf --.A}).  While phrase table features account for a substantial performance difference (9 BLEU points), dropping orientation features affects the system score relatively little.  This is not surprising, since the word order is generally preserved in Spanish to English translations.  Finally, both dropping phrase scores and replacing orientation features with random values ({\bf --.--}) results in 5.5 BLEU.
 
-\subsection{Adding back equivalent monolingual features}
+\subsection{Adding back equivalent monolingual features} \label{sect:exp:replacement}
 
 Next, we replace the feature functions with their monolingual equivalents.  Adding orientation features estimated from monolingual data ({\bf --.M}), as well as phrasal monolingual scores ({\bf P.--}), lexical monolingual scores ({\bf L.--}), and both ({\bf PL.--}) each recover a substantial part of the lost performance.  However, combining all three monolingually estimated scores ({\bf PL.M}) doesn't change the performance. \mtodo{Fix here and in legend when new results are in.}  Note that the monolingual score is equivalent to X lines of parallel text (see \figref{fig:learning}).  \mtodo{Fill in from learning curve.}
 
@@ -379,7 +371,7 @@ Note that just adding phrasal and lexical monolingual similarity scores ({\bf AP
 %\vskip 0.1in
 \begin{center}
 \includegraphics[width=\linewidth]{../figures/learning/learning.pdf}
-\caption{Performance of the Moses pipeline ({\bf A.A}) vs. the size of the training data (\todo{number} though \todo{number} tokens of the Spanish-English Europarl).}
+\caption{Performance of the Moses pipeline ({\bf A.A}) vs. the size of the training data (20 thousand though 1 million tokens of the Spanish-English Europarl).}
 \label{fig:learning}
 \end{center}
 \vskip -0.2in
@@ -394,7 +386,7 @@ We tune our feature weights using a dictionary-composed development set phrase t
 %\vskip 0.1in
 \begin{center}
 \includegraphics[width=\linewidth]{../figures/phrasetable/phrasetable.pdf}
-\caption{MT performance using extracted phrase tables: dictionary-composed table with no features ({\bf DictC.-.-.}), dictionary-composed tables with phrasal monolingual scores ({\bf DictC.P.-}), dictionary-composed table with lexical monolingual scores ({\bf DictC.L.-}), induced table with phrasal monolingual scores ({\bf Induc.P.-}), and induced table with lexical monolingual scores ({\bf Induc.L.-}).}
+\caption{MT performance using extracted phrase tables: dictionary-composed table with no features ({\bf DictC.--.--.}), dictionary-composed tables with phrasal monolingual scores ({\bf DictC.P.--}), dictionary-composed table with lexical monolingual scores ({\bf DictC.L.--}), induced table with phrasal monolingual scores ({\bf Induc.P.--}), and induced table with lexical monolingual scores ({\bf Induc.L.--}).}
 \label{fig:phrasetable}
 \end{center}
 \vskip -0.2in
