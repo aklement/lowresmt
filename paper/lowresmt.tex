@@ -94,13 +94,21 @@ In this paper we:
 \begin{itemize}
 \item Analyze the challenges of using bilingual lexicon induction for statistical machine translation (performance on low frequency items, moving from words to phrases, and $n^2$ comparisons).\mtodo{define n, make more clear}
 \item Extend bilingual lexicon induction to phrases, and scale it to extract translations of tens of thousands of  phrases (which naively requires trillions of phrase comparisons). 
-\item Perform an ablation study in which all feature functions are dropped from from a phrase table, and then replaced with monolingually estimated equivalents.
+\item Perform an ablation study in which all feature functions are dropped from from a phrase table, and then replaced with monolingually estimated equivalents.\mtodo{Don't like the word ablation.}
 \item Propose a novel algorithm for estimating reordering features from monolingual texts.
 \item Report end-to-end translation quality with a fixed phrase-table with monolingually estimated parameters and for a phrase-table created without any sentence-aligned parallel data.
 \end{itemize}
 
 % ------------------------------------------------
 \section{Related Work} \label{sect:related-work}
+
+The first formulation of statistical machine translation (SMT) is due to the early work by~\newcite{Brown:1993}, which formulated a series of probabilistic models based on word-to-word correspondences.  The best performing current methods, so-called {\em phrase-based} and {\em hierarchical} models \cite{Och:2002,Koehn:2003,Chiang:2005} extend the build on the IBM models, treating multi token phrases as building blocks for producing new translations.  One significant problem with these models is that their parameters are estimated from large quantities of sentence aligned translations.  These parallel resources are only available for a small set of language pairs and are very expensive to compile in sufficient quantities.  In this work, we estimate the parameters of the phrase-based formalism (reviewed in \secref{sect:bckg:smt}) from {\em monolingual} texts, which are easy to collect online.
+
+Our methods for estimating model parameters from monolingual 
+
+We build on the long line of work in lexicon induction
+
+Our proposed estimate model parameters 
 
 There has been a long line of work on inducing translation lexicons \cite{Rapp:1995,Rapp:1999}.
 \newcite{Fung:1998}
@@ -110,6 +118,14 @@ There has been a long line of work on inducing translation lexicons \cite{Rapp:1
 \newcite{Haghighi:2008}
 \newcite{Mimno:2009}
 \todo{One sentence per each, plus deficiencies in their evaluations.}
+
+Expand to phrases.  To the best of our knowledge, this work is the first attempt to 
+
+
+
+
+
+
 
 An alternative approach to dealing with data sparsity is to attempt to collect parallel data automatically (e.g. \cite{Resnik:2003,Munteanu:2006,Smith:2010,Uszkoreit:2010}).
 
