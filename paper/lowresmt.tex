@@ -342,11 +342,17 @@ We begin with a series of lesion experiments in which we drop feature functions 
 
 \subsection{Dropping features}  \label{sect:exp:lesions}
 
-We begin with a series of experiments where we remove individual features in order to get a sense of the relative contribution to the overall system performance on the English-Spanish language pair (see \figref{fig:lesionreplacement}.  When both phrase and orientation features are derived from word alignments ({\bf A.A}, the standard features functions defined in \secref{sect:bckg:smt}), the system reaches 21.87 BLEU.  Next we replace orientation features with random values ({\bf A.--}) and drop phrase table features ({\bf --.A}).  While phrase table features account for a substantial performance difference (9 BLEU points), dropping orientation features affects the system score relatively little.  This is not surprising, since the word order is generally preserved in Spanish to English translations.  Finally, both dropping phrase scores and replacing orientation features with random values ({\bf --.--}) results in 5.5 BLEU.
+We begin with a series of experiments where we remove individual features derived from an aligned bitext in order to get a sense of their relative contributions to the overall system performance on the English-Spanish language pair (see \figref{fig:lesionreplacement}).  When both phrase and orientation features are derived from word alignments ({\bf A.A}, the standard features functions defined in \secref{sect:bckg:smt}), the system reaches 21.87 BLEU.  Next we replace orientation features with random values ({\bf A.--}) and drop phrase features ({\bf --.A}).  While phrase table features account for a substantial performance difference (9 BLEU points), dropping orientation features affects the system score relatively little.  This is not surprising, since the word order is generally preserved in Spanish to English translations.  Finally, both dropping phrase scores and replacing orientation features with random values ({\bf --.--}) results in 5.5 BLEU, a 16.4 point drop.
 
 \subsection{Adding back equivalent monolingual features} \label{sect:exp:replacement}
 
-Next, we replace the feature functions with their monolingual equivalents.  Adding orientation features estimated from monolingual data ({\bf --.M}), as well as phrasal monolingual scores ({\bf P.--}), lexical monolingual scores ({\bf L.--}), and both ({\bf PL.--}) each recover a substantial part of the lost performance.  However, combining all three monolingually estimated scores ({\bf PL.M}) doesn't change the performance. \mtodo{Fix here and in legend when new results are in.}  Note that the Bleu  score for the monolingually estimated features is equivalent to training a standard bilingually estimated system using a parallel corpus with X sentence pairs (see \figref{fig:learning}).  \mtodo{Fill in from learning curve.}
+Next, we replace the feature functions with their monolingual equivalents, hoping to regain much of the 16.4 BLEU point loss that resulted from dropping all features.  Adding orientation features estimated from monolingual data ({\bf --.M}) alone recovers 5 BLEU points. Adding phrasal monolingual scores ({\bf P.--}) and lexical monolingual scores ({\bf L.--}) separately recovers 8.4 and 10.6 BLEU points, respectively, and 11 points together. Like the phrase table features derived from the bitext, our monolingual features contribute more to performance than the reordering feature, which, as mentioned, is not surprising for Spanish to English translation. Supplementing the stripped phrase table with all three monolingually estimated features ({\bf PL.M}) yields an even higher gain of 11.6 BLEU points, or over 70\% of the BLEU score loss that occurred when we dropped all features from the phrase table. From these results, we are able to conclude that our monolingual features in combination with our orientation feature successfully recover much of the information contained in the features derived from bitext. 
+
+We perform an additional experiment to determine whether there is any information estimated in monolingual scores that is not captured by the standard feature set derived from the bitext. Indeed, we see over a BLEU point increase when we supplement the original phrase table with phrasal and lexical monolingual features ({\bf APL.A}). Therefore, remarkably, our monolingually estimated scores capture some novel information not contained in the standard feature set.
+
+In a final experiment, instead of estimating the monolingual scores from two sides of a parallel corpus, an idealized case, we use truly monolingual data from web crawls. In this experiment, we estimate phrasal monolingual scores, lexical monolingual scores, and orientation features all from the crawled data and achieve 13.49 BLEU on the same Spanish to English test set. This is comparable to the 17.08 BLEU achieved when using the same feature set and estimating scores using parallel data. So, although there is a significant drop in performance when we move to using strictly monolingual corpora, performance is much higher than including no phrase table features at all. In the future we plan to perform additional experiments to explore how to best take advantage of truly monolingual resources.
+
+\mtodo{Fix here and in legend when new results are in.}  Note that the Bleu  score for the monolingually estimated features is equivalent to training a standard bilingually estimated system using a parallel corpus with X sentence pairs (see \figref{fig:learning}).  \mtodo{Fill in from learning curve.}
 
 \begin{figure*}[t]
 %\vskip 0.1in
@@ -357,10 +363,6 @@ Next, we replace the feature functions with their monolingual equivalents.  Addi
 \end{center}
 \vskip -0.2in
 \end{figure*}
-
-Note that just adding phrasal and lexical monolingual similarity scores ({\bf APL.A}) substantially improves on the standard feature set ({\bf A.A}).
-
-In another experiment, we estimated phrasal and lexical similarity scores along with the reordering features from the crawled monolingual data, and obtained 13.49 BLEU. \todo{Rewrite this section}
 
 \begin{figure}[t]
 %\vskip 0.1in
