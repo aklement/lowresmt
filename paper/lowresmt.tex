@@ -33,8 +33,8 @@
 \newcommand{\figref}[1]{Figure~\ref{#1}}
 \newcommand{\code}[1]{{\small \tt #1}}
 \newcommand{\emq}[1]{\emph{``#1''}}
-\newcommand{\paraheader}[1]{\vskip 0.08in \noindent\emph{#1}}
-\newcommand{\skipheader}{\vskip 0.08in}
+\newcommand{\paraheader}[1]{\vskip 0.05in \noindent\emph{#1}}
+\newcommand{\skipheader}{\vskip 0.05in}
 
 \newcommand{\bm}{\boldsymbol}
 \def\bs#1{\boldsymbol{#1}}
@@ -355,7 +355,7 @@ We perform an additional experiment to determine whether there is any informatio
 
 In a final experiment, instead of estimating the monolingual scores from two sides of a parallel corpus, an idealized case, we use truly monolingual data from web crawls. In this experiment, we estimate phrasal monolingual scores, lexical monolingual scores, and orientation features all from the crawled data and achieve 13.49 BLEU on the same Spanish to English test set. This is comparable to the 17.08 BLEU achieved when using the same feature set and estimating scores using parallel data. So, although there is a significant drop in performance when we move to using strictly monolingual corpora, performance is much higher than including no phrase table features at all. In the future we plan to perform additional experiments to explore how to best take advantage of truly monolingual resources.
 
-\mtodo{Fix here and in legend when new results are in.}  Note that the Bleu  score for the monolingually estimated features is equivalent to training a standard bilingually estimated system using a parallel corpus with X sentence pairs (see \figref{fig:learning}).  \mtodo{Fill in from learning curve.}
+ Note that the BLEU score for the monolingually estimated features is equivalent to training a standard bilingually estimated system using a parallel corpus with X sentence pairs.  \mtodo{Fill in from learning curve.}
 
 \begin{figure*}[t]
 %\vskip 0.1in
@@ -367,15 +367,15 @@ In a final experiment, instead of estimating the monolingual scores from two sid
 \vskip -0.2in
 \end{figure*}
 
-\begin{figure}[t]
-%\vskip 0.1in
-\begin{center}
-\includegraphics[width=\linewidth]{../figures/learning/learning.pdf}
-\caption{Performance of the Moses pipeline ({\bf A.A}) vs. the size of the training data (20 thousand though 1 million tokens of the Spanish-English Europarl).}
-\label{fig:learning}
-\end{center}
-\vskip -0.2in
-\end{figure}
+%\begin{figure}[t]
+%%\vskip 0.1in
+%\begin{center}
+%\includegraphics[width=\linewidth]{../figures/learning/learning.pdf}
+%\caption{Performance of the Moses pipeline ({\bf A.A}) vs. the size of the training data (20 thousand though 1 million tokens of the Spanish-English Europarl).}
+%\label{fig:learning}
+%\end{center}
+%\vskip -0.2in
+%\end{figure}
 
 \subsection{Phrase table extraction}\label{sect:exp:pt}
 As alternatives to using the Moses phrase table, which is based on the word-aligned parallel corpus, we perform several experiments using phrase tables generated in other ways. As explained in Section \ref{sect:extract}, we generate phrase translation pairs in three ways: combining and permuting dictionary translations (henceforth, dictionary-based); using lexicon induction methods to identify candidate word translations for OOV unigrams (henceforth, lexically induced); and inducing multi-word translations from the bilingual text treated as monolingual corpora (henceforth, induced phrase pairs). We compute both lexical and phrasal monolingual feature scores for all three types of phrase translations. To score lexical monolingual features, we use the word alignments inherent to both the dictionary-based translations and the lexically induced translations. We use the Berkeley aligner \cite{DeNero07} to generate alignments for the induced phrase pairs. 
