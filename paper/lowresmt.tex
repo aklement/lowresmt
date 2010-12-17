@@ -116,25 +116,26 @@ We attempt to use monolingual texts and an incomplete bilingual dictionary to es
 
 \begin{itemize}
 \item \emph{Phrase pairs}.  
-Phrase extraction heuristics \cite{Venugopal2003,Tillmann2003,Och2004} produce a set of phrase pairs ${<e, f>}$ that are `consistent' with the word alignments.  We consider the inventory of phrase pairs (irrespective of their scores) to be a model parameter.  Monolingual parameter estimation must have a mechanism to create a similar inventory to be considered a phrase-based translation model.
+Phrase extraction heuristics \cite{Venugopal2003,Tillmann2003,Och2004} produce a set of phrase pairs ${<e, f>}$ that are consistent with the word alignments.  We consider the inventory of phrase pairs (irrespective of their scores) to be a model parameter.  Monolingual parameter estimation must have a mechanism to create a similar inventory to be considered a phrase-based translation model.
 
-\item \emph{Phrase translation probabilities}.  Each phrase pair has a list of associated feature functions.  These include phrase translation probabilities ${\phi(e|f)}$ and ${\phi(f|e)}$ which are  typically calculated using maximum likelihood estimation. 
+\item \emph{Phrase translation probabilities}.  Each phrase pair has a list of associated feature functions (FFs).  These include phrase translation probabilities ${\phi(e|f)}$ and ${\phi(f|e)}$ which are  typically calculated via maximum likelihood estimation. 
 
-\item \emph{Lexical weighting}.  Since MLE overestimates ${\phi}$, smoothing is done with lexical weighting.  The phrase pair internal word alignments are used to 
+\item \emph{Lexical weighting}.  Since MLE overestimates ${\phi}$ for phrase pairs with sparse counts, lexical weighting FFs are used to smooth.  Average word translation probability ${w(e_i|f_j)}$ are calculated via phrase-pair-internal word alignments.
 
-\item \emph{Reordering model}.  monotone, swap, and discontinous
-See \figref{fig:reorderfeats}.
-\cite{tillman:2004:HLTNAACL,Kumar2004}
+\item \emph{Reordering model}.  Each ${<e, f>}$ also has reordering parameters $p_o(\textnormal{orientation}|f,e)$ which indicate the distribution of its orientation wrt the previously translated phrase. Orientations are {\it monotone, swap, discontinuous}. See \figref{fig:reorderfeats}.
+\cite{tillman:2004:HLTNAACL,Kumar2004} 
 
-\item \emph{Other features (not bilingually estimated)}. Language model, phrase penalties.
+
+\item \emph{Other features}. Other typical features are n-gram language model scores and phrase penalty (which governs whether to use fewer longer phrases or more shorter phrases).  These are not bilingually estimated, so we can re-use them directly without modification. 
 \end{itemize}
 
-Log linear formulation:
-  \begin{eqnarray*}
-    p(\mathbf{e} | \mathbf{f}) & \propto & \exp \sum_{i=1}^{n}{\lambda_i h_i (\mathbf{e}, \mathbf{f})} \label{log-linear-formulation}\\
-    \hat{e} & = & \argmax_{e}{p(\mathbf{e} | \mathbf{f}) }
-  \end{eqnarray*}
-
+The features are combined in a log linear model, and their weights are set through minimum error rate training \cite{Och2003c}.
+%Log linear formulation:
+%  \begin{eqnarray*}
+ %   p(\mathbf{e} | \mathbf{f}) & \propto & \exp \sum_{i=1}^{n}{\lambda_i h_i (\mathbf{e}, \mathbf{f})} \label{log-linear-formulation}\\
+ %   \hat{e} & = & \argmax_{e}{p(\mathbf{e} | \mathbf{f}) }
+ % \end{eqnarray*}
+We use the same log linear formulation and MERT, but propose alternative features derived directly from monolingual data.
 
 \begin{figure}[t]
 \vskip 0.1in
@@ -146,7 +147,6 @@ Log linear formulation:
 %\vskip -0.2in
 \end{figure}
 
-In this work, we will use the same general mathematical formulation, but propose alternative features derived directly from monolingual data.
 
  \subsection{Bilingual lexicon induction for SMT} \label{sect:bckg:lexind}
  
