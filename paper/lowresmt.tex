@@ -80,7 +80,7 @@ In this work, we approach the problem from an entirely different perspective: we
 
 \todo{One or two sentences about potential for dealing with languages w/o parallel corpora.}
 
-Much of the prior work on lexicon induction is motivated with the idea that it could be applied to machine translation, but stops short of actually doing so.  This work is a first attempt to extend and apply these ideas to an end-to-end machine translation pipeline. 
+Much of the prior work on lexicon induction is motivated by the idea that it could be applied to machine translation, but stops short of actually doing so.  This work is a first attempt to extend and apply these ideas to an end-to-end machine translation pipeline. 
 
 
 
@@ -90,7 +90,7 @@ Much of the prior work on lexicon induction is motivated with the idea that it c
 
 In this paper we:
 \begin{itemize}
-\item Analyze the challenges of using bilingual lexicon induction for statistical machine translation (performance on low frequency items, moving from words to phrases, and $n^2$ comparisons).
+\item Analyze the challenges of using bilingual lexicon induction for statistical machine translation (performance on low frequency items, moving from words to phrases, and $n^2$ comparisons).\mtodo{define n, make more clear}
 \item Extend bilingual lexicon induction to phrases, and scale it to extract translations of tens of thousands of  phrases (which naively requires trillions of phrase comparisons). 
 \item Perform a set of lesion experiments where all feature functions are dropped from from a phrase table, and then replaced with monolingually estimated equivalents.
 \item Propose a novel algorithm for estimating reordering features from independent monolingual texts.
@@ -112,6 +112,7 @@ There has been a long line of work on inducing translation lexicons \cite{Rapp:1
 An alternative approach to dealing with data sparsity is to attempt to collect parallel data automatically (e.g. \cite{Resnik:2003,Munteanu:2006,Smith:2010,Uszkoreit:2010}).
 
 \todo{The following text is stolen from my CoNLL paper with Nikesh, we need to replace it or reshape it to be relevant}
+\todo{Make citations real}
 The idea of words with similar meaning having similar contexts in the same language comes from the Distributional Hypothesis (Harris, 1985) and Rapp (1999) was the first to propose using context of a given word as a clue to its translation. Given a German word with an unknown translation, a German context vector is constructed by counting its surrounding words in a monolingual German corpus.  Using an incomplete bilingual dictionary, the counts of the German context words with known translations are projected onto an English vector.  The projected vector for the German word is compared to the vectors constructed for all English words using a monolingual English corpus.  The English words with the highest vector similarity are treated as translation candidates.  The original work employed a relatively large bilingual dictionary containing approximately 16,000 words and tested only on a small collection of 100 manually selected nouns.
 
 Koehn and Knight (2002) tested this idea on a larger test set consisting of the 1000 most frequent words from a German-English lexicon. They also incorporated clues such as frequency and orthographic similarity in addition to context. Schafer and Yarowsky, (2002) independently proposed using frequency, orthographic similarity and also showed improvements using temporal and word-burstiness similarity measures, in addition to context. Haghighi et al., (2008) made use of contextual and orthographic clues for learning a generative model from monolingual corpora and a seed lexicon.
@@ -184,7 +185,7 @@ In place of phrase scores estimated from bilingual alignments, we propose simila
 w_{k}^{(i)} = n_{i,k} \times (log( {n / n_{i}}) + 1)
 \end{equation*}
 
-\noindent where $n_{i,k}$ and $f_{k}$ are the number of times $f_{k}$ appears in the context of $f_{i}$ and in the entire corpus, and $n$ is the maximum number of occurrences of any word in the data.  Intuitively, the more frequently $f_{k}$ appears with $f_{i}$ and the less common it is in the corpus in general, the higher its component value.  Similarity between two resulting vectors is measured as a cosine of the angle between them.\\
+\noindent where $n_{i,k}$ and $f_{k}$ are the number of times $f_{k}$ appears in the context of $f_{i}$ and in the entire corpus, and $n$ is the maximum number of occurrences of any word in the data.  Intuitively, the more frequently $f_{k}$ appears with $f_{i}$ and the less common it is in the corpus in general, the higher its component value.  Similarity between two resulting vectors is measured as a cosine of the angle between them.\todo{Jonny says this isn't clear}\\
 
 \begin{figure}[t]
 \includegraphics[width= \linewidth]{../figures/temporal/temporal}
@@ -288,7 +289,7 @@ We propose two competing methods for composing a table of phrase translations wi
 
 To determine whether our pruning parameters were reasonable, we evaluated what percent of the items from a bilingually induced phrase table were retained.  Rather than consider all items from the phrase table (since many of them are bad), we considered only those phrase-pairs that were used by the decoder when translating a test set.\footnote{To determine which phrase pairs were used by the decoder, we used Moses decoder's trace function to find the set of phrases used in decoding our test set} We compare our filtered phrase tables to this set of phrase translation rules and attempt to maintain as many of them as possible, while pruning the set of phrase pairs down to manageable size. \\
 
-\noindent\emph{Dictionary-composed phrase table.}\mtodo{Chris had a citation for this method} We compose a second phrase table by enumerating all combinations of all translations of each word in a given source side phrase and then producing all word order permutations. Our available \mtodo{citation from this? it's a combination of some of David's dictionaries, I think} Spanish--English dictionary has over 300,000 entries and the resulting phrase table has a large amount of overlap with the decoder table, as shown in Table \ref{table:prune}. However, for the case of low-resource languages, dictionaries, in the cases that they even exist, are not as complete. We expect the performance of our dictionary-composed phrase table to be an upper bound for the performance of an induced-dictionary-composed table for truly low-resource languages. 
+\noindent\emph{Dictionary-based phrase table.}\mtodo{Chris had a citation for this method} We built a second phrase table by enumerating all combinations of all translations of each word in a given source side phrase and then producing all word order permutations. Our available \mtodo{citation from this? it's a combination of some of David's dictionaries, I think} Spanish--English dictionary has over 300,000 entries and the resulting phrase table has a large amount of overlap with the decoder table, as shown in Table \ref{table:prune}. However, for the case of low-resource languages, dictionaries, in the cases that they even exist, are not as complete. We expect the performance of our dictionary-based phrase table to be an upper bound for the performance of an induced-dictionary-composed table for truly low-resource languages. 
 
 %Our baseline phrase table is generated using a bilingual dictionary. For each Urdu test set phrase up to length three, we generated English phrases from all combinations of dictionary translations and all possible reorderings. For the baseline and our pruning methods, the number of filtered phrase pairs and the percent of phrases used by the Moses decoder not pruned away are given in Table \ref{table:prune}.  
 
@@ -375,7 +376,7 @@ Note that just adding phrasal and lexical monolingual similarity scores ({\bf AP
 \subsection{Extracted phrase tables}
 As alternatives to using the Moses phrase table, which is based on the word-aligned parallel corpus, we perform several experiments using phrase tables generated in other ways. As explained in Section \ref{sect:extract}, we generate phrase translation pairs in three ways: combining and permuting dictionary translations (henceforth, dictionary-based); using lexicon induction methods to identify candidate word translations for OOV unigrams (henceforth, lexically induced); and inducing multi-word translations from the bilingual text treated as monolingual corpora (henceforth, induced phrase pairs). We compute both lexical and phrasal monolingual feature scores for all three types of phrase translations. To score lexical monolingual features, we use the word alignments inherent to both the dictionary-based translations and the lexically induced translations. We use the Berkeley aligner \cite{add} to generate alignments for the induced phrase pairs. 
 
-We use the monolingual feature scores to prune the induced phrase pairs from over 500 million phrase pairs to 1.1 million and to prune the dictionary-based table from 74 million to about 500 thousand entries. We include the top three lexically induced translations for each OOV unigram.
+We use the monolingual feature scores to prune the induced phrase pairs from over 500 million phrase pairs to 1.1 million and to prune the dictionary-based table from 74 million to about 500 thousand entries. We include the top five lexically induced translations for each OOV unigram.
 
 BLEU scores resulting from using different combinations of phrase pair sets and features are shown in Figure \ref{fig:phrasetable}. In all experiments using phrase pairs from multiple sources, we add a feature to indicate whether a given phrase pair came from the dictionary-based or lexically induced tables or from the large table of induced phrase pairs. As shown, using the dictionary-based table without monolingual features and using the induced phrase pairs (with features) both result in relatively poor translation performance. However, adding monolingual features to the dictionary-based table improves the BLEU score to 
 11.52, and combining the dictionary-based table with the induced phrase pairs further improves the BLEU score to 12.25. Finally, combining all three alternative phrase pair sources results in a surprisingly competitive BLEU score of 12.65\mtodo{get final score with tuning, and with other lower frequency terms}. 
@@ -386,7 +387,7 @@ Although our alternative phrase pair sources do not reach the performance level 
 %\vskip 0.1in
 \begin{center}
 \includegraphics[width=\linewidth]{../figures/phrasetable/phrasetable.pdf}
-\caption{MT performance using extracted phrase tables: dictionary-composed table with no features ({\bf DictC.--.--.}), dictionary-composed tables with phrasal monolingual scores ({\bf DictC.P.--}), dictionary-composed table with lexical monolingual scores ({\bf DictC.L.--}), induced table with phrasal monolingual scores ({\bf Induc.P.--}), and induced table with lexical monolingual scores ({\bf Induc.L.--}).}
+\caption{MT performance using extracted phrase tables: dictionary-based table with no features ({\bf 1}), dictionary-based tables with phrasal monolingual scores ({\bf 2}), induced phrase pairs with monolingual features ({\bf 3}), combined dictionary-based table and induced phrase pairs with lexical and phrasal monolingual scores ({\bf 4}), and combined dictionary-based, lexically induced, and induced phrase pairs with lexical and phrasal monolingual scores ({\bf 5}). }
 \label{fig:phrasetable}
 \end{center}
 \vskip -0.2in
