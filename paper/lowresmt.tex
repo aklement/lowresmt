@@ -322,7 +322,9 @@ Freq + Dict & 566 M & $<$.04\% & 49\% & 55\% \\
 
 \section{Experiments} \label{sect:exp}
 
-We use the Spanish-English\mtodo{Add German if done in time.} subset of the Europarl version 5 corpus \cite{Koehn:2005} in all of the experiments below.  However, we treat the two sides of the corpus as two independent {\em monolingual} corpora.  We use the Moses SMT toolkit\mtodo{Add a moses citation} and a language model trained on the English side of Europarl.  With the exception of maximum phrase length (set to 3 in our experiments\mtodo{Add the phrase length vs. performance curve?}), default values were used for all of the parameters.  We also prune the preceding, following, and discontinues phrases collected by {\tt \small CollectOccurs()} (see \figref{fig:algoreorder}) to contain at most 1,000, 1,000, and 3,000 least frequent phrases phrases, respectively.
+We used two Spanish-English corpora to estimate monolingual features: (1) in most of our experiments, we use the Spanish-English subset of the Europarl version 5 corpus \cite{Koehn:2005}; however, we treat the two sides of the corpus as two {\em independent monolingual} corpora, and (2)  Spanish and English texts (106 and 187 million tokens, respectively) annotated with publication dates we collected by crawling news sites\footnote{We have been collecting similar resources for a number of low density languages, and we plan to make them available to the community.}.
+
+We use the Moses SMT toolkit\mtodo{Add a moses citation} and a language model trained on the English side of Europarl.  With the exception of maximum phrase length (set to 3 in our experiments\mtodo{Add the phrase length vs. performance curve?}), default values were used for all of the parameters.  We also prune the preceding, following, and discontinues phrases collected by {\tt \small CollectOccurs()} (see \figref{fig:algoreorder}) to contain at most 1,000, 1,000, and 3,000 least frequent phrases phrases, respectively.
 
 We begin with a series of lesion experiments in which we drop feature functions estimated from parallel data.  We then add equivalent but monolingually estimated features in reverse order to see how much of the lost performance can be regained.  Finally, we move on to phrase table induction experiments.
 
@@ -338,35 +340,27 @@ We begin with a series of lesion experiments in which we drop feature functions 
 
 \subsection{Dropping features}  \label{sect:exp:lesions}
 
-We begin with a series of experiments where we remove individual features in order to get a sense of the relative contribution to the overall system performance on the English-Spanish language pair. Four rightmost bars on \figref{fig:lesion} summarize the results.  When both phrase and orientation features are derived from word alignments ({\bf A.A}, the standard features functions defined in \secref{sect:bckg:smt}), the system reaches 21.87 BLEU.  Next we replace orientation features with random values ({\bf A.--}) and drop phrase table features ({\bf --.A}).  While phrase table features account for a substantial performance difference (9 BLEU points), dropping orientation features affects the system score relatively little.  This is not surprising, since the word order is generally preserved in Spanish to English translations.  Finally, both dropping phrase scores and replacing orientation features with random values ({\bf --.--}) results in 5.5 BLEU.
+We begin with a series of experiments where we remove individual features in order to get a sense of the relative contribution to the overall system performance on the English-Spanish language pair (see \figref{fig:lesionreplacement}.  When both phrase and orientation features are derived from word alignments ({\bf A.A}, the standard features functions defined in \secref{sect:bckg:smt}), the system reaches 21.87 BLEU.  Next we replace orientation features with random values ({\bf A.--}) and drop phrase table features ({\bf --.A}).  While phrase table features account for a substantial performance difference (9 BLEU points), dropping orientation features affects the system score relatively little.  This is not surprising, since the word order is generally preserved in Spanish to English translations.  Finally, both dropping phrase scores and replacing orientation features with random values ({\bf --.--}) results in 5.5 BLEU.
 
 \subsection{Adding back equivalent monolingual features} \label{sect:exp:replacement}
 
 Next, we replace the feature functions with their monolingual equivalents.  Adding orientation features estimated from monolingual data ({\bf --.M}), as well as phrasal monolingual scores ({\bf P.--}), lexical monolingual scores ({\bf L.--}), and both ({\bf PL.--}) each recover a substantial part of the lost performance.  However, combining all three monolingually estimated scores ({\bf PL.M}) doesn't change the performance. \mtodo{Fix here and in legend when new results are in.}  Note that the monolingual score is equivalent to X lines of parallel text (see \figref{fig:learning}).  \mtodo{Fill in from learning curve.}
 
-\begin{figure}[t]
+\begin{figure*}[t]
 %\vskip 0.1in
 \begin{center}
-\includegraphics[width=\linewidth]{../figures/lesion/lesions.pdf}
-\caption{Contributions of individual features to overall system performance: both phrase and orientation features derived from word alignments ({\bf A.A}), orientation features replaced with random values ({\bf A.--}), dropped phrase features ({\bf --.A}), and dropped phrase features and random orientations ({\bf --.--}).}
-\label{fig:lesion}
+\includegraphics[width=\linewidth]{../figures/lesionreplacement/lesionreplacement.pdf}
+\caption{Contributions of individual features to overall system performance: both phrase and orientation features derived from word alignments ({\bf A.A}), orientation features replaced with random values ({\bf A.--}), dropped phrase features ({\bf --.A}), and dropped phrase features and random orientations ({\bf --.--}).  Contributions due to adding back equivalent monolingual features: orientation features estimated from monolingual data ({\bf --.M}).  Random reordering features are then used with with phrasal ({\bf P.--}), and lexical monolingual scores ({\bf L.--}), as well as both ({\bf PL.--}).  ({\bf PL.M}) combines all monolingual features.  Finally, just adding phrasal and lexical monolingual similarity scores ({\bf APL.A}) substantially improves on the standard feature set ({\bf A.A}).}
+\label{fig:lesionreplacement}
 \end{center}
 \vskip -0.2in
-\end{figure}
-
-\begin{figure}[t]
-%\vskip 0.1in
-\begin{center}
-\includegraphics[width=\linewidth]{../figures/replacement/replacements.pdf}
-\caption{Contributions due to adding back equivalent monolingual features: orientation features estimated from monolingual data ({\bf --.M}).  Random reordering features are then used with with phrasal ({\bf P.--}), and lexical monolingual scores ({\bf L.--}), as well as both ({\bf PL.--}).  Adding induced reordering features ({\bf PL.M}) doesn't significantly change the performance.  Finally, just adding phrasal and lexical monolingual similarity scores ({\bf APL.A}) substantially improves on the standard feature set ({\bf A.A}).}
-\label{fig:remplacement}
-\end{center}
-\vskip -0.2in
-\end{figure}
+\end{figure*}
 
 Note that just adding phrasal and lexical monolingual similarity scores ({\bf APL.A}) substantially improves on the standard feature set ({\bf A.A}).
 
-\begin{figure}[h]
+In another experiment, we estimated phrasal and lexical similarity scores along with the reordering features from the crawled monolingual data, and obtained 13.49 BLEU. \todo{Rewrite this section}
+
+\begin{figure}[t]
 %\vskip 0.1in
 \begin{center}
 \includegraphics[width=\linewidth]{../figures/learning/learning.pdf}

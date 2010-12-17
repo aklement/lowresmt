@@ -1,0 +1,11 @@
+BLEU	Title	Comment
+21.87	A.A	
+21.49	A.-	
+12.86	-.A	
+5.50	-.-	
+10.51	-.M	REDONE(PST,OLD=9.89)
+13.88	P.-	REDONE
+16.14	L.-	
+16.48	PL.-	
+17.08	PL.M	REDONE(PST,OLD=15.20)
+22.90	APL.A	
