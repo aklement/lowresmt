@@ -4,5 +4,5 @@ Size	BLEU	Comment
 204	15.36	10K_lines
 412	16.33	20K_lines
 619	17.52	30K_lines
-825		40K_lines
+825	18.06	40K_lines
 1034	18.52	50K_lines
