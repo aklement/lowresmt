@@ -38,7 +38,7 @@
 \def\bs#1{\boldsymbol{#1}}
 
 %\setlength\titlebox{6.5cm}    % Expanding the titlebox
-\setlength\titlebox{5cm}    % Expanding the titlebox
+\setlength\titlebox{3.75cm}    % Expanding the titlebox
 
 \title{Toward Statistical Machine Translation without Parallel Corpora}
 
@@ -76,14 +76,15 @@ The parameters of statistical translation models are typically estimated from bi
 
 
 The parameters of statistical models of translation are typically estimated from bilingual parallel corpora \cite{Brown:1993}. 
-In this work, we approach the problem from an entirely different perspective: we use monolingual resources to induce an end-to-end statistical machine translation system.  In particular, we extend a long line of work on inducing translation lexicons (beginning with \newcite{Rapp:1995}) to estimate all parameters for the phrase-based statistical machine translation \cite{Koehn:2003}.   [list the parameters]
+In this work, we approach the problem from an entirely different perspective: we use monolingual resources to induce an end-to-end statistical machine translation system.  In particular, we extend a long line of work on inducing translation lexicons (beginning with \newcite{Rapp:1995}) to estimate all parameters for the phrase-based statistical machine translation \cite{Koehn:2003}.
 
-\todo{One or two sentences about potential for dealing with languages w/o parallel corpora.}
 
 Much of the prior work on lexicon induction is motivated by the idea that it could be applied to machine translation, but stops short of actually doing so.  This work is a first attempt to extend and apply these ideas to an end-to-end machine translation pipeline. 
+The promise of lexicon induction is that it could be used to create machine translation systems for languages which do not have extensive parallel corpora.  
+Instead training would only require two large monolingual corpora and a small bilingual dictionary.
+%, both of which are generally easy to obtain for a language.  
+The idea is that monolingual distributional similarity information and a small number of bilingual pairs as example mappings are enough to learn translations, because words behave similarly across languages.  Here we examine an idealized case where the distribution of words across languages are identical, by taking the two sides of a parallel corpus and treating them as independent monolingual corpora by forgetting the sentence alignments.
 
-
-\todo{One or two sentences about potential for dealing with languages w/o parallel corpora.}
 
 %Current statistical machine translation (SMT) methods (e.g. \cite{Koehn:2003,Chiang:2005}) crucially rely on vast amounts of sentence aligned translations in order to achieve state of the art performance.  These resources are only available for very few language pairs because producing them in sufficient quantities is an expensive and time consuming endeavor.  Moreover, the SMT system performance tends to drop if test data comes from a different domain then the parallel data used in training\mtodo{Need a good MT adaptation reference}.  
 
@@ -94,7 +95,7 @@ In this paper we:
 \item Analyze the challenges of using bilingual lexicon induction for statistical machine translation (performance on low frequency items, moving from words to phrases, and $n^2$ comparisons).\mtodo{define n, make more clear}
 \item Extend bilingual lexicon induction to phrases, and scale it to extract translations of tens of thousands of  phrases (which naively requires trillions of phrase comparisons). 
 \item Perform an ablation study in which all feature functions are dropped from from a phrase table, and then replaced with monolingually estimated equivalents.
-\item Propose a novel algorithm for estimating reordering features from independent monolingual texts.
+\item Propose a novel algorithm for estimating reordering features from monolingual texts.
 \item Report end-to-end translation quality with a fixed phrase-table with monolingually estimated parameters and for a phrase-table created without any sentence-aligned parallel data.
 \end{itemize}
 
@@ -196,7 +197,13 @@ w_{k}^{(i)} = n_{i,k} \times (log( {n / n_{i}}) + 1)
 \label{fig:temporal}
 \end{figure}
 
-\noindent\emph{Temporal similarity.} Online content is often published along with temporal information: news feeds, for example, are comprised of news stories annotated with date and time of publication.  The feeds are specialized for the target geographical locations and vary in content across languages.  Still, many events are deemed relevant to multiple audiences and the news stories related to them appear in several languages, although rarely as direct translations of one another.  Phrases associated with these events will appear with increased frequency in multiple languages around the dates when these events are reported (see \figref{fig:temporal}).  Such weak synchronicity provides a cue about the relatedness of phrases across the two languages.  In order to score a pair of phrases across languages, we can compute the similarity of their temporal signatures. To generate a time sequence for a given word, we first sort the set of (time-stamped) documents of our corpus into a sequence of equally sized temporal bins.  We then count the number of occurrences of a phrase in each bin.  Changing the size of the bin or computing counts in a sliding window instead can recover some accuracy if the temporal alignment between two languages in our dataset is poor \cite{Klementiev:2006b}.  Finally, we normalize the sequence and use the cosine measure to score similarity. 
+\noindent\emph{Temporal similarity.} In addition to contextual similarity, words in two different languages may be scored in terms of their temporal similarity.  The intuition is that news stories from different countries will tend to discuss the same world events on the same day.  The frequencies of words over time give them particular signatures, that will tend to spike in on the dates across languages.  For instance, if the term {\it tsunami} is used frequently during a particular time span, the number of mentions of the Spanish word {\it maremoto} is very likely to increase in the same timeframe.     Figure \figref{fig:temporal} illustrates how the temporal distribution of {\it terrorist} is more similar to the Spanish {\it terroista} than to other Spanish words.  This can be thought of as a weak signal that two phrases are translations of each other.  In order to score a pair of phrases across languages, we can compute the similarity of their temporal signatures. To generate a time sequence for a given word, we first sort the set of (time-stamped) documents of our corpus into a sequence of equally sized temporal bins.  We then count the number of occurrences of a phrase in each bin.  Changing the size of the bin or computing counts in a sliding window instead can recover some accuracy \cite{Klementiev:2006b}.  We normalize the sequence and use the cosine measure to score similarity. 
+
+\todo{integrate citations to these two papers in this section: 
+"lexical relationships from temporal patterns"
+\cite{alfonseca-ciaramita-hall:2009:EMNLP}
+Also
+\cite{Schafer:2002}}
 
 \subsubsection{Lexical similarity features}  \label{sect:lexfeats}
 
