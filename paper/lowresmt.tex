@@ -371,7 +371,7 @@ In a final experiment, instead of estimating the monolingual scores from two sid
 %\vskip 0.1in
 \begin{center}
 \includegraphics[width=\linewidth]{../figures/lesionreplacement/lesionreplacementlegend.pdf}
-\caption{Contributions of individual features to overall system performance: both phrase and orientation features derived from word alignments ({\bf A.A}), orientation features replaced with random values ({\bf A.--}), dropped phrase features ({\bf --.A}), and dropped phrase features and random orientations ({\bf --.--}).  Contributions due to adding back equivalent monolingual features: orientation features estimated from monolingual data ({\bf --.M}).  Random reordering features are then used with with phrasal ({\bf P.--}), and lexical monolingual scores ({\bf L.--}), as well as both ({\bf PL.--}).  ({\bf PL.M}) combines all monolingual features.  Finally, just adding phrasal and lexical monolingual similarity scores ({\bf APL.A}) substantially improves on the standard feature set ({\bf A.A}).}
+\caption{Contributions of individual features derived from parallel texts (experiments 1-4) and their monolingual equivalents (experiments 5-9) to overall system performance.  Over 70\% of lost performance can be recovered with monolingual features alone.  Moreover, when added alongside the features derived from parallel data, monolingual features account for for over 1 BLEU point gain (experiment 10).}
 \label{fig:lesionreplacement}
 \end{center}
 \vskip -0.2in
