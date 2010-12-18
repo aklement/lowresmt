@@ -39,6 +39,13 @@
 \newcommand{\bm}{\boldsymbol}
 \def\bs#1{\boldsymbol{#1}}
 
+\newenvironment{my_itemize}{
+\begin{itemize}
+  \setlength{\itemsep}{2pt}
+  \setlength{\parskip}{2pt}
+  \setlength{\parsep}{1pt}}{\end{itemize}
+}
+
 %\setlength\titlebox{6.5cm}    % Expanding the titlebox
 \setlength\titlebox{3.75cm}    % Expanding the titlebox
 
@@ -117,9 +124,11 @@ Our methods for estimating model parameters from monolingual corpora build on th
 
 We attempt to use monolingual texts and an incomplete bilingual dictionary to estimate the parameters of a phrase-based translation  model \cite{Koehn:2003,Moses}.  Phrase-based translation typically starts by word-aligning a bilingual parallel corpus \cite{Och2003}.  The viterbi word alignments determine the parameters of phrase-based SMT.  These parameters are:
 
-\begin{itemize}
+\begin{my_itemize}
 \item \emph{Phrase pairs}.  
-Phrase extraction heuristics \cite{Venugopal2003,Tillmann2003,Och2004} produce a set of phrase pairs ${<e, f>}$ that are consistent with the word alignments.  We consider the inventory of phrase pairs (irrespective of their scores) to be a model parameter.  Monolingual parameter estimation must have a mechanism to create a similar inventory to be considered a phrase-based translation model.
+Phrase extraction heuristics \cite{Venugopal2003,Tillmann2003,Och2004} produce a set of phrase pairs ${<e, f>}$ that are consistent with the word alignments.  We consider the inventory of phrase pairs (irrespective of their scores) to be a model parameter.  
+%Monolingual parameter estimation must have a mechanism to create a similar inventory to be considered a phrase-based translation model.
+Creating this inventory from monolingual texts alone is a major challenge.
 
 \item \emph{Phrase translation probabilities}.  Each phrase pair has a list of associated feature functions (FFs).  These include phrase translation probabilities ${\phi(e|f)}$ and ${\phi(f|e)}$ which are  typically calculated via maximum likelihood estimation. 
 
@@ -130,8 +139,9 @@ Phrase extraction heuristics \cite{Venugopal2003,Tillmann2003,Och2004} produce a
 
 
 \item \emph{Other features}. Other typical features are n-gram language model scores and phrase penalty (which governs whether to use fewer longer phrases or more shorter phrases).  These are not bilingually estimated, so we can re-use them directly without modification. 
-\end{itemize}
+\end{my_itemize}
 
+\noindent
 The features are combined in a log linear model, and their weights are set through minimum error rate training \cite{Och2003c}.
 %Log linear formulation:
 %  \begin{eqnarray*}
