@@ -382,35 +382,37 @@ BLEU scores resulting from using different combinations of phrase pair sets and 
 
 Although our alternative phrase pair sources do not reach the performance level of the Moses phrase table, they do show that it is possible to perform end-to-end MT without a sentence-aligned parallel corpus. We believe that this is a promising direction for future work.
 
-\begin{figure}[h]
+%\begin{figure}[h]
 %\vskip 0.1in
-\begin{center}
-\includegraphics[width=\linewidth]{../figures/phrasetable/phrasetable.pdf}
-\caption{MT performance using extracted phrase tables: dictionary-based table with no features ({\bf 1}), dictionary-based tables with phrasal monolingual scores ({\bf 2}), induced phrase pairs with monolingual features ({\bf 3}), combined dictionary-based table and induced phrase pairs with lexical and phrasal monolingual scores ({\bf 4}), and combined dictionary-based, lexically induced, and induced phrase pairs with lexical and phrasal monolingual scores ({\bf 5}). }
-\label{fig:phrasetable}
-\end{center}
-\vskip -0.2in
-\end{figure}
-
-
-%\begin{table}
-%\small
 %\begin{center}
-%\begin{tabular}{|c|c|c|c|}
-%\hline
-%Phrase 	& Monolinual	& Reordering & 	BLEU \\
-%Table	& Features	&  Features &  \\
-%\hline
-%Dict-composed & None & Random & 9.09 \\
-%Dict-composed & Mono & Random & 11.52 \\
-%Dict-composed & Align-Mono & Random & 11.63 \\
-%Induced & Mono & Random & X \\
-%Induced & Align-Mono & Random & If-time \\
-%\hline
-%\end{tabular}
-%\caption{Decoding with induced and dictionary-composed phrase tables}\label{table:new-phrase-tables}
+%\includegraphics[width=\linewidth]{../figures/phrasetable/phrasetable.pdf}
+%\caption{MT performance using extracted phrase tables: dictionary-based table with no features ({\bf 1}), dictionary-based tables with phrasal monolingual scores ({\bf 2}), induced phrase pairs with monolingual features ({\bf 3}), combined dictionary-based table and induced phrase pairs with lexical and phrasal monolingual scores ({\bf 4}), and combined dictionary-based, lexically induced, and induced phrase pairs with lexical and phrasal monolingual scores ({\bf 5}). }
+%\label{fig:phrasetable}
 %\end{center}
-%\end{table}
+%\vskip -0.2in
+%\end{figure}
+
+
+\begin{table}
+\small
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Phrase 	& Monolinual  & 	BLEU \\
+Table	& Features &  \\
+\hline
+Dict-B. & None & 9.09 \\
+Dict-B. & Ph-Mono & 11.52 \\
+%Dict-composed & Align-Mono & Random & 11.63 \\
+Induc. & Ph-Mono &  8.97 \\
+%Induced & Align-Mono & Random & If-time \\
+Dict-B.+Induc. & Ph+Lx-Mono & 12.25 \\
+Dict-B.+Induc.+Lex-I & Ph+Lx-Mono & 12.65 \\
+\hline
+\end{tabular}
+\caption{Decoding with the dictionary-based phrase table (Dict-B.), induced phrase pairs (Induc.), and lexically induced OOVs (Lex-I) scored with lexical monolingual features (Lx-Mono) and phrasal monolingual features (Ph-Mono). In all of the experiments shown in this table, we used random reordering features.}\label{table:new-phrase-tables}
+\end{center}
+\end{table}
 
 
 
