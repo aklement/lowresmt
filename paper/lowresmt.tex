@@ -90,9 +90,14 @@ In this work, we take an entirely different approach: we use monolingual resourc
 
 Much of the prior work on lexicon induction is motivated by the idea that it could be applied to machine translation but stops short of actually doing so.  This work is a first attempt to extend and apply these ideas to an end-to-end machine translation pipeline. 
 The promise of lexicon induction is that it could be used to create machine translation systems for languages which do not have extensive parallel corpora.  
-Instead training would only require two large monolingual corpora and a small bilingual dictionary.
-%, both of which are generally easy to obtain for a language.  
-The idea is that monolingual distributional similarity and a handful of bilingual pairs to act as example mappings are enough to learn translations, because words behave similarly across languages.  Here we examine an idealized case where the distribution of words across languages is identical, by taking the two sides of a parallel corpus and treating them as independent monolingual corpora by forgetting the sentence alignments. In this paper we:
+Instead training would only require two large monolingual corpora and a small bilingual dictionary.%
+\footnote{In this paper we also assume the existence of a very small bitext (1,000-2,000 sentence pairs) to tune feature weights in minimum error rate training.}
+The idea is that monolingual distributional similarity and a handful of bilingual pairs to act as example mappings are enough to learn translations, because words behave similarly across languages.  
+% Here we
+We first 
+examine an idealized case where the distribution of words across languages is identical, by taking the two sides of a Spanish-English parallel corpus and treating them as independent monolingual corpora by forgetting the sentence alignments. 
+We then examine a more realistic scenario, estimating values for a Urdu-English phrase table using truly independent monolingual.
+In this paper we:
 
 \todop{Chris}{Now that we have an Urdu experiment, we should emphasize it in text / in the list below / in the abstract?}
 \todop{Chris}{Motivate the "no parallel data" setting (e.g. from commented out text?) here and possibly in the abstract.}
@@ -119,10 +124,11 @@ In this work, we estimate the parameters of the phrase-based formalism (reviewed
 Our methods for estimating model parameters build on the long line of work in bilingual lexicon induction from monolingual corpora. \newcite{Rapp:1995} was the first to propose using the context of a given word as a clue to its translation.  The model populates a bilingual lexicon by using a small seed dictionary to project context vectors across two languages and score their similarity. \newcite{Rapp:1999}, and \newcite{Fung:1998} build on the original idea proposing alternative similarity metrics. \newcite{Schafer:2002} exploited the idea that word translations tend to co-occur in time across languages. \newcite{Klementiev:2006b} used this temporal cue to train a phonetic similarity model for associating Named Entities across languages.  \newcite{Koehn:2002} used similarity in spelling as another kind of cue that a pair of words may be translations of one another.  In this work, we extend these ideas to estimate three independent kinds of metrics to score {\em phrasal} translation candidates.  More recent work on lexical induction includes \newcite{Haghighi:2008} who made use of contextual and orthographic clues to learn a generative model from monolingual texts and a seed lexicon, and \newcite{Mimno:2009} who proposed a polylingual topic model and matched high probability words in each topic across languages.  While effective for a small number of topics, it is unlikely to scale well for our purposes. %to large multilingual dictionaries.
 
 
+\newcite{Carbonell2006}
+
 \todop{Chris}{Additional reference pointed out by reviewers worth including?}
 Alternative research focuses on mining parallel or comparable corpora from the web \cite{Munteanu:2006,Schwenk2008,Rauf2009,Smith2010,Uszkoreit:2010}.
 
-\newcite{Carbonell2006}
 
 %\todo{The following text is stolen from my CoNLL paper with Nikesh, we need to replace it or reshape it to be relevant}
 %\todo{Make citations real}
