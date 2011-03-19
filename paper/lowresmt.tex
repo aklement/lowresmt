@@ -376,8 +376,6 @@ Freq + Dict & 566 M & $<$.04\% & 49\% & 55\% \\
 
 \section{Experiments} \label{sect:exp}
 
-We ran our end-to-end translation experiments for two language pairs.
-
 For Spanish-English (es-en) experiments in Sections \ref{sect:exp:lesions} though \ref{sect:exp:augment}, and \ref{sect:exp:pt} we use the Spanish and English sections of the Europarl ver. 5 corpus\footnote{Europarl filenames include dates, making temporal signatures easy to compute.} \cite{Koehn:2005}. When estimating monolingual parameters, we treat the two sides of the corpus as two {\em independent monolingual} corpora.  Our development data was comprised of {\em news-test2008} and {\em news-syscomb2009}, and are test set was {\em news-test2009} \cite{callisonburch-EtAl:2010:WMT}.  Our seed dictionary has entries for 49,795 source tokens\footnote{Translation results are robust to substantially reducing dictionary size; we omit the experiments due to space constraints.}.
 
 For Urdu-English (ur-en) experiments in \secref{sect:exp:indep} we use the NIST corpus \todopi{Chris}{add name and reference}.  We estimate monolingual parameters from a genuinely monolingual corpora annotated with publication dates in Urdu and English (145 and 159 million tokens, respectively) we have collected by crawling news sites.  Note: we have been collecting similar resources for a number of low density languages, and we plan to make them available to the community.  Our seed dictionary has entries for 25,377 source tokens.
