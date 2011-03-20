@@ -469,8 +469,6 @@ Dict-B.+Induc.+Lex-I & Ph+Lx-Mono & 12.65 \\
 \end{center}
 \end{table}
 
-
-
 %\subsection{Single language}
 
 %\begin{enumerate}
@@ -492,16 +490,19 @@ Dict-B.+Induc.+Lex-I & Ph+Lx-Mono & 12.65 \\
 
 \section{Conclusions and Future Work} \label{sect:conc}
 
-\todop{Everyone}{Expand conclusions.}
-
 %In the future we plan to build complete systems for low resource languages. In the case that very little or no parallel text is available, we expect to significantly outperform state-of-the-art MT. We have been actively collecting newswire data for many languages, which we will use to build phrase tables and estimate monolingual features, and we will make this available to the research community.
 
 %In moving from Spanish--English translation to translation from other, less-similar languages, we expect to face new challenges. Estimating orientation probabilities, for example, for languages with very different grammars may demand a more sophisticated algorithm. However, our work here lays the foundation for this important future work.
 
-In this paper we have made use of plentiful monolingual data to perform machine translation, which paves the way for MT systems to reduce dependence on parallel data.  In particular, we have demonstrated that monolingual features on phrase translations are informative enough on their own to be used in a competitive system. In addition to monolingual feature estimates similar to those used for bilingual lexicon induction, we proposed an algorithm for estimating orientation probabilities from monolingual data. Finally, we have proposed methods for generating phrase translation pairs from monolingual data, which replace the phrase table derived from aligned parallel sentences.
+In this work we have made use of plentiful monolingual data to induce a machine translation system, proposing one the way to reduce the dependence on the expensive and sparse parallel texts.  Specifically, we propose monolingual equivalents of the phrase-based translation model parameters extending the existing lexicon induction work.  We also introduce a novel algorithm for estimating orientation probabilities from monolingual data.  Finally, we propose methods for generating phrase tables without any sentence-aligned data.
+
+This work is an initial step toward reducing the requirement for expensive and sparse parallel data assumed to be available by state-of-the-art statistical translation methods.  There are many directions for possible future work and remaining questions.  Monolingual data is much more available and cheap to collect than bitexts, but it remains to be seen if the size of monolingual data can afford continuous improvements without the need for a more complex translation model.
+
+When extracting phrase tables in \secref{sect:extract}, we resorted to pruning the space of possible phrase translations before scoring them, because considering the entire space of phrase pairs is computationally infeasible.  However, relying less on pruning heuristics and being able to consider more pairs is likely to lead to better phrase tables.  Approximate scoring techniques, such as Locality Sensitive Hashing \cite{Charikar2002,VanDurme2010} would enable us to substantially expand the space of candidates we could feasibly consider.
+
+%Named Entities are problematic for MT in general and for our setting in particular, since they tend to have low corpus counts and thus unreliable similarity scores. 
 
 %In addition to proving to be competitive in {\it replacing} elements of the standard phrase-based MT pipeline, we have shown that using features derived from monolingual data to {\it augment} MT systems significantly improves performance. Simply adding our monolingual features to the phrase table results in over a BLEU point performance increase.
-
 
 %\begin{itemize}
 %\item Show that simply adding mono features => over a BLEU point gain.
