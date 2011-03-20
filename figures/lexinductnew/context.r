@@ -49,7 +49,7 @@ lines(x, y10, type="o", pch=pts[2], lty=types[2], lwd=3, col=colors[2])
 
 grid(col = "black", lty = "dotted", lwd = 1, equilogs = TRUE)
 
-title(ylab="Accuracy")
+title(ylab="Accuracy, %")
 title(xlab="Corpus Frequency")
 
 legend("bottomright", cex=slabels, names, col=colors, lty=types, pch=pts, lwd=3, bty="y", bg="white");
