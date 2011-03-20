@@ -157,9 +157,7 @@ Creating this inventory from monolingual texts alone is a major challenge.
 
 \item \emph{Lexical weighting}.  Since MLE overestimates ${\phi}$ for phrase pairs with sparse counts, lexical weighting FFs are used to smooth.  Average word translation probability ${w(e_i|f_j)}$ are calculated via phrase-pair-internal word alignments.
 
-\item \emph{Reordering model}.  Each $(e, f)$ also has reordering parameters $p_o(\textnormal{orientation}|f,e)$ which indicate the distribution of its orientation wrt the previously translated phrase. Orientations are {\it monotone, swap, discontinuous}, see \figref{fig:reorderfeats}.
-\cite{tillman:2004:HLTNAACL,Kumar2004} 
-
+\item \emph{Reordering model}.  Each $(e, f)$ also has reordering parameters $p_o(\textnormal{orientation}|f,e)$ which indicate the distribution of its orientation wrt the previously translated phrase. Orientations are {\it monotone, swap, discontinuous} \cite{tillman:2004:HLTNAACL,Kumar2004}, see \figref{fig:reorderfeats}. 
 
 \item \emph{Other features}. Other typical features are n-gram language model scores and phrase penalty (which governs whether to use fewer longer phrases or more shorter phrases).  These are not bilingually estimated, so we can re-use them directly without modification. 
 \end{my_itemize}
@@ -177,7 +175,7 @@ We use the same log linear formulation and MERT, but propose alternative feature
 \vskip 0.1in
 \begin{center}
 \includegraphics[width=0.8 \linewidth]{../figures/reorderfeats/reorderfeats.pdf}
-\caption{Example alignment along with three kinds of orientations: monotone (m), swap (s), and discontinuous (d). }
+\caption{Example alignment with three kinds of orientations: monotone (m), swap (s), and discontinuous (d). }
 \label{fig:reorderfeats} 
 \end{center}
 %\vskip -0.2in
@@ -213,6 +211,12 @@ These behave analogously to the phrasal and lexical features in \secref{sect:bck
 
 \subsubsection{Phrasal similarity features} \label{sect:phrasalfeats}
 
+\begin{figure}[t]
+\includegraphics[width=\linewidth]{../figures/contextual/contextual}
+\caption{Scoring contextual similarity of phrases: first, contextual vectors are projected using a small seed dictionary and then compared with the target language candidates.}
+\label{fig:contextual}
+\end{figure}
+
 \paraheader{Contextual similarity.}  We extend the vector space approach of \newcite{Rapp:1999} to compute similarity between \emph{phrases} in the source and target languages.  More formally, assume that $(s_{1}, s_{2}, \dots s_{N})$ and $(t_{1}, t_{2}, \dots t_{M})$ are (arbitrarily indexed) source and target vocabularies, respectively.  A source phrase $f$ is represented with an $N$ and target phrase $e$ with an $M$ dimensional vector (see \figref{fig:contextual}).  Only the components corresponding to words that appear in the context of a phrase in data take on non-zero values. Next, $f$'s contextual vector is projected by mapping its components to the target language space using the small number of word-word translations taken from a seed dictionary.
 %, but retaining the source component value.  
 Finally, the pair ($f, e$) is scored by computing similarity between the target  and projected source vectors.  Various means of computing the component values and vector similarity measures have been proposed in literature (e.g. \newcite{Rapp:1999}, \newcite{Fung:1998}).  Following \newcite{Fung:1998}, we compute the value of the $k$-th component of $f$'s contextual vector  as follows: 
@@ -222,12 +226,6 @@ w_{k} = n_{f,k} \times (log( {n / n_{k}}) + 1)
 \end{equation*}
 
 \noindent where $n_{f,k}$ and $n_{k}$ are the number of times $s_{k}$ appears in the context of $f$ and in the entire corpus, and $n$ is the maximum number of occurrences of any word in the data.  Intuitively, the more frequently $s_{k}$ appears with $f$ and the less common it is in the corpus in general, the higher its component value.  Similarity between two resulting vectors is measured as a cosine of the angle between them.
-
-\begin{figure}[t]
-\includegraphics[width=\linewidth]{../figures/contextual/contextual}
-\caption{Scoring contextual similarity of phrases: first, contextual vectors are projected using a small seed dictionary and then compared with the target language candidates.}
-\label{fig:contextual}
-\end{figure}
 
 \mtodo{Give an example Spanish phrase and the English phrases that it has the highest similarity with}
 
@@ -247,6 +245,16 @@ w_{k} = n_{f,k} \times (log( {n / n_{k}}) + 1)
 %Also
 %\cite{Schafer:2002}}
 
+\begin{figure}[t]
+%\vskip 0.1in
+\begin{center}
+\includegraphics[width=0.8 \linewidth]{../figures/monoreord/monoreord.pdf}
+\caption{Collecting phrase orientation statistics for a en-de phrase pair (\emq{profile}, \emq{Profils}) from non-parallel sentences (the German sentence translates as  \emq{Creating a Facebook profile is easy}). The longest preceding phrase \emq{Facebook} in source, has a phrase table translation \emq{in Facebook} appearing after the target phrase.}
+\label{fig:monoreord}
+\end{center}
+\vskip -0.2in
+\end{figure}
+
 \subsubsection{Lexical similarity features}  \label{sect:lexfeats}
 
 \paraheader{Contextual and Temporal similarity.}  Another way to estimate the quality of a phrasal translation is to score the similarity of individual words within the phrases.  To compute these lexical similarity features, we first average similarity scores (contextual or temporal) over all aligned words across the two phrases.  We then scale the score by the proportion of aligned words in the two phrases, effectively penalizing poorly aligned phrase pairs.\mtodo{Mention that it is the average of both forward and backward alignments?}
@@ -258,16 +266,6 @@ w_{k} = n_{f,k} \times (log( {n / n_{k}}) + 1)
 %\skipheader In our experiments in \secref{sect:exp}, we will focus on the similarity scores introduced in this section.  However, note that various other similarity scores\mtodo{list them} can be computed depending on the available monolingual data and its associated metadata (see, e.g. \newcite{Schafer:2002}).
 
 \subsection{Reordering} \label{sect:order}
-
-\begin{figure}[t]
-%\vskip 0.1in
-\begin{center}
-\includegraphics[width=0.8 \linewidth]{../figures/monoreord/monoreord.pdf}
-\caption{Collecting phrase orientation statistics for a en-de phrase pair (\emq{profile}, \emq{Profils}) from non-parallel sentences (the German sentence translates as  \emq{Creating a Facebook profile is easy}). The longest preceding phrase \emq{Facebook} in source, has a phrase table translation \emq{in Facebook} appearing after the target phrase.}
-\label{fig:monoreord}
-\end{center}
-\vskip -0.2in
-\end{figure}
 
 \SetAlFnt{\relsize{-1.5}}
 
@@ -374,6 +372,16 @@ Freq + Dict & 566 M & $<$.04\% & 49\% & 55\% \\
 
 % ------------------------------------------------
 
+\begin{figure*}[t]
+%\vskip 0.1in
+\begin{center}
+\includegraphics[width=\linewidth]{../figures/lesionreplacement/lesionreplacementlegend.pdf}
+\caption{Contributions of individual features derived from parallel texts (experiments 1-4) and their monolingual equivalents (experiments 5-9) to overall system performance in Spanish-English experiments.  Over 70\% of lost performance can be recovered with monolingual features alone.  Moreover, when added alongside the features derived from parallel data, monolingual features account for for over 1 BLEU point gain (experiment 10).}
+\label{fig:lesionreplacement}
+\end{center}
+\vskip -0.2in
+\end{figure*}
+
 \section{Experiments} \label{sect:exp}
 
 For Spanish-English (es-en) experiments in Sections \ref{sect:exp:lesions} though \ref{sect:exp:augment}, and \ref{sect:exp:pt} we use the Spanish and English sections of the Europarl ver. 5 corpus\footnote{Europarl filenames include dates, making temporal signatures easy to compute.} \cite{Koehn:2005}. When estimating monolingual parameters, we treat the two sides of the corpus as two {\em independent monolingual} corpora.  Our development data was comprised of {\em news-test2008} and {\em news-syscomb2009}, and are test set was {\em news-test2009} \cite{callisonburch-EtAl:2010:WMT}.  Our seed dictionary has entries for 49,795 source tokens\footnote{Translation results are robust to substantially reducing dictionary size; we omit the experiments due to space constraints.}.
@@ -384,16 +392,6 @@ We use the Moses SMT toolkit \cite{Moses} and a language model trained on the En
 %CUT FOR SPACE: We also prune the preceding, following, and discontinues phrases collected by {\tt \small CollectOccurs()} (see \figref{fig:algoreorder}) to contain at most 1,000, 1,000, and 3,000 least frequent phrases phrases, respectively.
 
 We begin with a series of lesion experiments in which we drop feature functions estimated from parallel data.  We then add equivalent but monolingually estimated features in reverse order to see how much of the lost performance can be regained.  \figref{fig:lesionreplacement} gives all of the results, which are explained below. Finally, we move on to phrase table induction experiments.
-
-\begin{figure*}[t]
-%\vskip 0.1in
-\begin{center}
-\includegraphics[width=\linewidth]{../figures/lesionreplacement/lesionreplacementlegend.pdf}
-\caption{Contributions of individual features derived from parallel texts (experiments 1-4) and their monolingual equivalents (experiments 5-9) to overall system performance in Spanish-English experiments.  Over 70\% of lost performance can be recovered with monolingual features alone.  Moreover, when added alongside the features derived from parallel data, monolingual features account for for over 1 BLEU point gain (experiment 10).}
-\label{fig:lesionreplacement}
-\end{center}
-\vskip -0.2in
-\end{figure*}
 
 \subsection{Lesion experiments (Experiments 1-4)}  \label{sect:exp:lesions}
 
