@@ -1,0 +1,843 @@
+11/03/19 02:38:18 INFO lexinduct.FreqBinInductor: 
+----------- Configuration -----------
+corpora.europarl.Path: /mnt/data/babel/Resources/Parallel/EuroParl/ver.5/es-en/train
+corpora.europarl.SrcSubDir: es/
+corpora.europarl.TrgSubDir: en/
+corpora.europarl.DateFrom: 96-04-15
+corpora.europarl.DateTo: 09-10-23
+corpora.europarl.OneSentPerLine: true
+resources.stopwords.Path: /mnt/data/babel/Resources/StopWordLists/
+resources.stopwords.SrcStopWords: es.stop
+resources.stopwords.TrgStopWords: en.stop
+resources.dictionary.Path: /mnt/data/babel/Resources/Dictionaries/
+resources.dictionary.Dictionary: es-en.dict
+preprocessing.Path: /home/aklement/Tools/moses/es-en/binLexInduct.2/preprocessing/
+preprocessing.FilterRomanSrc: false
+preprocessing.FilterRomanTrg: false
+preprocessing.input.Context: europarl
+preprocessing.input.Time: europarl
+preprocessing.context.SrcEqClass: babel.content.eqclasses.SimpleEquivalenceClass
+preprocessing.context.TrgEqClass: babel.content.eqclasses.SimpleEquivalenceClass
+preprocessing.context.PruneEqIfOccursMoreThan: -1
+preprocessing.context.PruneEqIfOccursFewerThan: -1
+preprocessing.context.PruneContextToSize: -1
+preprocessing.context.Window: 2
+preprocessing.phrases.MaxPhraseLength: 1
+preprocessing.phrases.CaseSensitive: true
+preprocessing.time.Align: false
+output.Path: /home/aklement/Tools/moses/es-en/binLexInduct.2/output/
+experiments.time.SlidingWindow: false
+experiments.time.WindowSize: 1
+experiments.NumSource: 3000
+experiments.NumSourceBins: 10
+experiments.NumTranslationsToAddPerSource: 500
+experiments.DictionaryPruneNumTranslations: -1
+experiments.NumRankingThreads: 8
+experiments.DoTime: true
+experiments.DoContext: true
+experiments.DoEditDistance: false
+experiments.DoAggregate: true
+-------------------------------------
+11/03/19 02:38:18 INFO lexinduct.FreqBinInductPreparer:  - Constructing contextual equivalence classes...
+11/03/19 02:45:41 INFO lexinduct.FreqBinInductPreparer:  - Source context classes = 110942, max occurrences = 897346
+11/03/19 02:45:41 INFO lexinduct.FreqBinInductPreparer:  - Target context classes = 60605, max occurrences = 1813793
+11/03/19 02:45:41 INFO lexinduct.FreqBinInductPreparer:  - Reading/preparing seed dictionary ...
+11/03/19 02:45:45 INFO lexinduct.FreqBinInductPreparer:  - Seed dictionary: Dictionary [SeedDictionary] contains 19813 source language entries.
+11/03/19 02:45:45 INFO lexinduct.FreqBinInductPreparer:  - Reading/preparing transliteration dictionary ...
+11/03/19 02:45:45 INFO lexinduct.FreqBinInductPreparer:  - No transliteration dictionary specified
+11/03/19 02:45:45 INFO lexinduct.FreqBinInductPreparer:  - Filtering source words: keeping those in dict [Dictionary [SeedDictionary] contains 19813 source language entries.] and occuring (10,5000) times and not in the stop word list ...
+11/03/19 02:45:45 INFO lexinduct.FreqBinInductPreparer:  - Filtered source classes: 10420
+11/03/19 02:45:45 INFO lexinduct.FreqBinInductPreparer:  - Selecting 3000 source candidates from 10 bins ...
+11/03/19 02:45:45 INFO lexinduct.FreqBinInductPreparer:  - Bin 0: counts between 1018.0 and 4994.0, average = 2158.0266666666666 and 300 source candidates ...
+11/03/19 02:45:46 INFO lexinduct.FreqBinInductPreparer:  - Bin 1: counts between 403.0 and 1015.0, average = 649.1766666666666 and 300 source candidates ...
+11/03/19 02:45:46 INFO lexinduct.FreqBinInductPreparer:  - Bin 2: counts between 207.0 and 401.0, average = 288.23 and 300 source candidates ...
+11/03/19 02:45:47 INFO lexinduct.FreqBinInductPreparer:  - Bin 3: counts between 114.0 and 206.0, average = 153.55666666666667 and 300 source candidates ...
+11/03/19 02:45:47 INFO lexinduct.FreqBinInductPreparer:  - Bin 4: counts between 69.0 and 114.0, average = 88.63 and 300 source candidates ...
+11/03/19 02:45:47 INFO lexinduct.FreqBinInductPreparer:  - Bin 5: counts between 45.0 and 69.0, average = 55.24666666666667 and 300 source candidates ...
+11/03/19 02:45:47 INFO lexinduct.FreqBinInductPreparer:  - Bin 6: counts between 30.0 and 45.0, average = 36.87 and 300 source candidates ...
+11/03/19 02:45:48 INFO lexinduct.FreqBinInductPreparer:  - Bin 7: counts between 21.0 and 30.0, average = 25.27 and 300 source candidates ...
+11/03/19 02:45:48 INFO lexinduct.FreqBinInductPreparer:  - Bin 8: counts between 15.0 and 21.0, average = 17.573333333333334 and 300 source candidates ...
+11/03/19 02:45:48 INFO lexinduct.FreqBinInductPreparer:  - Bin 9: counts between 11.0 and 15.0, average = 12.436666666666667 and 300 source candidates ...
+11/03/19 02:45:48 INFO lexinduct.FreqBinInductPreparer:  - Selected 3000 source candidates ...
+11/03/19 02:45:48 INFO lexinduct.FreqBinInductPreparer:  - Selecting target candidates ...
+11/03/19 02:45:48 INFO lexinduct.FreqBinInductPreparer:  - Filtering target words: keeping those occuring (10,2147483647) times and not in the stop word list ...
+11/03/19 02:45:48 INFO lexinduct.FreqBinInductPreparer:  - Filtered target classes: 21092
+11/03/19 02:45:48 INFO lexinduct.FreqBinInductPreparer:  - Selected 21092 target candidates ...
+11/03/19 02:45:48 INFO lexinduct.FreqBinInductPreparer:  - Filtering source contextual words: keeping those in dict [Dictionary [SeedDictionary] contains 19813 source language entries.] and occuring (-1,-1) times...
+11/03/19 02:45:48 INFO lexinduct.FreqBinInductPreparer:  - Filtered context source classes: 19813
+11/03/19 02:45:48 INFO lexinduct.FreqBinInductPreparer:  - Filtering target contextual words: keeping those in dict [Dictionary [SeedDictionary] contains 19813 source language entries.] and occuring (-1,-1) times...
+11/03/19 02:45:48 INFO lexinduct.FreqBinInductPreparer:  - Filtered context target classes: 20252
+11/03/19 02:45:48 INFO lexinduct.FreqBinInductPreparer:  - Collecting context and time phrase properties for 3000 source and 21092 target phrases  ...
+11/03/19 02:54:50 INFO lexinduct.FreqBinInductPreparer:  - Projecting and scoring source contextual items with babel.ranking.scorers.context.FungS1Scorer and time distributions with babel.ranking.scorers.timedistribution.TimeDistributionCosineScorer...
+11/03/19 02:54:53 INFO lexinduct.FreqBinInductPreparer:  - Scoring target contextual items with babel.ranking.scorers.context.FungS1Scorer and time distributions with babel.ranking.scorers.timedistribution.TimeDistributionCosineScorer...
+11/03/19 02:54:56 INFO lexinduct.FreqBinInductor:  --- Ranking candidates from bin 0 ---
+11/03/19 02:54:56 INFO lexinduct.FreqBinInductor:  - Ranking candidates using time...
+11/03/19 02:54:56 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 02:54:56 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 02:54:56 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 02:54:56 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 02:54:56 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 02:54:56 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 02:54:56 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 02:54:56 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 02:55:19 INFO ranking.Ranker: 5% done.
+11/03/19 02:55:26 INFO ranking.Ranker: 10% done.
+11/03/19 02:55:33 INFO ranking.Ranker: 15% done.
+11/03/19 02:55:40 INFO ranking.Ranker: 20% done.
+11/03/19 02:55:47 INFO ranking.Ranker: 25% done.
+11/03/19 02:55:54 INFO ranking.Ranker: 30% done.
+11/03/19 02:56:01 INFO ranking.Ranker: 35% done.
+11/03/19 02:56:09 INFO ranking.Ranker: 40% done.
+11/03/19 02:56:15 INFO ranking.Ranker: 45% done.
+11/03/19 02:56:23 INFO ranking.Ranker: 50% done.
+11/03/19 02:56:30 INFO ranking.Ranker: 55% done.
+11/03/19 02:56:36 INFO ranking.Ranker: 60% done.
+11/03/19 02:56:44 INFO ranking.Ranker: 65% done.
+11/03/19 02:56:51 INFO ranking.Ranker: 70% done.
+11/03/19 02:56:58 INFO ranking.Ranker: 75% done.
+11/03/19 02:57:05 INFO ranking.Ranker: 80% done.
+11/03/19 02:57:12 INFO ranking.Ranker: 85% done.
+11/03/19 02:57:19 INFO ranking.Ranker: 90% done.
+11/03/19 02:57:26 INFO ranking.Ranker: 95% done.
+11/03/19 02:57:30 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 02:57:30 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 02:57:30 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 02:57:31 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 02:57:32 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 02:57:32 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 02:57:33 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 02:57:33 INFO ranking.Ranker: 100% done.
+11/03/19 02:57:33 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 02:57:34 INFO lexinduct.FreqBinInductor: Ranking candidates using context...
+11/03/19 02:57:34 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 02:57:34 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 02:57:34 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 02:57:34 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 02:57:34 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 02:57:34 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 02:57:34 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 02:57:34 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 02:58:11 INFO ranking.Ranker: 5% done.
+11/03/19 02:58:49 INFO ranking.Ranker: 10% done.
+11/03/19 02:59:18 INFO ranking.Ranker: 15% done.
+11/03/19 02:59:48 INFO ranking.Ranker: 20% done.
+11/03/19 03:00:18 INFO ranking.Ranker: 25% done.
+11/03/19 03:00:52 INFO ranking.Ranker: 30% done.
+11/03/19 03:01:21 INFO ranking.Ranker: 35% done.
+11/03/19 03:01:50 INFO ranking.Ranker: 40% done.
+11/03/19 03:02:21 INFO ranking.Ranker: 45% done.
+11/03/19 03:02:52 INFO ranking.Ranker: 50% done.
+11/03/19 03:03:24 INFO ranking.Ranker: 55% done.
+11/03/19 03:03:56 INFO ranking.Ranker: 60% done.
+11/03/19 03:04:32 INFO ranking.Ranker: 65% done.
+11/03/19 03:05:04 INFO ranking.Ranker: 70% done.
+11/03/19 03:05:35 INFO ranking.Ranker: 75% done.
+11/03/19 03:06:04 INFO ranking.Ranker: 80% done.
+11/03/19 03:06:33 INFO ranking.Ranker: 85% done.
+11/03/19 03:07:04 INFO ranking.Ranker: 90% done.
+11/03/19 03:07:30 INFO ranking.Ranker: 95% done.
+11/03/19 03:07:47 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 03:07:49 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 03:07:50 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 03:07:51 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 03:07:52 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 03:07:57 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 03:07:59 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 03:08:04 INFO ranking.Ranker: 100% done.
+11/03/19 03:08:04 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 03:08:04 INFO lexinduct.FreqBinInductor: Aggregating (MRR) all rankings...
+11/03/19 03:08:05 INFO ranking.MRRAggregator: Aggregating 2 rankings.
+11/03/19 03:08:11 INFO lexinduct.FreqBinInductor:  --- Ranking candidates from bin 1 ---
+11/03/19 03:08:11 INFO lexinduct.FreqBinInductor:  - Ranking candidates using time...
+11/03/19 03:08:11 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 03:08:11 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 03:08:11 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 03:08:11 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 03:08:11 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 03:08:11 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 03:08:11 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 03:08:11 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 03:08:16 INFO ranking.Ranker: 5% done.
+11/03/19 03:08:21 INFO ranking.Ranker: 10% done.
+11/03/19 03:08:25 INFO ranking.Ranker: 15% done.
+11/03/19 03:08:29 INFO ranking.Ranker: 20% done.
+11/03/19 03:08:33 INFO ranking.Ranker: 25% done.
+11/03/19 03:08:37 INFO ranking.Ranker: 30% done.
+11/03/19 03:08:41 INFO ranking.Ranker: 35% done.
+11/03/19 03:08:46 INFO ranking.Ranker: 40% done.
+11/03/19 03:08:51 INFO ranking.Ranker: 45% done.
+11/03/19 03:08:55 INFO ranking.Ranker: 50% done.
+11/03/19 03:08:59 INFO ranking.Ranker: 55% done.
+11/03/19 03:09:03 INFO ranking.Ranker: 60% done.
+11/03/19 03:09:08 INFO ranking.Ranker: 65% done.
+11/03/19 03:09:12 INFO ranking.Ranker: 70% done.
+11/03/19 03:09:16 INFO ranking.Ranker: 75% done.
+11/03/19 03:09:21 INFO ranking.Ranker: 80% done.
+11/03/19 03:09:25 INFO ranking.Ranker: 85% done.
+11/03/19 03:09:29 INFO ranking.Ranker: 90% done.
+11/03/19 03:09:33 INFO ranking.Ranker: 95% done.
+11/03/19 03:09:36 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 03:09:36 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 03:09:37 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 03:09:37 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 03:09:37 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 03:09:38 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 03:09:38 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 03:09:38 INFO ranking.Ranker: 100% done.
+11/03/19 03:09:38 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 03:09:38 INFO lexinduct.FreqBinInductor: Ranking candidates using context...
+11/03/19 03:09:38 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 03:09:38 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 03:09:38 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 03:09:38 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 03:09:38 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 03:09:38 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 03:09:38 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 03:09:38 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 03:10:02 INFO ranking.Ranker: 5% done.
+11/03/19 03:10:20 INFO ranking.Ranker: 10% done.
+11/03/19 03:10:39 INFO ranking.Ranker: 15% done.
+11/03/19 03:10:55 INFO ranking.Ranker: 20% done.
+11/03/19 03:11:15 INFO ranking.Ranker: 25% done.
+11/03/19 03:11:33 INFO ranking.Ranker: 30% done.
+11/03/19 03:11:59 INFO ranking.Ranker: 35% done.
+11/03/19 03:12:17 INFO ranking.Ranker: 40% done.
+11/03/19 03:12:38 INFO ranking.Ranker: 45% done.
+11/03/19 03:12:57 INFO ranking.Ranker: 50% done.
+11/03/19 03:13:16 INFO ranking.Ranker: 55% done.
+11/03/19 03:13:37 INFO ranking.Ranker: 60% done.
+11/03/19 03:13:55 INFO ranking.Ranker: 65% done.
+11/03/19 03:14:14 INFO ranking.Ranker: 70% done.
+11/03/19 03:14:32 INFO ranking.Ranker: 75% done.
+11/03/19 03:14:51 INFO ranking.Ranker: 80% done.
+11/03/19 03:15:13 INFO ranking.Ranker: 85% done.
+11/03/19 03:15:32 INFO ranking.Ranker: 90% done.
+11/03/19 03:15:52 INFO ranking.Ranker: 95% done.
+11/03/19 03:16:03 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 03:16:03 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 03:16:05 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 03:16:06 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 03:16:08 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 03:16:09 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 03:16:09 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 03:16:10 INFO ranking.Ranker: 100% done.
+11/03/19 03:16:10 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 03:16:11 INFO lexinduct.FreqBinInductor: Aggregating (MRR) all rankings...
+11/03/19 03:16:11 INFO ranking.MRRAggregator: Aggregating 2 rankings.
+11/03/19 03:16:18 INFO lexinduct.FreqBinInductor:  --- Ranking candidates from bin 2 ---
+11/03/19 03:16:18 INFO lexinduct.FreqBinInductor:  - Ranking candidates using time...
+11/03/19 03:16:18 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 03:16:18 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 03:16:18 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 03:16:18 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 03:16:18 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 03:16:18 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 03:16:18 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 03:16:18 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 03:16:21 INFO ranking.Ranker: 5% done.
+11/03/19 03:16:24 INFO ranking.Ranker: 10% done.
+11/03/19 03:16:27 INFO ranking.Ranker: 15% done.
+11/03/19 03:16:31 INFO ranking.Ranker: 20% done.
+11/03/19 03:16:33 INFO ranking.Ranker: 25% done.
+11/03/19 03:16:36 INFO ranking.Ranker: 30% done.
+11/03/19 03:16:40 INFO ranking.Ranker: 35% done.
+11/03/19 03:16:42 INFO ranking.Ranker: 40% done.
+11/03/19 03:16:45 INFO ranking.Ranker: 45% done.
+11/03/19 03:16:48 INFO ranking.Ranker: 50% done.
+11/03/19 03:16:50 INFO ranking.Ranker: 55% done.
+11/03/19 03:16:54 INFO ranking.Ranker: 60% done.
+11/03/19 03:16:56 INFO ranking.Ranker: 65% done.
+11/03/19 03:16:59 INFO ranking.Ranker: 70% done.
+11/03/19 03:17:02 INFO ranking.Ranker: 75% done.
+11/03/19 03:17:05 INFO ranking.Ranker: 80% done.
+11/03/19 03:17:08 INFO ranking.Ranker: 85% done.
+11/03/19 03:17:11 INFO ranking.Ranker: 90% done.
+11/03/19 03:17:14 INFO ranking.Ranker: 95% done.
+11/03/19 03:17:15 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 03:17:15 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 03:17:16 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 03:17:16 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 03:17:16 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 03:17:16 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 03:17:16 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 03:17:16 INFO ranking.Ranker: 100% done.
+11/03/19 03:17:16 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 03:17:17 INFO lexinduct.FreqBinInductor: Ranking candidates using context...
+11/03/19 03:17:17 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 03:17:17 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 03:17:17 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 03:17:17 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 03:17:17 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 03:17:17 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 03:17:17 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 03:17:17 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 03:17:36 INFO ranking.Ranker: 5% done.
+11/03/19 03:17:53 INFO ranking.Ranker: 10% done.
+11/03/19 03:18:06 INFO ranking.Ranker: 15% done.
+11/03/19 03:18:21 INFO ranking.Ranker: 20% done.
+11/03/19 03:18:38 INFO ranking.Ranker: 25% done.
+11/03/19 03:18:56 INFO ranking.Ranker: 30% done.
+11/03/19 03:19:14 INFO ranking.Ranker: 35% done.
+11/03/19 03:19:29 INFO ranking.Ranker: 40% done.
+11/03/19 03:19:44 INFO ranking.Ranker: 45% done.
+11/03/19 03:20:00 INFO ranking.Ranker: 50% done.
+11/03/19 03:20:18 INFO ranking.Ranker: 55% done.
+11/03/19 03:20:33 INFO ranking.Ranker: 60% done.
+11/03/19 03:20:51 INFO ranking.Ranker: 65% done.
+11/03/19 03:21:04 INFO ranking.Ranker: 70% done.
+11/03/19 03:21:19 INFO ranking.Ranker: 75% done.
+11/03/19 03:21:33 INFO ranking.Ranker: 80% done.
+11/03/19 03:21:47 INFO ranking.Ranker: 85% done.
+11/03/19 03:22:02 INFO ranking.Ranker: 90% done.
+11/03/19 03:22:18 INFO ranking.Ranker: 95% done.
+11/03/19 03:22:25 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 03:22:26 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 03:22:27 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 03:22:28 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 03:22:28 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 03:22:30 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 03:22:31 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 03:22:32 INFO ranking.Ranker: 100% done.
+11/03/19 03:22:32 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 03:22:33 INFO lexinduct.FreqBinInductor: Aggregating (MRR) all rankings...
+11/03/19 03:22:33 INFO ranking.MRRAggregator: Aggregating 2 rankings.
+11/03/19 03:22:40 INFO lexinduct.FreqBinInductor:  --- Ranking candidates from bin 3 ---
+11/03/19 03:22:40 INFO lexinduct.FreqBinInductor:  - Ranking candidates using time...
+11/03/19 03:22:40 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 03:22:40 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 03:22:40 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 03:22:40 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 03:22:40 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 03:22:40 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 03:22:40 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 03:22:40 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 03:22:42 INFO ranking.Ranker: 5% done.
+11/03/19 03:22:44 INFO ranking.Ranker: 10% done.
+11/03/19 03:22:46 INFO ranking.Ranker: 15% done.
+11/03/19 03:22:48 INFO ranking.Ranker: 20% done.
+11/03/19 03:22:49 INFO ranking.Ranker: 25% done.
+11/03/19 03:22:51 INFO ranking.Ranker: 30% done.
+11/03/19 03:22:53 INFO ranking.Ranker: 35% done.
+11/03/19 03:22:55 INFO ranking.Ranker: 40% done.
+11/03/19 03:22:57 INFO ranking.Ranker: 45% done.
+11/03/19 03:22:59 INFO ranking.Ranker: 50% done.
+11/03/19 03:23:01 INFO ranking.Ranker: 55% done.
+11/03/19 03:23:03 INFO ranking.Ranker: 60% done.
+11/03/19 03:23:05 INFO ranking.Ranker: 65% done.
+11/03/19 03:23:07 INFO ranking.Ranker: 70% done.
+11/03/19 03:23:09 INFO ranking.Ranker: 75% done.
+11/03/19 03:23:11 INFO ranking.Ranker: 80% done.
+11/03/19 03:23:13 INFO ranking.Ranker: 85% done.
+11/03/19 03:23:15 INFO ranking.Ranker: 90% done.
+11/03/19 03:23:16 INFO ranking.Ranker: 95% done.
+11/03/19 03:23:17 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 03:23:18 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 03:23:18 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 03:23:18 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 03:23:18 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 03:23:18 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 03:23:18 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 03:23:18 INFO ranking.Ranker: 100% done.
+11/03/19 03:23:18 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 03:23:19 INFO lexinduct.FreqBinInductor: Ranking candidates using context...
+11/03/19 03:23:19 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 03:23:19 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 03:23:19 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 03:23:19 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 03:23:19 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 03:23:19 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 03:23:19 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 03:23:19 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 03:23:33 INFO ranking.Ranker: 5% done.
+11/03/19 03:23:42 INFO ranking.Ranker: 10% done.
+11/03/19 03:23:53 INFO ranking.Ranker: 15% done.
+11/03/19 03:24:06 INFO ranking.Ranker: 20% done.
+11/03/19 03:24:16 INFO ranking.Ranker: 25% done.
+11/03/19 03:24:30 INFO ranking.Ranker: 30% done.
+11/03/19 03:24:42 INFO ranking.Ranker: 35% done.
+11/03/19 03:24:54 INFO ranking.Ranker: 40% done.
+11/03/19 03:25:04 INFO ranking.Ranker: 45% done.
+11/03/19 03:25:17 INFO ranking.Ranker: 50% done.
+11/03/19 03:25:30 INFO ranking.Ranker: 55% done.
+11/03/19 03:25:41 INFO ranking.Ranker: 60% done.
+11/03/19 03:25:53 INFO ranking.Ranker: 65% done.
+11/03/19 03:26:05 INFO ranking.Ranker: 70% done.
+11/03/19 03:26:17 INFO ranking.Ranker: 75% done.
+11/03/19 03:26:29 INFO ranking.Ranker: 80% done.
+11/03/19 03:26:39 INFO ranking.Ranker: 85% done.
+11/03/19 03:26:51 INFO ranking.Ranker: 90% done.
+11/03/19 03:27:03 INFO ranking.Ranker: 95% done.
+11/03/19 03:27:10 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 03:27:10 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 03:27:11 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 03:27:11 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 03:27:13 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 03:27:14 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 03:27:15 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 03:27:16 INFO ranking.Ranker: 100% done.
+11/03/19 03:27:16 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 03:27:17 INFO lexinduct.FreqBinInductor: Aggregating (MRR) all rankings...
+11/03/19 03:27:17 INFO ranking.MRRAggregator: Aggregating 2 rankings.
+11/03/19 03:27:23 INFO lexinduct.FreqBinInductor:  --- Ranking candidates from bin 4 ---
+11/03/19 03:27:23 INFO lexinduct.FreqBinInductor:  - Ranking candidates using time...
+11/03/19 03:27:23 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 03:27:23 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 03:27:23 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 03:27:23 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 03:27:23 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 03:27:23 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 03:27:23 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 03:27:23 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 03:27:25 INFO ranking.Ranker: 5% done.
+11/03/19 03:27:26 INFO ranking.Ranker: 10% done.
+11/03/19 03:27:28 INFO ranking.Ranker: 15% done.
+11/03/19 03:27:29 INFO ranking.Ranker: 20% done.
+11/03/19 03:27:31 INFO ranking.Ranker: 25% done.
+11/03/19 03:27:32 INFO ranking.Ranker: 30% done.
+11/03/19 03:27:33 INFO ranking.Ranker: 35% done.
+11/03/19 03:27:35 INFO ranking.Ranker: 40% done.
+11/03/19 03:27:36 INFO ranking.Ranker: 45% done.
+11/03/19 03:27:37 INFO ranking.Ranker: 50% done.
+11/03/19 03:27:39 INFO ranking.Ranker: 55% done.
+11/03/19 03:27:40 INFO ranking.Ranker: 60% done.
+11/03/19 03:27:42 INFO ranking.Ranker: 65% done.
+11/03/19 03:27:43 INFO ranking.Ranker: 70% done.
+11/03/19 03:27:45 INFO ranking.Ranker: 75% done.
+11/03/19 03:27:46 INFO ranking.Ranker: 80% done.
+11/03/19 03:27:48 INFO ranking.Ranker: 85% done.
+11/03/19 03:27:49 INFO ranking.Ranker: 90% done.
+11/03/19 03:27:50 INFO ranking.Ranker: 95% done.
+11/03/19 03:27:51 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 03:27:51 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 03:27:51 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 03:27:51 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 03:27:51 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 03:27:51 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 03:27:51 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 03:27:52 INFO ranking.Ranker: 100% done.
+11/03/19 03:27:52 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 03:27:52 INFO lexinduct.FreqBinInductor: Ranking candidates using context...
+11/03/19 03:27:52 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 03:27:52 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 03:27:52 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 03:27:52 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 03:27:52 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 03:27:52 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 03:27:52 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 03:27:52 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 03:28:03 INFO ranking.Ranker: 5% done.
+11/03/19 03:28:12 INFO ranking.Ranker: 10% done.
+11/03/19 03:28:22 INFO ranking.Ranker: 15% done.
+11/03/19 03:28:32 INFO ranking.Ranker: 20% done.
+11/03/19 03:28:43 INFO ranking.Ranker: 25% done.
+11/03/19 03:28:52 INFO ranking.Ranker: 30% done.
+11/03/19 03:29:03 INFO ranking.Ranker: 35% done.
+11/03/19 03:29:12 INFO ranking.Ranker: 40% done.
+11/03/19 03:29:20 INFO ranking.Ranker: 45% done.
+11/03/19 03:29:28 INFO ranking.Ranker: 50% done.
+11/03/19 03:29:36 INFO ranking.Ranker: 55% done.
+11/03/19 03:29:45 INFO ranking.Ranker: 60% done.
+11/03/19 03:29:53 INFO ranking.Ranker: 65% done.
+11/03/19 03:30:00 INFO ranking.Ranker: 70% done.
+11/03/19 03:30:09 INFO ranking.Ranker: 75% done.
+11/03/19 03:30:18 INFO ranking.Ranker: 80% done.
+11/03/19 03:30:26 INFO ranking.Ranker: 85% done.
+11/03/19 03:30:33 INFO ranking.Ranker: 90% done.
+11/03/19 03:30:42 INFO ranking.Ranker: 95% done.
+11/03/19 03:30:47 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 03:30:47 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 03:30:47 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 03:30:49 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 03:30:49 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 03:30:49 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 03:30:49 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 03:30:50 INFO ranking.Ranker: 100% done.
+11/03/19 03:30:50 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 03:30:50 INFO lexinduct.FreqBinInductor: Aggregating (MRR) all rankings...
+11/03/19 03:30:50 INFO ranking.MRRAggregator: Aggregating 2 rankings.
+11/03/19 03:30:56 INFO lexinduct.FreqBinInductor:  --- Ranking candidates from bin 5 ---
+11/03/19 03:30:56 INFO lexinduct.FreqBinInductor:  - Ranking candidates using time...
+11/03/19 03:30:56 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 03:30:56 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 03:30:56 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 03:30:56 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 03:30:56 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 03:30:56 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 03:30:56 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 03:30:56 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 03:30:56 INFO ranking.Ranker: 5% done.
+11/03/19 03:30:57 INFO ranking.Ranker: 10% done.
+11/03/19 03:30:58 INFO ranking.Ranker: 15% done.
+11/03/19 03:30:59 INFO ranking.Ranker: 20% done.
+11/03/19 03:31:00 INFO ranking.Ranker: 25% done.
+11/03/19 03:31:01 INFO ranking.Ranker: 30% done.
+11/03/19 03:31:01 INFO ranking.Ranker: 35% done.
+11/03/19 03:31:02 INFO ranking.Ranker: 40% done.
+11/03/19 03:31:03 INFO ranking.Ranker: 45% done.
+11/03/19 03:31:04 INFO ranking.Ranker: 50% done.
+11/03/19 03:31:05 INFO ranking.Ranker: 55% done.
+11/03/19 03:31:06 INFO ranking.Ranker: 60% done.
+11/03/19 03:31:06 INFO ranking.Ranker: 65% done.
+11/03/19 03:31:07 INFO ranking.Ranker: 70% done.
+11/03/19 03:31:08 INFO ranking.Ranker: 75% done.
+11/03/19 03:31:09 INFO ranking.Ranker: 80% done.
+11/03/19 03:31:10 INFO ranking.Ranker: 85% done.
+11/03/19 03:31:11 INFO ranking.Ranker: 90% done.
+11/03/19 03:31:12 INFO ranking.Ranker: 95% done.
+11/03/19 03:31:12 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 03:31:12 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 03:31:12 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 03:31:12 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 03:31:12 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 03:31:12 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 03:31:12 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 03:31:12 INFO ranking.Ranker: 100% done.
+11/03/19 03:31:12 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 03:31:13 INFO lexinduct.FreqBinInductor: Ranking candidates using context...
+11/03/19 03:31:13 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 03:31:13 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 03:31:13 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 03:31:13 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 03:31:13 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 03:31:13 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 03:31:13 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 03:31:13 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 03:31:20 INFO ranking.Ranker: 5% done.
+11/03/19 03:31:28 INFO ranking.Ranker: 10% done.
+11/03/19 03:31:35 INFO ranking.Ranker: 15% done.
+11/03/19 03:31:42 INFO ranking.Ranker: 20% done.
+11/03/19 03:31:48 INFO ranking.Ranker: 25% done.
+11/03/19 03:31:56 INFO ranking.Ranker: 30% done.
+11/03/19 03:32:03 INFO ranking.Ranker: 35% done.
+11/03/19 03:32:10 INFO ranking.Ranker: 40% done.
+11/03/19 03:32:18 INFO ranking.Ranker: 45% done.
+11/03/19 03:32:24 INFO ranking.Ranker: 50% done.
+11/03/19 03:32:32 INFO ranking.Ranker: 55% done.
+11/03/19 03:32:39 INFO ranking.Ranker: 60% done.
+11/03/19 03:32:45 INFO ranking.Ranker: 65% done.
+11/03/19 03:32:53 INFO ranking.Ranker: 70% done.
+11/03/19 03:33:01 INFO ranking.Ranker: 75% done.
+11/03/19 03:33:08 INFO ranking.Ranker: 80% done.
+11/03/19 03:33:15 INFO ranking.Ranker: 85% done.
+11/03/19 03:33:22 INFO ranking.Ranker: 90% done.
+11/03/19 03:33:30 INFO ranking.Ranker: 95% done.
+11/03/19 03:33:34 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 03:33:34 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 03:33:35 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 03:33:36 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 03:33:36 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 03:33:36 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 03:33:37 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 03:33:37 INFO ranking.Ranker: 100% done.
+11/03/19 03:33:37 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 03:33:37 INFO lexinduct.FreqBinInductor: Aggregating (MRR) all rankings...
+11/03/19 03:33:37 INFO ranking.MRRAggregator: Aggregating 2 rankings.
+11/03/19 03:33:42 INFO lexinduct.FreqBinInductor:  --- Ranking candidates from bin 6 ---
+11/03/19 03:33:42 INFO lexinduct.FreqBinInductor:  - Ranking candidates using time...
+11/03/19 03:33:42 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 03:33:42 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 03:33:42 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 03:33:42 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 03:33:42 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 03:33:42 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 03:33:42 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 03:33:42 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 03:33:43 INFO ranking.Ranker: 5% done.
+11/03/19 03:33:44 INFO ranking.Ranker: 10% done.
+11/03/19 03:33:44 INFO ranking.Ranker: 15% done.
+11/03/19 03:33:45 INFO ranking.Ranker: 20% done.
+11/03/19 03:33:46 INFO ranking.Ranker: 25% done.
+11/03/19 03:33:46 INFO ranking.Ranker: 30% done.
+11/03/19 03:33:47 INFO ranking.Ranker: 35% done.
+11/03/19 03:33:48 INFO ranking.Ranker: 40% done.
+11/03/19 03:33:48 INFO ranking.Ranker: 45% done.
+11/03/19 03:33:49 INFO ranking.Ranker: 50% done.
+11/03/19 03:33:50 INFO ranking.Ranker: 55% done.
+11/03/19 03:33:50 INFO ranking.Ranker: 60% done.
+11/03/19 03:33:51 INFO ranking.Ranker: 65% done.
+11/03/19 03:33:51 INFO ranking.Ranker: 70% done.
+11/03/19 03:33:52 INFO ranking.Ranker: 75% done.
+11/03/19 03:33:53 INFO ranking.Ranker: 80% done.
+11/03/19 03:33:53 INFO ranking.Ranker: 85% done.
+11/03/19 03:33:54 INFO ranking.Ranker: 90% done.
+11/03/19 03:33:54 INFO ranking.Ranker: 95% done.
+11/03/19 03:33:55 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 03:33:55 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 03:33:55 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 03:33:55 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 03:33:55 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 03:33:55 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 03:33:55 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 03:33:55 INFO ranking.Ranker: 100% done.
+11/03/19 03:33:55 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 03:33:56 INFO lexinduct.FreqBinInductor: Ranking candidates using context...
+11/03/19 03:33:56 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 03:33:56 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 03:33:56 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 03:33:56 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 03:33:56 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 03:33:56 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 03:33:56 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 03:33:56 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 03:34:03 INFO ranking.Ranker: 5% done.
+11/03/19 03:34:10 INFO ranking.Ranker: 10% done.
+11/03/19 03:34:16 INFO ranking.Ranker: 15% done.
+11/03/19 03:34:22 INFO ranking.Ranker: 20% done.
+11/03/19 03:34:29 INFO ranking.Ranker: 25% done.
+11/03/19 03:34:35 INFO ranking.Ranker: 30% done.
+11/03/19 03:34:40 INFO ranking.Ranker: 35% done.
+11/03/19 03:34:47 INFO ranking.Ranker: 40% done.
+11/03/19 03:34:53 INFO ranking.Ranker: 45% done.
+11/03/19 03:35:00 INFO ranking.Ranker: 50% done.
+11/03/19 03:35:07 INFO ranking.Ranker: 55% done.
+11/03/19 03:35:13 INFO ranking.Ranker: 60% done.
+11/03/19 03:35:20 INFO ranking.Ranker: 65% done.
+11/03/19 03:35:26 INFO ranking.Ranker: 70% done.
+11/03/19 03:35:31 INFO ranking.Ranker: 75% done.
+11/03/19 03:35:38 INFO ranking.Ranker: 80% done.
+11/03/19 03:35:45 INFO ranking.Ranker: 85% done.
+11/03/19 03:35:51 INFO ranking.Ranker: 90% done.
+11/03/19 03:35:58 INFO ranking.Ranker: 95% done.
+11/03/19 03:36:01 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 03:36:01 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 03:36:01 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 03:36:01 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 03:36:02 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 03:36:02 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 03:36:04 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 03:36:05 INFO ranking.Ranker: 100% done.
+11/03/19 03:36:05 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 03:36:05 INFO lexinduct.FreqBinInductor: Aggregating (MRR) all rankings...
+11/03/19 03:36:05 INFO ranking.MRRAggregator: Aggregating 2 rankings.
+11/03/19 03:36:10 INFO lexinduct.FreqBinInductor:  --- Ranking candidates from bin 7 ---
+11/03/19 03:36:10 INFO lexinduct.FreqBinInductor:  - Ranking candidates using time...
+11/03/19 03:36:10 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 03:36:10 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 03:36:10 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 03:36:10 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 03:36:10 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 03:36:10 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 03:36:10 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 03:36:10 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 03:36:11 INFO ranking.Ranker: 5% done.
+11/03/19 03:36:11 INFO ranking.Ranker: 10% done.
+11/03/19 03:36:12 INFO ranking.Ranker: 15% done.
+11/03/19 03:36:12 INFO ranking.Ranker: 20% done.
+11/03/19 03:36:13 INFO ranking.Ranker: 25% done.
+11/03/19 03:36:13 INFO ranking.Ranker: 30% done.
+11/03/19 03:36:14 INFO ranking.Ranker: 35% done.
+11/03/19 03:36:14 INFO ranking.Ranker: 40% done.
+11/03/19 03:36:15 INFO ranking.Ranker: 45% done.
+11/03/19 03:36:15 INFO ranking.Ranker: 50% done.
+11/03/19 03:36:16 INFO ranking.Ranker: 55% done.
+11/03/19 03:36:16 INFO ranking.Ranker: 60% done.
+11/03/19 03:36:17 INFO ranking.Ranker: 65% done.
+11/03/19 03:36:17 INFO ranking.Ranker: 70% done.
+11/03/19 03:36:17 INFO ranking.Ranker: 75% done.
+11/03/19 03:36:18 INFO ranking.Ranker: 80% done.
+11/03/19 03:36:18 INFO ranking.Ranker: 85% done.
+11/03/19 03:36:19 INFO ranking.Ranker: 90% done.
+11/03/19 03:36:19 INFO ranking.Ranker: 95% done.
+11/03/19 03:36:20 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 03:36:20 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 03:36:20 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 03:36:20 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 03:36:20 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 03:36:20 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 03:36:20 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 03:36:20 INFO ranking.Ranker: 100% done.
+11/03/19 03:36:20 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 03:36:20 INFO lexinduct.FreqBinInductor: Ranking candidates using context...
+11/03/19 03:36:20 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 03:36:20 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 03:36:20 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 03:36:20 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 03:36:20 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 03:36:20 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 03:36:20 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 03:36:20 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 03:36:27 INFO ranking.Ranker: 5% done.
+11/03/19 03:36:34 INFO ranking.Ranker: 10% done.
+11/03/19 03:36:39 INFO ranking.Ranker: 15% done.
+11/03/19 03:36:45 INFO ranking.Ranker: 20% done.
+11/03/19 03:36:51 INFO ranking.Ranker: 25% done.
+11/03/19 03:36:57 INFO ranking.Ranker: 30% done.
+11/03/19 03:37:03 INFO ranking.Ranker: 35% done.
+11/03/19 03:37:09 INFO ranking.Ranker: 40% done.
+11/03/19 03:37:14 INFO ranking.Ranker: 45% done.
+11/03/19 03:37:21 INFO ranking.Ranker: 50% done.
+11/03/19 03:37:26 INFO ranking.Ranker: 55% done.
+11/03/19 03:37:32 INFO ranking.Ranker: 60% done.
+11/03/19 03:37:37 INFO ranking.Ranker: 65% done.
+11/03/19 03:37:43 INFO ranking.Ranker: 70% done.
+11/03/19 03:37:49 INFO ranking.Ranker: 75% done.
+11/03/19 03:37:55 INFO ranking.Ranker: 80% done.
+11/03/19 03:38:00 INFO ranking.Ranker: 85% done.
+11/03/19 03:38:06 INFO ranking.Ranker: 90% done.
+11/03/19 03:38:12 INFO ranking.Ranker: 95% done.
+11/03/19 03:38:15 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 03:38:15 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 03:38:16 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 03:38:16 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 03:38:16 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 03:38:17 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 03:38:17 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 03:38:18 INFO ranking.Ranker: 100% done.
+11/03/19 03:38:18 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 03:38:18 INFO lexinduct.FreqBinInductor: Aggregating (MRR) all rankings...
+11/03/19 03:38:18 INFO ranking.MRRAggregator: Aggregating 2 rankings.
+11/03/19 03:38:23 INFO lexinduct.FreqBinInductor:  --- Ranking candidates from bin 8 ---
+11/03/19 03:38:23 INFO lexinduct.FreqBinInductor:  - Ranking candidates using time...
+11/03/19 03:38:23 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 03:38:23 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 03:38:23 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 03:38:23 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 03:38:23 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 03:38:23 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 03:38:23 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 03:38:23 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 03:38:23 INFO ranking.Ranker: 5% done.
+11/03/19 03:38:24 INFO ranking.Ranker: 10% done.
+11/03/19 03:38:24 INFO ranking.Ranker: 15% done.
+11/03/19 03:38:24 INFO ranking.Ranker: 20% done.
+11/03/19 03:38:25 INFO ranking.Ranker: 25% done.
+11/03/19 03:38:25 INFO ranking.Ranker: 30% done.
+11/03/19 03:38:26 INFO ranking.Ranker: 35% done.
+11/03/19 03:38:26 INFO ranking.Ranker: 40% done.
+11/03/19 03:38:26 INFO ranking.Ranker: 45% done.
+11/03/19 03:38:27 INFO ranking.Ranker: 50% done.
+11/03/19 03:38:27 INFO ranking.Ranker: 55% done.
+11/03/19 03:38:27 INFO ranking.Ranker: 60% done.
+11/03/19 03:38:28 INFO ranking.Ranker: 65% done.
+11/03/19 03:38:28 INFO ranking.Ranker: 70% done.
+11/03/19 03:38:29 INFO ranking.Ranker: 75% done.
+11/03/19 03:38:29 INFO ranking.Ranker: 80% done.
+11/03/19 03:38:29 INFO ranking.Ranker: 85% done.
+11/03/19 03:38:30 INFO ranking.Ranker: 90% done.
+11/03/19 03:38:30 INFO ranking.Ranker: 95% done.
+11/03/19 03:38:30 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 03:38:30 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 03:38:30 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 03:38:30 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 03:38:30 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 03:38:30 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 03:38:30 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 03:38:31 INFO ranking.Ranker: 100% done.
+11/03/19 03:38:31 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 03:38:31 INFO lexinduct.FreqBinInductor: Ranking candidates using context...
+11/03/19 03:38:31 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 03:38:31 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 03:38:31 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 03:38:31 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 03:38:31 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 03:38:31 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 03:38:31 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 03:38:31 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 03:38:37 INFO ranking.Ranker: 5% done.
+11/03/19 03:38:44 INFO ranking.Ranker: 10% done.
+11/03/19 03:38:49 INFO ranking.Ranker: 15% done.
+11/03/19 03:38:54 INFO ranking.Ranker: 20% done.
+11/03/19 03:38:59 INFO ranking.Ranker: 25% done.
+11/03/19 03:39:05 INFO ranking.Ranker: 30% done.
+11/03/19 03:39:10 INFO ranking.Ranker: 35% done.
+11/03/19 03:39:16 INFO ranking.Ranker: 40% done.
+11/03/19 03:39:32 INFO ranking.Ranker: 45% done.
+11/03/19 03:39:38 INFO ranking.Ranker: 50% done.
+11/03/19 03:39:44 INFO ranking.Ranker: 55% done.
+11/03/19 03:39:50 INFO ranking.Ranker: 60% done.
+11/03/19 03:39:54 INFO ranking.Ranker: 65% done.
+11/03/19 03:40:00 INFO ranking.Ranker: 70% done.
+11/03/19 03:40:06 INFO ranking.Ranker: 75% done.
+11/03/19 03:40:11 INFO ranking.Ranker: 80% done.
+11/03/19 03:40:16 INFO ranking.Ranker: 85% done.
+11/03/19 03:40:22 INFO ranking.Ranker: 90% done.
+11/03/19 03:40:28 INFO ranking.Ranker: 95% done.
+11/03/19 03:40:31 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 03:40:31 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 03:40:32 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 03:40:32 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 03:40:32 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 03:40:33 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 03:40:33 INFO ranking.Ranker: 100% done.
+11/03/19 03:40:33 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 03:40:33 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 03:40:33 INFO lexinduct.FreqBinInductor: Aggregating (MRR) all rankings...
+11/03/19 03:40:33 INFO ranking.MRRAggregator: Aggregating 2 rankings.
+11/03/19 03:40:38 INFO lexinduct.FreqBinInductor:  --- Ranking candidates from bin 9 ---
+11/03/19 03:40:38 INFO lexinduct.FreqBinInductor:  - Ranking candidates using time...
+11/03/19 03:40:38 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 03:40:38 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 03:40:38 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 03:40:38 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 03:40:38 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 03:40:38 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 03:40:38 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 03:40:38 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 03:40:38 INFO ranking.Ranker: 5% done.
+11/03/19 03:40:38 INFO ranking.Ranker: 10% done.
+11/03/19 03:40:39 INFO ranking.Ranker: 15% done.
+11/03/19 03:40:39 INFO ranking.Ranker: 20% done.
+11/03/19 03:40:39 INFO ranking.Ranker: 25% done.
+11/03/19 03:40:40 INFO ranking.Ranker: 30% done.
+11/03/19 03:40:40 INFO ranking.Ranker: 35% done.
+11/03/19 03:40:40 INFO ranking.Ranker: 40% done.
+11/03/19 03:40:41 INFO ranking.Ranker: 45% done.
+11/03/19 03:40:41 INFO ranking.Ranker: 50% done.
+11/03/19 03:40:41 INFO ranking.Ranker: 55% done.
+11/03/19 03:40:42 INFO ranking.Ranker: 60% done.
+11/03/19 03:40:42 INFO ranking.Ranker: 65% done.
+11/03/19 03:40:42 INFO ranking.Ranker: 70% done.
+11/03/19 03:40:43 INFO ranking.Ranker: 75% done.
+11/03/19 03:40:43 INFO ranking.Ranker: 80% done.
+11/03/19 03:40:43 INFO ranking.Ranker: 85% done.
+11/03/19 03:40:44 INFO ranking.Ranker: 90% done.
+11/03/19 03:40:44 INFO ranking.Ranker: 95% done.
+11/03/19 03:40:44 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 03:40:44 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 03:40:44 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 03:40:44 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 03:40:44 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 03:40:44 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 03:40:44 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 03:40:44 INFO ranking.Ranker: 100% done.
+11/03/19 03:40:44 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 03:40:45 INFO lexinduct.FreqBinInductor: Ranking candidates using context...
+11/03/19 03:40:45 INFO ranking.Ranker: Worker 0 started collecting rankings.
+11/03/19 03:40:45 INFO ranking.Ranker: Worker 1 started collecting rankings.
+11/03/19 03:40:45 INFO ranking.Ranker: Worker 6 started collecting rankings.
+11/03/19 03:40:45 INFO ranking.Ranker: Worker 2 started collecting rankings.
+11/03/19 03:40:45 INFO ranking.Ranker: Worker 7 started collecting rankings.
+11/03/19 03:40:45 INFO ranking.Ranker: Worker 3 started collecting rankings.
+11/03/19 03:40:45 INFO ranking.Ranker: Worker 4 started collecting rankings.
+11/03/19 03:40:45 INFO ranking.Ranker: Worker 5 started collecting rankings.
+11/03/19 03:40:50 INFO ranking.Ranker: 5% done.
+11/03/19 03:40:56 INFO ranking.Ranker: 10% done.
+11/03/19 03:41:02 INFO ranking.Ranker: 15% done.
+11/03/19 03:41:07 INFO ranking.Ranker: 20% done.
+11/03/19 03:41:13 INFO ranking.Ranker: 25% done.
+11/03/19 03:41:18 INFO ranking.Ranker: 30% done.
+11/03/19 03:41:24 INFO ranking.Ranker: 35% done.
+11/03/19 03:41:29 INFO ranking.Ranker: 40% done.
+11/03/19 03:41:33 INFO ranking.Ranker: 45% done.
+11/03/19 03:41:39 INFO ranking.Ranker: 50% done.
+11/03/19 03:41:45 INFO ranking.Ranker: 55% done.
+11/03/19 03:41:50 INFO ranking.Ranker: 60% done.
+11/03/19 03:41:56 INFO ranking.Ranker: 65% done.
+11/03/19 03:42:01 INFO ranking.Ranker: 70% done.
+11/03/19 03:42:07 INFO ranking.Ranker: 75% done.
+11/03/19 03:42:12 INFO ranking.Ranker: 80% done.
+11/03/19 03:42:17 INFO ranking.Ranker: 85% done.
+11/03/19 03:42:23 INFO ranking.Ranker: 90% done.
+11/03/19 03:42:28 INFO ranking.Ranker: 95% done.
+11/03/19 03:42:31 INFO ranking.Ranker: Worker 3 finished.
+11/03/19 03:42:31 INFO ranking.Ranker: Worker 0 finished.
+11/03/19 03:42:31 INFO ranking.Ranker: Worker 5 finished.
+11/03/19 03:42:32 INFO ranking.Ranker: Worker 7 finished.
+11/03/19 03:42:32 INFO ranking.Ranker: Worker 4 finished.
+11/03/19 03:42:32 INFO ranking.Ranker: Worker 2 finished.
+11/03/19 03:42:32 INFO ranking.Ranker: Worker 6 finished.
+11/03/19 03:42:32 INFO ranking.Ranker: 100% done.
+11/03/19 03:42:32 INFO ranking.Ranker: Worker 1 finished.
+11/03/19 03:42:33 INFO lexinduct.FreqBinInductor: Aggregating (MRR) all rankings...
+11/03/19 03:42:33 INFO ranking.MRRAggregator: Aggregating 2 rankings.
+11/03/19 03:42:37 INFO lexinduct.FreqBinInductor: --- Done ---
