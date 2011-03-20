@@ -385,6 +385,16 @@ We use the Moses SMT toolkit \cite{Moses} and a language model trained on the En
 
 We begin with a series of lesion experiments in which we drop feature functions estimated from parallel data.  We then add equivalent but monolingually estimated features in reverse order to see how much of the lost performance can be regained.  \figref{fig:lesionreplacement} gives all of the results, which are explained below. Finally, we move on to phrase table induction experiments.
 
+\begin{figure*}[t]
+%\vskip 0.1in
+\begin{center}
+\includegraphics[width=\linewidth]{../figures/lesionreplacement/lesionreplacementlegend.pdf}
+\caption{Contributions of individual features derived from parallel texts (experiments 1-4) and their monolingual equivalents (experiments 5-9) to overall system performance in Spanish-English experiments.  Over 70\% of lost performance can be recovered with monolingual features alone.  Moreover, when added alongside the features derived from parallel data, monolingual features account for for over 1 BLEU point gain (experiment 10).}
+\label{fig:lesionreplacement}
+\end{center}
+\vskip -0.2in
+\end{figure*}
+
 \subsection{Lesion experiments (Experiments 1-4)}  \label{sect:exp:lesions}
 
 We begin with a series of experiments where we remove individual features derived from an aligned bitext in order to get a sense of their relative contributions to the overall system performance on the English-Spanish language pair (see \figref{fig:lesionreplacement}). When both phrase and orientation features are derived from word alignments ({\bf B/B}, the standard features functions defined in \secref{sect:bckg:smt}), the system reaches 21.87 BLEU.  Next we replace orientation features with random values ({\bf B/--}) and drop phrase features ({\bf --/B}).  While phrase table features account for a substantial performance difference (9 BLEU points), dropping orientation features affects the system score relatively little.  This is not surprising, since the word order is generally preserved in Spanish to English translations.  Finally, both dropping phrase scores and replacing orientation features with random values ({\bf --/--}) results in 5.5 BLEU, a 16.4 point drop.
@@ -398,19 +408,14 @@ We perform an additional experiment to determine whether there is any informatio
 
 \subsection{Truly independent monolingual corpora} \label{sect:exp:indep}
 
-\todop{Alex}{Add Urdu experiment / translation examples.  Remove the Spanish crawl experiment.}
+We now turn to estimating monolingual features from truly independent monolingual corpora we collected from web crawls for a pair of unrelated languages, Urdu and English.  While we cannot recover as much of the lost performance (see \figref{fig:urdu}) as we did in the idealized setup of the Spanish-English experiments, the monolingual features are certainly informative and take us a long way toward inducing a reasonable model.  Monolingual corpora is a much more plentiful resource then parallel data, and we expect system performance to improve further with more available data.
 
-In a final experiment, instead of estimating the monolingual scores from two sides of a parallel corpus, an idealized case, we use truly monolingual data from web crawls. In this experiment, we estimate phrasal monolingual scores, lexical monolingual scores, and orientation features all from the crawled data and achieve 13.49 BLEU on the same Spanish to English test set. This is comparable to the 17.08 BLEU achieved when using the same feature set and estimating scores using parallel data. This is expected since the distribution of words across languages is no longer identical. We would expect better performance with larger and more comparable monolingual corpora.  %So, although there is a significant drop in performance when we move to using strictly monolingual corpora, performance is much higher than including no phrase table features at all. In the future we plan to perform additional experiments to explore how to best take advantage of truly monolingual resources.
+\begin{figure}[t]
+\includegraphics[width=\linewidth]{../figures/urdu/urdulegend.pdf}
+\caption{Performance in English-Urdu experiments, where monolingual parameters are estimated from truly  monolingual data.}
+\label{fig:urdu}
+\end{figure}
 
-\begin{figure*}[t]
-%\vskip 0.1in
-\begin{center}
-\includegraphics[width=\linewidth]{../figures/lesionreplacement/lesionreplacementlegend.pdf}
-\caption{Contributions of individual features derived from parallel texts (experiments 1-4) and their monolingual equivalents (experiments 5-9) to overall system performance.  Over 70\% of lost performance can be recovered with monolingual features alone.  Moreover, when added alongside the features derived from parallel data, monolingual features account for for over 1 BLEU point gain (experiment 10).}
-\label{fig:lesionreplacement}
-\end{center}
-\vskip -0.2in
-\end{figure*}
 
 %\begin{figure}[t]
 %%\vskip 0.1in
