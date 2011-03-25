@@ -55,7 +55,7 @@
 \title{Toward Statistical Machine Translation without Parallel Corpora}
 
 \author{}
-\author{Alex Kelementiev \ \ \ \  Ann Irvine \ \ \ \ Chris Callison-Burch \ \ \ \ David Yarowsky \\
+\author{Alex Klementiev \ \ \ \  Ann Irvine \ \ \ \ Chris Callison-Burch \ \ \ \ David Yarowsky \\
 Center for Language and Speech Processing \\ Johns Hopkins University}
 %  University of Awesome\\
 %  Location\\
@@ -74,6 +74,7 @@ Center for Language and Speech Processing \\ Johns Hopkins University}
 \begin{document}
 \maketitle
 \begin{abstract}
+%AKI: I kind of like the contrast, but could cut everything before and including "In this paper"
 The parameters of statistical translation models are typically estimated from bilingual parallel corpora.   In this paper we explore the idea of estimating the parameters of a phrase-based statistical machine translation system from monolingual corpora.  Existing research on inducing bilingual dictionaries from monolingual texts has largely focused on learning the translations of individual, high frequency words.   We extend the concept to estimate all the parameters of phrase-based translation: phrase translation pairs, lexical and phrasal translation probabilities, and re-ordering probabilities.  We begin with a fixed phrase-table extracted from bitext and perform a feature lesion study that shows how much translation performance decreases when model parameters are removed, and how much of that loss can be restored when monolingually-estimated equivalents are added.  Overall, we show that more than 70\% of the lost performance can be recovered with monolingual features alone.  Finally, we analyze challenges of inducing the phrase table itself from monolingual texts and suggest ways of pruning the search space.  
 % Large volumes of parallel text are required before translation models produce high quality translations, but sufficiently large corpora are available for  very few language pairs.  On the other hand, monolingual data is widely available and cheap to collect.  In this work, we propose a set of cues derived from monolingual resources and systematically introduce them in a phrase-based machine translation pipeline \emph{in place} of features induced from parallel data.  We show on two language pairs that monolingual data can take us a long way toward  inducing a high quality machine translation system.
 
@@ -90,14 +91,13 @@ The parameters of statistical models of translation are typically estimated from
 In this work, we take an entirely different approach: we use monolingual resources to induce an end-to-end statistical machine translation system.  In particular, we extend a long line of work on inducing translation lexicons (beginning with \newcite{Rapp:1995}) to estimate all parameters for phrase-based statistical machine translation \cite{Koehn:2003}.
 
 Much of the prior work on lexicon induction is motivated by the idea that it could be applied to machine translation but stops short of actually doing so.  This work is a first attempt to extend and apply these ideas to an end-to-end machine translation pipeline. 
-The promise of lexicon induction is that it could be used to create machine translation systems for languages which do not have extensive parallel corpora.  
-Instead training would only require two large monolingual corpora and a small bilingual dictionary.%
+The promise of lexicon induction is that it could be used to create machine translation systems for languages which do not have extensive parallel corpora. 
+Instead training would only require two large monolingual corpora and a small bilingual dictionary. %
 %\footnote{In this paper we also assume the existence of a very small bitext (1,000-2,000 sentence pairs) to tune feature weights in minimum error rate training.}
 The idea is that monolingual distributional similarity and a handful of bilingual pairs to act as example mappings are enough to learn translations, because words behave similarly across languages.  
 % Here we
-We first 
-examine an idealized case where the distribution of words across languages is identical, by taking the two sides of a Spanish-English parallel corpus and treating them as independent monolingual corpora by forgetting the sentence alignments. 
-We then examine a more realistic scenario, estimating values for a Urdu-English phrase table using truly independent monolingual.
+We first examine an idealized case where the distribution of words across languages is identical, by taking the two sides of a Spanish-English parallel corpus and treating them as independent monolingual corpora by ignoring the sentence alignments. 
+We then examine a more realistic scenario, estimating values for an Urdu-English phrase table using truly independent monolingual corpora.
 In this paper we:
 
 %\todop{Chris}{Now that we have an Urdu experiment, we should emphasize it in text / in the list below / in the abstract?}
@@ -111,7 +111,7 @@ In this paper we:
   \item Analyze the challenges of using bilingual lexicon induction for statistical machine translation (performance on low frequency items, moving from words to phrases, and dealing with prohibitively large search space over phrase pairs).
   \item Extend bilingual lexicon induction to phrases, and scale it to extract translations of tens of thousands of  phrases (which naively requires trillions of phrase comparisons). 
   \item Perform a lesion study in which all feature functions are dropped from a phrase table and then replaced with monolingually estimated equivalents.
-  \item Propose a novel algorithm for estimating phrase reordering features from monolingual texts.
+  \item Propose an algorithm for estimating phrase reordering features from monolingual texts.
   \item Report end-to-end translation quality with (1) a fixed phrase-table with monolingually estimated parameters and (2) a phrase-table created without any sentence-aligned parallel data.
 \end{itemize}
 
@@ -185,7 +185,7 @@ We use the same log linear formulation and MERT, but propose alternative feature
  
 There are inherent challenges in extending lexicon induction methods to statistical machine translation.  
 
-First, scaling these methods up substantially degrades their performance due to sparsity issues. High accuracy results reported in most of the previous literature on a small set of source language words (e.g. 100 nouns in \newcite{Rapp:1995}, or 1,000 most frequent words in \cite{Koehn:2002}) tend to be misleading when the goal is to induce large translation dictionaries. \figref{fig:lexinduct} plots the quality of single-word translations induced using contextual similarity (defined in \secref{sect:phrasalfeats}) from the English and Spanish sections of the Europarl corpus\footnote{\secref{sect:exp} describes the data and the experimental parameters in detail.} as a function of source word corpus frequency. Unsurprisingly, frequent terms have a substantially better chance of being paired with a correct translation.  These concerns are exacerbated when we move to multi-token phrases.  As with phrase translation features estimated from parallel data, longer phrases are more sparse, making similarity scores less reliable than for single words.  In \secref{sect:lexfeats}, we introduce additional similarity estimates less prone to sparsity issues.  In \secref{sect:exp:replacement} we show that monolingual features are very informative and reliable in our setting; even when added alongside the feature functions derived from parallel data, they account for over a BLEU point gain in performance.
+First, scaling these methods up substantially degrades their performance due to sparsity issues. High accuracy results reported in most of the previous literature on a small set of source language words (e.g. 100 nouns in \newcite{Rapp:1995}, or 1,000 most frequent words in \cite{Koehn:2002}) tend to be misleading when the goal is to induce large translation dictionaries. \figref{fig:lexinduct} plots the quality of single-word translations induced using contextual similarity (defined in \secref{sect:phrasalfeats}) from the English and Spanish sections of the Europarl corpus\footnote{\secref{sect:exp} describes the data and the experimental parameters in detail.} as a function of source word corpus frequency. Unsurprisingly, frequent terms have a substantially better chance of being paired with a correct translation.  These concerns are exacerbated when we move to multi-token phrases.  As with phrase translation features estimated from parallel data, longer phrases are more sparse, making similarity scores less reliable than for single words.  In \secref{sect:lexfeats}, we introduce additional similarity estimates less prone to sparsity issues.  In \secref{sect:exp:replacement} we show that monolingual features are very informative and reliable in our setting; even when added alongside the feature functions derived from parallel data, they yield substantial BLEU score improvements (over a point in our Spanish-English MT experiments). %over a BLEU point gain in performance. - Not true for Urdu
 
 \begin{figure}[t]
 %\vskip 0.1in
@@ -259,7 +259,7 @@ w_{k} = n_{f,k} \times (log( {n / n_{k}}) + 1)
 
 \paraheader{Contextual and Temporal similarity.}  Another way to estimate the quality of a phrasal translation is to score the similarity of individual words within the phrases.  To compute these lexical similarity features, we first average similarity scores (contextual or temporal) over all aligned words across the two phrases.  We then scale the score by the proportion of aligned words in the two phrases, effectively penalizing poorly aligned phrase pairs.\mtodo{Mention that it is the average of both forward and backward alignments?}
 
-\paraheader{Orthographic / phonetic similarity.} Etymologically related words often retain similar spelling across languages with the same writing system, and edit distance can be used to measure their similarity.  We use word alignments as before to score entire phrases for orthographic similarity.\mtodo{Not done quite the same as above but will glance over it.} We can also extend this idea to language pairs not sharing the same writing system, since many cognates and transliterated words remain phonetically similar.  Transliterations can be generated for tokens in a source phrase (e.g. \cite{Knight1997}), with phrase similarity computed as before.
+\paraheader{Orthographic / phonetic similarity.} Etymologically related words often retain similar spelling across languages with the same writing system, and edit distance can be used to measure their similarity.  We use word alignments as before to score entire phrases for orthographic similarity.\mtodo{Not done quite the same as above but will glance over it.} We can also extend this idea to language pairs not sharing the same writing system, since many cognates and transliterated words remain phonetically similar.  Transliterations can be generated for tokens in a source phrase (e.g. \cite{Knight1997}), with phonetic similarity computed as before.
 
 \skipheader Note that various other similarity scores can be computed depending on the available monolingual data and its associated metadata (see, e.g. \newcite{Schafer:2002}).
 
@@ -339,14 +339,14 @@ Shorter and more frequent phrases (e.g. punctuation) are more likely to appear i
 \subsection{Extracting a phrase table without a bitext}  \label{sect:extract}
 We propose three methods for assembling a table of phrase pairs without using parallel data: (1) We extend past efforts in bilingual lexicon induction from monolingual corpora to the induction of multi-word phrases. (2) We build a table of phrase pair translations from an existing bilingual seed dictionary. (3) We identify \emph {unigrams} in our development and test sets that are OOV in our existing bilingual dictionary and then use a bilingual lexicon induction framework to induce new translations for each. In Section \ref{sect:exp:pt} we perform end-to-end MT experiments to test the quality of these phrase tables both individually and combined.
 
-\paraheader{Phrase table induction.} As we argued in \secref{sect:bckg:lexind}, we cannot directly extend translation lexicon induction techniques to induce phrasal translations.  Because this search space is very large, we must aggressively prune it.   Specifically, we compare phrases in the same frequency bands \cite{Uszkoreit:2010}, require that the stemmed version of each phrase-pair contain at least one word-pair from a stemmed version of our bilingual dictionary\footnote{Our stemmer truncates words to a max. of six characters.}, and prune all very low frequency target phrases. %\todo{Alt wording:} We compare  each source side phrase only to target side phrases that occur in the same frequency band (according to the frequencies in two monolingual corpora). Of those target side phrases, we keep only the ones with at least one \mtodo{discuss dictionary parameters} word translating into a word in the source side phrase. 
+\paraheader{Phrase table induction.} As we argued in \secref{sect:bckg:lexind}, we cannot directly extend translation lexicon induction techniques to induce phrasal translations.  Because this search space is very large, we must aggressively prune it.   Specifically, we compare phrases in the same frequency bands \cite{Uszkoreit:2010}, disallow unigram-trigram pairs, and prune very low frequency target phrases. We also use a filter that requires stemmed versions of each phrase-pair to contain at least one (source unigrams and bigrams) or two (source trigrams) word-pairs from a stemmed version of our bilingual dictionary\footnote{Our stemmer truncates words to a max. of six characters.}. %\todo{Alt wording:} We compare  each source side phrase only to target side phrases that occur in the same frequency band (according to the frequencies in two monolingual corpora). Of those target side phrases, we keep only the ones with at least one \mtodo{discuss dictionary parameters} word translating into a word in the source side phrase. 
 
-To determine whether our pruning parameters are reasonable, we evaluate what percent of the items from a bilingually induced phrase table are retained.  Rather than consider all items from the phrase table (since many of them are bad), we consider only those phrase-pairs that are used by the decoder to translate a test set.\footnote{We use the Moses decoder's trace function to find the set of phrases it used in decoding our test set.} We compare our filtered phrase tables to this set of phrase translation rules and attempt to maintain as many of them as possible, while pruning the set of phrase pairs down to manageable size.
+To determine whether our pruning parameters are reasonable, we evaluate what percent of the items from a bilingually induced phrase table are retained.  Rather than consider all items from the phrase table (since many of them are bad), we consider only those phrase-pairs that are used by the decoder to translate a test set\footnote{We use the Moses decoder's trace function to find the set of phrases it used in decoding our test set.}. We compare our filtered phrase tables to this set of phrase translation rules and attempt to maintain as many of them as possible, while pruning the set of phrase pairs down to a manageable size. Table \ref{table:prune} shows results using the enumerated heuristics both with the dictionary filter (``Freq+Dict'') and without (``Freq Filter'').
 
-\paraheader{Dictionary-based phrase table.} We build a second phrase table by enumerating all combinations and permutations of up to three dictionary translation entries \cite{garera08a}. Our Spanish--English dictionary has over entries for 49,795 source tokens and the resulting phrase table has a large amount of overlap with the decoder table, as shown in Table \ref{table:prune}. 
+\paraheader{Dictionary-based phrase table.} We build a second phrase table by enumerating all combinations and permutations of up to three source word dictionary translations \cite{garera08a}. Our Spanish--English dictionary has over entries for 49,795 source tokens and the resulting phrase table has a large amount of overlap with the decoder table, as shown in Table \ref{table:prune} (``Dict combs''). 
 %CUT FOR SPACE: However, for the case of low-resource languages, dictionaries, in the cases that they even exist, are not as complete. We expect the performance of our dictionary-based phrase table to be an upper bound for the performance of an induced-dictionary-composed table for truly low-resource languages.
 
-\paraheader{Induced lexical translations.} We use a bilingual lexical induction framework that works by comparing context, time, and edit distance source and target word vectors to build a table of candidate translations for the approximately ten thousand word types in our development and test sets that do not have entries in our bilingual dictionary. In Section \ref{sect:exp:pt} we use this relatively small set of unigram translation pairs to supplement the above tables.
+\paraheader{Induced lexical translations.} We use a bilingual lexical induction framework that works by comparing context, time, and edit distance source and target word vectors to build a table of candidate translations for the word types (approximately 10,000 for Spanish, x for Urdu) in our development and test sets that do not have entries in our bilingual dictionary. In Section \ref{sect:exp:pt} we use this relatively small set of unigram translation pairs to supplement the above tables.
 
 %Our baseline phrase table is generated using a bilingual dictionary. For each Urdu test set phrase up to length three, we generated English phrases from all combinations of dictionary translations and all possible reorderings. For the baseline and our pruning methods, the number of filtered phrase pairs and the percent of phrases used by the Moses decoder not pruned away are given in Table \ref{table:prune}.  
 
@@ -358,13 +358,24 @@ To determine whether our pruning parameters are reasonable, we evaluate what per
 Pruning 	& Phrase	& Search & 	Findable 	& Findable \\
 filters	& Pairs	&  Space & Types 	&  Tokens \\
 \hline
-Unpruned & 1.6 T & 100\% & 100\% & 100\% \\
-Dict combs. & 74 M & $<$.01\% & 38\% & 65\% \\
-Freq Filter &  31 B & 2\% & 75\% & 81\% \\
-Freq + Dict & 566 M & $<$.04\% & 49\% & 55\% \\
+\hline
+\multicolumn{5}{|l|}{Spanish} \\
+\hline
+Unpruned & 1.0 T & 100\% & 100\% & 100\% \\
+Dict combs. & 76 M & $<$.01\% & 32\% & 42\% \\
+Freq Filter &  6.2 B & 0.6\% & 54\% & 66\% \\
+Freq + Dict & 324 M & $<$.04\% & 44\% & 54\% \\
+\hline
+\hline
+\multicolumn{5}{|l|}{Urdu} \\
+\hline
+Unpruned & 913 B & 100\% & 100\% & 100\% \\
+Dict combs. & 54 M & $<$.01\% & 15\% & 25\% \\
+Freq Filter & 1.5 B & 0.2\% & 49\% & 62\% \\
+Freq + Dict & 87 M & $<$.01\% & 26\% & 35\% \\
 \hline
 \end{tabular}
-\caption{The tradeoff between pruning the phrase pair search space and the accuracy of the final set of phrase pairs. The findable types and tokens measures refer to the percent of phrase types and tokens used by Moses to decode a test set that are not pruned away. }\label{table:prune}
+\caption{The tradeoff between pruning the phrase pair search space and the accuracy of the final set of phrase pairs. The findable types and tokens measures refer to the percent of phrase types and tokens used by Moses to decode a test set that are not pruned away. The phrase pair count is over phrases in a source side MT dev/test set (Spanish: 2525 sentences, Urdu: 1864 sentences) and in a given target side monolingual corpus (Spanish: English side of Europarl training data, Urdu: English web crawls). The maximum source and target phrase length is three.}\label{table:prune}
 \end{center}
 \end{table}
 
@@ -382,16 +393,20 @@ Freq + Dict & 566 M & $<$.04\% & 49\% & 55\% \\
 \vskip -0.2in
 \end{figure*}
 
-\section{Experiments} \label{sect:exp}
+\section{Experimental Setup} \label{sect:expsetup}
 
 For Spanish-English (es-en) experiments in Sections \ref{sect:exp:lesions} though \ref{sect:exp:augment}, and \ref{sect:exp:pt} we use the Spanish and English sections of the Europarl ver. 5 corpus\footnote{Europarl filenames include dates, making temporal signatures easy to compute.} \cite{Koehn:2005}. When estimating monolingual parameters, we treat the two sides of the corpus as two {\em independent monolingual} corpora.  Our development data was comprised of {\em news-test2008} and {\em news-syscomb2009}, and are test set was {\em news-test2009} \cite{callisonburch-EtAl:2010:WMT}.  Our seed dictionary has entries for 49,795 source tokens\footnote{Translation results are robust to substantially reducing dictionary size; we omit the experiments due to space constraints.}.
 
-For Urdu-English (ur-en) experiments in \secref{sect:exp:indep} we use the NIST corpus \todopi{Chris}{add name and reference}.  We estimate monolingual parameters from a genuinely monolingual corpora annotated with publication dates in Urdu and English (145 and 159 million tokens, respectively) we have collected by crawling news sites.  Note: we have been collecting similar resources for a number of low density languages, and we plan to make them available to the community.  Our seed dictionary has entries for 25,377 source tokens.
+For Urdu-English (ur-en) experiments in \secref{sect:exp:indep} and  \ref{sect:exp:pt} we use the NIST corpus \todopi{Chris}{add name and reference}.  We estimate monolingual parameters from a genuinely monolingual corpora annotated with publication dates in Urdu and English (145 and 159 million tokens, respectively) we have collected by crawling news sites.  Note: we have been collecting similar resources for a number of low density languages, and we plan to make them available to the community.  Our seed dictionary has entries for 25,377 source tokens.
 
 We use the Moses SMT toolkit \cite{Moses} and a language model trained on the English side of the parallel corpora.  With the exception of maximum phrase length (set to 3 in our experiments), default values were used for all of the parameters.  Beyond seed dictionaries, the only other bilingual resource we use is a development set to tune feature weights in minimum error rate training.  However, these bitexts are very small (2,553 and 981 sentences for es-en and ur-en, respectively).  We collect a contextual vector for a phrase over a window of two tokens on each side (provided it does not cross the sentence boundary).   
 %CUT FOR SPACE: We also prune the preceding, following, and discontinues phrases collected by {\tt \small CollectOccurs()} (see \figref{fig:algoreorder}) to contain at most 1,000, 1,000, and 3,000 least frequent phrases phrases, respectively.
 
 We begin with a series of lesion experiments in which we drop feature functions estimated from parallel data.  We then add equivalent but monolingually estimated features in reverse order to see how much of the lost performance can be regained.  \figref{fig:lesionreplacement} gives all of the results, which are explained below. Finally, we move on to phrase table induction experiments.
+
+\todopi{Chris}{Make this a little tighter, 1 more paragraph to introduce Section 6 very clearly}
+
+\section{Results} \label{sect:results}
 
 \subsection{Lesion experiments (Experiments 1-4)}  \label{sect:exp:lesions}
 
@@ -409,7 +424,7 @@ We perform an additional experiment to determine whether there is any informatio
 We now turn to estimating monolingual features from truly independent monolingual corpora we collected from web crawls for a pair of unrelated languages, Urdu and English.  While we cannot recover as much of the lost performance (see \figref{fig:urdu}) as we did in the idealized setup of the Spanish-English experiments, the monolingual features are certainly informative and take us a long way toward inducing a reasonable model.  Monolingual corpora is a much more plentiful resource then parallel data, and we expect system performance to improve further with more available data.
 
 \begin{figure}[t]
-\includegraphics[width=\linewidth]{../figures/urdu/urdulegend.pdf}
+\includegraphics[width=\linewidth]{../figures/urdu/urdulegendanni.pdf}
 \caption{Performance in English-Urdu experiments, where monolingual parameters are estimated from truly  monolingual data.}
 \label{fig:urdu}
 \end{figure}
@@ -428,7 +443,7 @@ We now turn to estimating monolingual features from truly independent monolingua
 \subsection{Phrase table extraction}\label{sect:exp:pt}
 As alternatives to using the Moses phrase table, which is based on the word-aligned parallel corpus, we perform several experiments using phrase tables generated in other ways. As explained in Section \ref{sect:extract}, we generate phrase translation pairs in three ways: combining and permuting dictionary translations (henceforth, dictionary-based); using lexicon induction methods to identify candidate word translations for OOV unigrams (henceforth, lexically induced); and inducing multi-word translations from the bilingual text treated as monolingual corpora (henceforth, induced phrase pairs). We compute both lexical and phrasal monolingual feature scores for all three types of phrase translations. To score lexical monolingual features, we use the word alignments inherent to both the dictionary-based translations and the lexically induced translations. We use an aligner \cite{DeNero07} to generate word alignments for the induced phrase pairs. In all of the experiments, we used random reordering features.
 
-We use the monolingual feature scores to prune the induced phrase pairs from over 500 million to 1.1 million and to prune the dictionary-based table from 74 million to about 500 thousand entries. We include the top five lexically induced translations for each OOV unigram.
+\todopi{Anni}{make these two paragraphs relevant to Urdu as well as Spanish, assuming experiments finish} We use the monolingual feature scores to prune the induced phrase pairs from over 500 million to 1.1 million and to prune the dictionary-based table from 74 million to about 500 thousand entries. We include the top five lexically induced translations for each OOV unigram.
 
 BLEU scores resulting from using different combinations of phrase pair sets and features are shown in Table \ref{table:new-phrase-tables}. In all experiments using phrase pairs from multiple sources, we add a feature to indicate whether a given phrase pair came from the dictionary-based or lexically induced tables or from the large table of induced phrase pairs.
 % As shown, using the dictionary-based table without monolingual features and using the induced phrase pairs (with features) both result in relatively poor translation performance. However, 
@@ -451,21 +466,21 @@ Although our alternative phrase pair sources do not reach the performance level 
 \begin{table}
 \small
 \begin{center}
-\begin{tabular}{|c|c|c|}
+\begin{tabular}{|c|c|c|c|}
 \hline
-Phrase 	& Monolinual  & 	BLEU \\
-Table	& Features &  \\
+Phrase 	& Monolinual  & \multicolumn{2}{|c|} {BLEU}  \\
+Table	& Features &   \multicolumn{1}{|c}{Spanish} & \multicolumn{1}{c|}{Urdu} \\
 \hline
-Dict-B. & None & 9.09 \\
-Dict-B. & Ph-Mono & 11.52 \\
+Dict & None & 9.09 & x\\
+Dict & Ph-Mono & 11.52 & x\\
 %Dict-composed & Align-Mono & Random & 11.63 \\
-Induc. & Ph-Mono &  8.97 \\
+Induc & Ph-Mono &  8.97 & x\\
 %Induced & Align-Mono & Random & If-time \\
-Dict-B.+Induc. & Ph+Lx-Mono & 12.25 \\
-Dict-B.+Induc.+Lex-I & Ph+Lx-Mono & 12.65 \\
+Dict+Induc & Ph+Lx-Mono & 12.25 & x\\
+Dict+Induc+Lex-I & Ph+Lx-Mono & 12.65 & x\\
 \hline
 \end{tabular}
-\caption{Decoding with the dictionary-based phrase table (Dict-B.), induced phrase pairs (Induc.), and lexically induced OOVs (Lex-I) scored with lexical monolingual features (Lx-Mono) and phrasal monolingual features (Ph-Mono). In all of the experiments shown in this table, we used random reordering features.}\label{table:new-phrase-tables}
+\caption{Decoding with the dictionary-based phrase table (Dict), induced phrase pairs (Induc), and lexically induced OOVs (Lex-I) scored with lexical monolingual features (Lx-Mono) and phrasal monolingual features (Ph-Mono). In all of the experiments shown in this table, we used random reordering features.}\label{table:new-phrase-tables}
 \end{center}
 \end{table}
 
@@ -494,9 +509,9 @@ Dict-B.+Induc.+Lex-I & Ph+Lx-Mono & 12.65 \\
 
 %In moving from Spanish--English translation to translation from other, less-similar languages, we expect to face new challenges. Estimating orientation probabilities, for example, for languages with very different grammars may demand a more sophisticated algorithm. However, our work here lays the foundation for this important future work.
 
-In this work we have made use of plentiful monolingual data to induce a machine translation system, proposing one the way to reduce the dependence on the expensive and sparse parallel texts.  Specifically, we propose monolingual equivalents of the phrase-based translation model parameters extending the existing lexicon induction work.  We also introduce a novel algorithm for estimating orientation probabilities from monolingual data.  Finally, we propose methods for generating phrase tables without any sentence-aligned data.
+In this work we have made use of plentiful monolingual data to induce a machine translation system, proposing one way to reduce the dependence on the expensive and sparse parallel texts.  Specifically, we propose monolingual equivalents of the phrase-based translation model parameters, extending existing lexicon induction work.  We also introduce a novel algorithm for estimating orientation probabilities from monolingual data.  Finally, we propose methods for generating phrase tables without any sentence-aligned data.
 
-This work is an initial step toward reducing the requirement for expensive and sparse parallel data assumed to be available by state-of-the-art statistical translation methods.  There are many directions for possible future work and remaining questions.  Monolingual data is much more available and cheap to collect than bitexts, but it remains to be seen if the size of monolingual data can afford continuous improvements without the need for a more complex translation model.
+This work is an initial step toward reducing the requirement for expensive and sparse parallel data, which is assumed by state-of-the-art statistical translation methods.  There are many remaining questions and directions for possible future work.  Monolingual data is much more available and cheap to collect than bitexts, but it remains to be seen if the size of monolingual data can afford continuous improvements without the need for a more complex translation model.
 
 When extracting phrase tables in \secref{sect:extract}, we resorted to pruning the space of possible phrase translations before scoring them, because considering the entire space of phrase pairs is computationally infeasible.  However, relying less on pruning heuristics and being able to consider more pairs is likely to lead to better phrase tables.  Approximate scoring techniques, such as Locality Sensitive Hashing \cite{Charikar2002,VanDurme2010} would enable us to substantially expand the space of candidates we could feasibly consider.
 
