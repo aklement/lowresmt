@@ -417,7 +417,7 @@ The only bilingual resources that we use are seed dictionaries and a development
 \paraheader{Software.} We use the Moses SMT toolkit \cite{Moses} and a language model trained on the English side of the parallel corpora.  With the exception of maximum phrase length (set to 3 in our experiments), default values were used for all of the parameters.  We collect contextual vectors for phrases over windows of two tokens on each side. %CUT FOR SPACE (provided it does not cross the sentence boundary).   
 %CUT FOR SPACE: We also prune the preceding, following, and discontinues phrases collected by {\tt \small CollectOccurs()} (see \figref{fig:algoreorder}) to contain at most 1,000, 1,000, and 3,000 least frequent phrases phrases, respectively.
 
-Since our experiments are complex, we release our software for full reproducibility.  It includes source code and documentation describing the monolingual estimation proceedures for all parameters. We also release data, including large monolingual resources and dictionaries for 55 low density languages. \url{www.xxx.yyy/~zzz/}
+Since our experiments are complex, we release our software for full reproducibility.  It includes source code and documentation describing the monolingual estimation proceedures for all parameters. We include large monolingual corpora and dictionaries for 55 low density languages. \url{url}
 
 
 %We begin with a series of lesion experiments in which we drop feature functions estimated from parallel data.  %We then add equivalent but monolingually estimated features in reverse order to see how much of the lost performance can be regained.  \figref{fig:lesionreplacement} gives all of the results, which are explained below. Finally, we move on to phrase table induction experiments.
