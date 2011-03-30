@@ -387,8 +387,6 @@ Freq + Dict & 87 M & $<$.01\% & 26\% & 35\% \\
 \end{table}
 
 
-To determine whether our pruning parameters are reasonable, we evaluate what percent of the items from a bilingually induced phrase table are retained.  Rather than consider all items from the phrase table (since many of them are bad), we consider only those phrase-pairs that are used by the decoder to translate a test set.\footnote{We use the Moses decoder's trace function to find the set of phrases it used in decoding our test set.} We compare our filtered phrase tables to this set of phrase translation rules and attempt to maintain as many of them as possible, while pruning the set of phrase pairs down to a manageable size. Table \ref{table:prune} shows results using the enumerated heuristics both with the dictionary filter (``Freq+Dict'') and without (``Freq Filter'').
-
 %Our baseline phrase table is generated using a bilingual dictionary. For each Urdu test set phrase up to length three, we generated English phrases from all combinations of dictionary translations and all possible reorderings. For the baseline and our pruning methods, the number of filtered phrase pairs and the percent of phrases used by the Moses decoder not pruned away are given in Table \ref{table:prune}.  
 
 
