@@ -131,7 +131,7 @@ Our methods for estimating model parameters build on the long line of work in bi
 %\todop{Chris}{Additional reference pointed out by reviewers worth including?}
 \newcite{Carbonell2006} described a data-driven machine translation system that used no parallel text. It produced translation lattices using a bilingual dictionary and scored them using an n-gram language model.  This method is similar to one of our baselines which eliminates the translation probabilities from a phrase-table, and scores the output only with an n-gram language model.  
 
-We examine scenarios where large bilingual parallel corpora are not available.  A variety of past research has focused on overcoming this bottleneck by mining parallel or comparable corpora from the web \cite{Munteanu:2006,Schwenk2008,Rauf2009,Smith2010,Uszkoreit:2010}.  We consider methods for acquiring bitexts to be complimentary but orthogonal to the goals of our research. In this paper we focus on the ``no bitext'' condition, but a logical follow-on study would be to bootstrap starting with a small bitext.
+We examine scenarios where large bilingual parallel corpora are not available.  A variety of past research has focused on overcoming this bottleneck by mining parallel or comparable corpora from the web \cite{Munteanu:2006,Schwenk2008,Rauf2009,Smith2010,Uszkoreit:2010}.  Methods for acquiring bitexts are complimentary but orthogonal to our research goals.  We focus on the ``no bitext'' condition, but a logical follow-on would be to bootstrap from a small bitext.
 
 
 %\todo{The following text is stolen from my CoNLL paper with Nikesh, we need to replace it or reshape it to be relevant}
@@ -185,7 +185,7 @@ We use the same log linear formulation and MERT but propose alternative features
  
 There are inherent challenges in extending lexicon induction methods to statistical machine translation.  
 
-First, scaling these methods up substantially degrades their performance due to sparsity issues. High accuracy results reported in most of the previous literature on a small set of source language words (e.g. 100 nouns in \newcite{Rapp:1995}, or 1,000 most frequent words in \cite{Koehn:2002}) tend to be misleading when the goal is to induce large translation dictionaries. \figref{fig:lexinduct} plots the quality of single-word translations induced using contextual similarity (defined in \secref{sect:phrasalfeats}) from the English and Spanish sections of the Europarl corpus\footnote{\secref{sect:expsetup} describes the data and the experimental parameters in detail.} as a function of source word corpus frequency. Unsurprisingly, frequent terms have a substantially better chance of being paired with a correct translation.  These concerns are exacerbated when we move to multi-token phrases.  As with phrase translation features estimated from parallel data, longer phrases are more sparse, making similarity scores less reliable than for single words.  In \secref{sect:lexfeats}, we introduce additional similarity estimates less prone to sparsity issues.  In \secref{sect:exp:replacement} we show that monolingual features are very informative and reliable in our setting; even when added alongside the feature functions derived from parallel data, they yield substantial BLEU score improvements (over a point in our Spanish-English MT experiments). %over a BLEU point gain in performance. - Not true for Urdu
+First, scaling these methods up substantially degrades their performance due to sparsity issues. High accuracy results reported in most of the previous literature on a small set of source language words (e.g. 100 nouns in \newcite{Rapp:1995}, or 1,000 most frequent words in \cite{Koehn:2002}) tend to be misleading when the goal is to induce large translation dictionaries. \figref{fig:lexinduct} plots the quality of single-word translations induced using contextual similarity (defined in \secref{sect:phrasalfeats}) from the English and Spanish sections of the Europarl corpus\footnote{\secref{sect:expsetup} describes the data and parameters in detail.} as a function of source word corpus frequency. Unsurprisingly, frequent terms have a substantially better chance of being paired with a correct translation.  These concerns are exacerbated when we move to multi-token phrases.  As with phrase translation features estimated from parallel data, longer phrases are more sparse, making similarity scores less reliable than for single words.  In \secref{sect:lexfeats}, we introduce additional similarity estimates less prone to sparsity issues.  In \secref{sect:exp:replacement} we show that monolingual features are very informative and reliable in our setting; even when added alongside the feature functions derived from parallel data, they yield substantial BLEU score improvements (over a point in our Spanish-English MT experiments). %over a BLEU point gain in performance. - Not true for Urdu
 
 \begin{figure}[t]
 %\vskip 0.1in
@@ -225,18 +225,17 @@ These behave analogously to the phrasal and lexical features in \secref{sect:bck
 \paraheader{Contextual similarity.}  We extend the vector space approach of \newcite{Rapp:1999} to compute similarity between \emph{phrases} in the source and target languages.  More formally, assume that $(s_{1}, s_{2}, \dots s_{N})$ and $(t_{1}, t_{2}, \dots t_{M})$ are (arbitrarily indexed) source and target vocabularies, respectively.  A source phrase $f$ is represented with an $N$ and target phrase $e$ with an $M$ dimensional vector (see \figref{fig:contextual}).  Only the components corresponding to words that appear in the context of a phrase in data take on non-zero values. Next, $f$'s contextual vector is projected by mapping its components to the target language space using the small number of word-word translations taken from a seed dictionary.
 %, but retaining the source component value.  
 Finally, the pair ($f, e$) is scored by computing similarity between the target  and projected source vectors.  Various means of computing the component values and vector similarity measures have been proposed in literature (e.g. \newcite{Rapp:1999}, \newcite{Fung:1998}).  Following \newcite{Fung:1998}, we compute the value of the $k$-th component of $f$'s contextual vector  as follows: 
-
 \begin{equation*}
 w_{k} = n_{f,k} \times (log( {n / n_{k}}) + 1)
 \end{equation*}
 
 \noindent where $n_{f,k}$ and $n_{k}$ are the number of times $s_{k}$ appears in the context of $f$ and in the entire corpus, and $n$ is the maximum number of occurrences of any word in the data.  Intuitively, the more frequently $s_{k}$ appears with $f$ and the less common it is in the corpus in general, the higher its component value.  Similarity between two resulting vectors is measured as a cosine of the angle between them.
 
-\mtodo{Give an example Spanish phrase and the English phrases that it has the highest similarity with}
+%\mtodo{Give an example Spanish phrase and the English phrases that it has the highest similarity with}
 
 \begin{figure}[t]
 \includegraphics[width= \linewidth]{../figures/temporal/temporal}
-\caption{Temporal histograms of the English phrase {\em to travellers}, its Spanish translation {\em a los viajeros}, and the phrase {\em y riqueza} (and wealth) collected from monolingual texts spanning a 13 year period. While the correct translation has a good temporal match, the non-translation {\em y riqueza} has a distinctly different temporal signature.}
+\caption{Temporal histograms of the English phrase {\em to travellers}, its Spanish translation {\em a los viajeros}, and the phrase {\em y riqueza} (and wealth) collected from monolingual texts spanning a 13 year period. While the correct translation has a good temporal match, the non-translation {\em y riqueza} has a distinctly different signature.}
 \label{fig:temporal}
 \end{figure}
 
@@ -250,6 +249,18 @@ w_{k} = n_{f,k} \times (log( {n / n_{k}}) + 1)
 %Also
 %\cite{Schafer:2002}}
 
+
+\subsubsection{Lexical similarity features}  \label{sect:lexfeats}
+
+\paraheader{Contextual and Temporal similarity.}  Another way to estimate the quality of a phrasal translation is to score the similarity of individual words within the phrases.  To compute these lexical similarity features, we first average similarity scores (contextual or temporal) over all aligned words across the two phrases.  We then scale the score by the proportion of aligned words in the two phrases, effectively penalizing poorly aligned phrase pairs. Because individual words are more frequent than multiword phrases, the accuracy of their induced translations tends to be higher (see Figure \ref{fig:lexinduct}). The phrasal and lexical features in combination results in better translation quality than phrasal features alone. \mtodo{Mention that it is the average of both forward and backward alignments?}
+
+\paraheader{Orthographic / phonetic similarity.} Etymologically related words often retain similar spelling across languages with the same writing system, and edit distance can be used to measure their similarity.  We use word alignments as before to score entire phrases for orthographic similarity.\mtodo{Not done quite the same as above but will glance over it.} We can also extend this idea to language pairs not sharing the same writing system since many cognates, borrowed words, and names remain phonetically similar.  Transliterations can be generated for tokens in a source phrase (e.g. \cite{Knight1997}), with phonetic similarity computed as before.
+
+Various other similarity scores can be computed depending on the available monolingual data and its associated metadata (see, e.g. \newcite{Schafer:2002}). All of these can be incorporated into our log linear translation model as additional feature fns.
+
+%\skipheader In our experiments in \secref{sect:exp}, we will focus on the similarity scores introduced in this section.  However, note that various other similarity scores\mtodo{list them} can be computed depending on the available monolingual data and its associated metadata (see, e.g. \newcite{Schafer:2002}).
+
+
 \begin{figure}[t]
 %\vskip 0.1in
 \begin{center}
@@ -259,16 +270,6 @@ w_{k} = n_{f,k} \times (log( {n / n_{k}}) + 1)
 \end{center}
 \vskip -0.2in
 \end{figure}
-
-\subsubsection{Lexical similarity features}  \label{sect:lexfeats}
-
-\paraheader{Contextual and Temporal similarity.}  Another way to estimate the quality of a phrasal translation is to score the similarity of individual words within the phrases.  To compute these lexical similarity features, we first average similarity scores (contextual or temporal) over all aligned words across the two phrases.  We then scale the score by the proportion of aligned words in the two phrases, effectively penalizing poorly aligned phrase pairs. Because individual words are more frequent than multiword phrases, the accuracy of their induced translations tends to be higher (see Figure \ref{fig:lexinduct}). The phrasal and lexical features in combination results in better translation quality than phrasal features alone. \mtodo{Mention that it is the average of both forward and backward alignments?}
-
-\paraheader{Orthographic / phonetic similarity.} Etymologically related words often retain similar spelling across languages with the same writing system, and edit distance can be used to measure their similarity.  We use word alignments as before to score entire phrases for orthographic similarity.\mtodo{Not done quite the same as above but will glance over it.} We can also extend this idea to language pairs not sharing the same writing system since many cognates, borrowed words, and names remain phonetically similar.  Transliterations can be generated for tokens in a source phrase (e.g. \cite{Knight1997}), with phonetic similarity computed as before.
-
-\skipheader Note that various other similarity scores can be computed depending on the available monolingual data and its associated metadata (see, e.g. \newcite{Schafer:2002}). All of these can be incorporated into our log linear translation model as additional feature functions.
-
-%\skipheader In our experiments in \secref{sect:exp}, we will focus on the similarity scores introduced in this section.  However, note that various other similarity scores\mtodo{list them} can be computed depending on the available monolingual data and its associated metadata (see, e.g. \newcite{Schafer:2002}).
 
 \subsection{Reordering} \label{sect:order}
 
@@ -363,24 +364,24 @@ To determine whether our pruning parameters are reasonable, we evaluate what per
 Pruning 	& Phrase	& Search & 	Findable 	& Findable \\
 filters	& Pairs	&  Space & Types 	&  Tokens \\
 \hline
-\hline
-\multicolumn{5}{|l|}{Spanish} \\
-\hline
+%\hline
+%\multicolumn{5}{|l|}{Spanish} \\
+%\hline
 Unpruned & 1.0 T & 100\% & 100\% & 100\% \\
 Dict combs. & 76 M & $<$.01\% & 32\% & 42\% \\
 Freq Filter &  6.2 B & 0.6\% & 54\% & 66\% \\
 Freq + Dict & 324 M & $<$.04\% & 44\% & 54\% \\
 \hline
-\hline
-\multicolumn{5}{|l|}{Urdu} \\
-\hline
+%\hline
+%\multicolumn{5}{|l|}{Urdu} \\
+%\hline
 Unpruned & 913 B & 100\% & 100\% & 100\% \\
 Dict combs. & 54 M & $<$.01\% & 15\% & 25\% \\
 Freq Filter & 1.5 B & 0.2\% & 49\% & 62\% \\
 Freq + Dict & 87 M & $<$.01\% & 26\% & 35\% \\
 \hline
 \end{tabular}
-\caption{The tradeoff between pruning the phrase pair search space and the accuracy of the final set of phrase pairs. The findable types and tokens measures refer to the percent of phrase types and tokens used by Moses to decode a test set that are not pruned away. The phrase pair count is over phrases in a source side MT dev/test set (Spanish: 2525 sentences, Urdu: 1864 sentences) and in a given target side monolingual corpus (Spanish: English side of Europarl training data, Urdu: English web crawls). The maximum source and target phrase length is three.}\label{table:prune}
+\caption{The tradeoff between pruning the phrase pair search space and the accuracy of the final set of phrase pairs. The findable types and tokens measures refer to the percent of phrase types and tokens used by Moses to decode a test set that are not pruned away. The phrase pair count is over phrases in a source side MT dev/test set (Spanish: 2525 sentences, Urdu: 1864 sentences) and in a given target side monolingual corpus (Spanish: English side of Europarl training data, Urdu: English web crawls). The maximum phrase length is three.}\label{table:prune}
 \end{center}
 \end{table}
 
@@ -414,28 +415,30 @@ To determine whether our pruning parameters are reasonable, we evaluate what per
 We conduct three sets of experiments. The first uses a fixed phrase table that is extracted from a bitext but whose parameters are re-estimated by treating the parallel corpus as two monolingual texts. This makes two idealizations: (1) the phrase table itself is high quality, and (2) the monolingual corpora have identical distributional properties. These are useful to give an upper bound on how well our methods could work in principle. For the second set of experiments we drop the second idealization and show how well we do using truly monolingual texts. For the third set, we give up the idealized phrase table.
 
 \paraheader{Data.} For Spanish-English (es-en) experiments in Sections \ref{sect:exp:lesions} though \ref{sect:exp:augment}, and \ref{sect:exp:pt} we use the Spanish and English sections of the Europarl v5 corpus\footnote{Europarl filenames include dates, making temporal signatures easy to compute.} \cite{Koehn:2005}. When estimating monolingual parameters, we treat the two sides of the corpus as two {\em independent monolingual} corpora.  Our development data was comprised of {\em news-test2008} and {\em news-syscomb2009}, and our test set was {\em news-test2009} \cite{callisonburch-EtAl:2010:WMT}.  Our seed dictionary has entries for 49,795 source tokens\footnote{Translation results are robust to substantially reducing dictionary size; we omit the experiments due to space constraints.}.
-For Urdu-English (ur-en) experiments in \secref{sect:exp:indep} and  \ref{sect:exp:pt} we use the NIST corpus development and test sets\todopi{Chris}{add name and reference}.  We estimate monolingual parameters from genuinely monolingual Urdu and English corpora annotated with publication dates (145 and 159 million tokens, respectively), which we have collected by crawling online news sites.  %Note: we have been collecting similar resources for a number of low density languages, and we plan to make them available to the community.  
+For Urdu-English (ur-en) experiments in \secref{sect:exp:indep} and  \ref{sect:exp:pt} we use the parallel corpus and development and test sets distributed for the NIST 2009 Open MT Evaluation Workshop.  We estimate monolingual parameters from genuinely monolingual Urdu and English corpora annotated with publication dates (145 and 159 million tokens, respectively), which we have collected by crawling online news sites.  %Note: we have been collecting similar resources for a number of low density languages, and we plan to make them available to the community.  
 Our seed dictionary has entries for 25,377 source tokens.
+
+The only bilingual resources that we use are seed dictionaries and a development set to tune feature weights in minimum error rate training.  However, these bitexts are very small (2,553 and 981 sentences for es-en and ur-en, respectively).  
 
 \paraheader{Software.} We use the Moses SMT toolkit \cite{Moses} and a language model trained on the English side of the parallel corpora.  With the exception of maximum phrase length (set to 3 in our experiments), default values were used for all of the parameters.  We collect contextual vectors for phrases over windows of two tokens on each side. %CUT FOR SPACE (provided it does not cross the sentence boundary).   
 %CUT FOR SPACE: We also prune the preceding, following, and discontinues phrases collected by {\tt \small CollectOccurs()} (see \figref{fig:algoreorder}) to contain at most 1,000, 1,000, and 3,000 least frequent phrases phrases, respectively.
 
-For reproducibility, we plan to release our software for estimating phrasal, lexical, and reordering monolingual parameters. In addition to Urdu, we have been crawling the web for monolingual resources for a number of low density languages and will make this data available to the community. The only bilingual resources that we use are seed dictionaries and a development set to tune feature weights in minimum error rate training.  However, these bitexts are very small (2,553 and 981 sentences for es-en and ur-en, respectively).  
+Since our experiments are complex, we release our software for full reproducibility.  It includes source code and documentation describing the monolingual estimation proceedures for all parameters. We also release data, including large monolingual resources and dictionaries for 55 low density languages. \url{www.xxx.yyy/~zzz/}
 
 
 %We begin with a series of lesion experiments in which we drop feature functions estimated from parallel data.  %We then add equivalent but monolingually estimated features in reverse order to see how much of the lost performance can be regained.  \figref{fig:lesionreplacement} gives all of the results, which are explained below. Finally, we move on to phrase table induction experiments.
 
 \section{Results} \label{sect:results}
 
-\subsection{Lesion experiments (Experiments 1-4)}  \label{sect:exp:lesions}
+\paragraph{Lesion experiments (Experiments 1-4)}  \label{sect:exp:lesions}
 
 We begin with a series of experiments where we remove individual features derived from an aligned bitext in order to get a sense of their relative contributions to the overall system performance on the English-Spanish language pair (see \figref{fig:lesionreplacement}). When both phrase and orientation features are derived from word alignments ({\bf B/B}, the standard features functions defined in \secref{sect:bckg:smt}), the system reaches 21.87 BLEU.  Next we replace orientation features with random values ({\bf B/--}) and drop phrase features ({\bf --/B}).  While phrase table features account for a substantial performance difference (9 BLEU points), dropping orientation features affects the system score relatively little.  This is not surprising, since the word order is generally preserved in Spanish to English translations.  Finally, both dropping phrase scores and replacing orientation features with random values ({\bf --/--}) results in 5.5 BLEU, a 16.4 point drop.
 
-\subsection{Adding equivalent monolingual features (Experiments 5-9)} \label{sect:exp:replacement}
+\paragraph{Adding equivalent monolingual features (Experiments 5-9)} \label{sect:exp:replacement}
 
 Next, we replace the feature functions with their monolingual equivalents, hoping to regain much of the 16.4 BLEU point loss that resulted from dropping all features.  Adding orientation features estimated from monolingual data alone ({\bf --/M})  recovers 5 BLEU points. Adding phrasal monolingual scores ({\bf P/--}) and lexical monolingual scores ({\bf L/--}) separately recover 8.4 and 10.6 BLEU points, respectively, and 11 points together. Like the phrase table features derived from the bitext, our monolingual features contribute more to performance than the reordering feature. Supplementing the stripped phrase table with all three monolingually estimated features ({\bf PL/M}) yields an even higher gain of {\bf 11.6 BLEU} points, or {\bf over 70\% of the BLEU score} loss that occurred when we dropped all features from the phrase table. Our monolingual features successfully recover much of the information contained in the features derived from bitext.  Note that the achieved score is equivalent to a standard bilingually estimated system trained on a parallel corpus of roughly 500,000 words (learning curve is omitted due to space constraints).
 
-\subsection{Augmenting standard features with monolingual features (Experiment 10)} \label{sect:exp:augment}
+\paragraph{Augmenting standard features with monolingual features (Experiment 10)} \label{sect:exp:augment}
 We perform an additional experiment to determine whether there is any information estimated in monolingual scores that is not captured by the standard feature set derived from the bitext. Indeed, we see a 1 BLEU point increase when we supplement the original phrase table with phrasal and lexical monolingual features ({\bf BPL/B}). Therefore, our monolingually estimated scores capture some novel information not contained in the standard feature set.
 
 \subsection{Truly independent monolingual corpora} \label{sect:exp:indep}
