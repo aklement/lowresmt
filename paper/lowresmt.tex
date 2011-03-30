@@ -12,6 +12,7 @@
 \usepackage{latexsym}
 \usepackage{amsmath}
 \usepackage{multirow}
+\usepackage{fullpage}
 \usepackage{url}
 \usepackage{color}
 \usepackage[vlined,figure]{algorithm2e}
@@ -364,17 +365,17 @@ To determine whether our pruning parameters are reasonable, we evaluate what per
 Pruning 	& Phrase	& Search & 	Findable 	& Findable \\
 filters	& Pairs	&  Space & Types 	&  Tokens \\
 \hline
-%\hline
-%\multicolumn{5}{|l|}{Spanish} \\
-%\hline
+\hline
+\multicolumn{5}{|l|}{Spanish} \\
+\hline
 Unpruned & 1.0 T & 100\% & 100\% & 100\% \\
 Dict combs. & 76 M & $<$.01\% & 32\% & 42\% \\
 Freq Filter &  6.2 B & 0.6\% & 54\% & 66\% \\
 Freq + Dict & 324 M & $<$.04\% & 44\% & 54\% \\
 \hline
-%\hline
-%\multicolumn{5}{|l|}{Urdu} \\
-%\hline
+\hline
+\multicolumn{5}{|l|}{Urdu} \\
+\hline
 Unpruned & 913 B & 100\% & 100\% & 100\% \\
 Dict combs. & 54 M & $<$.01\% & 15\% & 25\% \\
 Freq Filter & 1.5 B & 0.2\% & 49\% & 62\% \\
