@@ -457,14 +457,15 @@ We now turn to estimating monolingual features from truly independent monolingua
 %\end{figure}
 
 \subsection{Phrase table extraction}\label{sect:exp:pt}
-As alternatives to using the Moses phrase table, which is based on the word-aligned parallel corpus, we perform several experiments using phrase tables generated in other ways. As explained in Section \ref{sect:extract}, we generate phrase translation pairs in three ways: combining and permuting dictionary translations (henceforth, dictionary-based); using lexicon induction methods to identify candidate word translations for OOV unigrams (henceforth, lexically induced); and inducing multi-word translations from the bilingual text treated as monolingual corpora (henceforth, induced phrase pairs). We compute both lexical and phrasal monolingual feature scores for all three types of phrase translations. To score lexical monolingual features, we use the word alignments inherent to both the dictionary-based translations and the lexically induced translations. We use an aligner \cite{DeNero07} to generate word alignments for the induced phrase pairs. In all of the experiments, we used random reordering features.
+As alternatives to using the Moses phrase table, which is based on the word-aligned parallel corpus, we perform several Spanish translation experiments using phrase tables generated in other ways. As explained in Section \ref{sect:extract}, we generate phrase translation pairs in three ways: combining and permuting dictionary translations (dictionary-composed); using lexicon induction methods to identify candidate word translations for OOV unigrams (lexically induced); and inducing multi-word translations from the bilingual text treated as monolingual corpora (induced phrase pairs). We compute lexical and phrasal monolingual feature scores for all phrase pairs. To score lexical features, we use the word alignments inherent to both the dictionary-based translations and the lexically induced translations. We use an aligner \cite{DeNero07} to generate word alignments for the induced phrase pairs. In all of the experiments, we used random reordering features.
 
-\todopi{Anni}{make these two paragraphs relevant to Urdu as well as Spanish, assuming experiments finish} We use the monolingual feature scores to prune the induced phrase pairs from over 500 million to 1.1 million and to prune the dictionary-based table from 74 million to about 500 thousand entries. We include the top five lexically induced translations for each OOV unigram.
+%\todopi{Anni}{make these two paragraphs relevant to Urdu as well as Spanish, assuming experiments finish} 
+We use monolingual feature scores to prune the induced phrase pairs from over 500 million to 1.1 million and dictionary-composed pairs from 74 million to about 500 thousand. We include the top five lexically induced translations for OOV unigrams.
 
-BLEU scores resulting from using different combinations of phrase pair sets and features are shown in Table \ref{table:new-phrase-tables}. In all experiments using phrase pairs from multiple sources, we add a feature to indicate whether a given phrase pair came from the dictionary-based or lexically induced tables or from the large table of induced phrase pairs.
+BLEU scores resulting from using different combinations of phrase pair sets and features are shown in Table \ref{table:new-phrase-tables}. In all experiments using phrase pairs from multiple sources, we add a feature to indicate whether a given phrase pair came from the dictionary-composed or lexically induced tables or from the large table of induced phrase pairs.
 % As shown, using the dictionary-based table without monolingual features and using the induced phrase pairs (with features) both result in relatively poor translation performance. However, 
-Adding monolingual features to the dictionary-based table improves the BLEU score to 
-11.52, and combining the dictionary-based table with the induced phrase pairs further improves the BLEU score to 12.25. Finally, combining all three alternative phrase pair sources results in a surprisingly competitive BLEU score of 12.65. 
+Adding monolingual features to the dictionary-composed table improves the BLEU score to 
+11.52, and combining the dictionary-composed table with the induced phrase pairs further improves the BLEU score to 12.25. Finally, combining all three alternative phrase pair sources results in a surprisingly competitive BLEU score of 12.65. 
 
 Although our alternative phrase pair sources do not reach the performance level of the Moses phrase table, they are promising because they show that it is possible to perform end-to-end MT without a sentence-aligned parallel corpus. %We believe that this is a promising direction for future work.
 
@@ -482,21 +483,21 @@ Although our alternative phrase pair sources do not reach the performance level 
 \begin{table}
 \small
 \begin{center}
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{|c|c|c|}
 \hline
-Phrase 	& Monolinual  & \multicolumn{2}{|c|} {BLEU}  \\ \cline{3-4}
-Table	& Features &   \multicolumn{1}{|c}{Spanish} & \multicolumn{1}{c|}{Urdu} \\ 
+Phrase Table & Monolingual Features & BLEU \\ %\multicolumn{2}{|c|} {BLEU}  \\ %\cline{3-4}
+%Table & Features &   \multicolumn{2}{|c|} {} \\ %{Spanish} & \multicolumn{1}{c|}{Urdu} \\ 
 \hline
-Dict & None & 9.09 & x\\
-Dict & Ph-Mono & 11.52 & x\\
+Dict & None & 9.09 \\
+Dict & Ph-Mono & 11.52 \\
 %Dict-composed & Align-Mono & Random & 11.63 \\
-Induc & Ph-Mono &  8.97 & x\\
+Induc & Ph-Mono &  8.97 \\
 %Induced & Align-Mono & Random & If-time \\
-Dict+Induc & Ph+Lx-Mono & 12.25 & x\\
-Dict+Induc+Lex-I & Ph+Lx-Mono & 12.65 & x\\
+Dict+Induc & Ph+Lx-Mono & 12.25 \\
+Dict+Induc+Lex-I & Ph+Lx-Mono & 12.65 \\
 \hline
 \end{tabular}
-\caption{Decoding with the dictionary-composed phrase table (Dict), induced phrase pairs (Induc), and lexically induced OOVs (Lex-I) scored with lexical monolingual features (Lx-Mono) and phrasal monolingual features (Ph-Mono). In all of the experiments shown in this table, we used random reordering features.}\label{table:new-phrase-tables}
+\caption{Spanish-English decoding with the dictionary-composed phrase table (Dict), induced phrase pairs (Induc), and lexically induced OOVs (Lex-I) scored with lexical monolingual features (Lx-Mono) and phrasal monolingual features (Ph-Mono). All experiments shown in this table use random reordering features.}\label{table:new-phrase-tables}
 \end{center}
 \end{table}
 
