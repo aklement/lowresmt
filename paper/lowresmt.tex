@@ -407,7 +407,7 @@ Freq + Dict & 87 M & $<$.01\% & 26\% & 35\% \\
 
 \section{Experimental Setup} \label{sect:expsetup}
 
-We conduct three sets of experiments. The first uses a fixed phrase table that is extracted from a bitext but whose parameters are re-estimated by treating the parallel corpus as two monolingual texts. This makes two idealizations: (1) the phrase table itself is high quality, and (2) the monolingual corpora have identical distributional properties. These are useful to give an upper bound on how well our methods could work in principle. For the second set of experiments we drop the second idealization and show how well we do using truly monolingual texts. For the third set, we give up the idealized phrase table.
+We conduct three sets of experiments. The first uses a fixed phrase table that is extracted from a bitext but whose parameters are re-estimated by treating the parallel corpus as two monolingual texts. This makes two idealizations: (1) the phrase table itself is high quality, and (2) the monolingual corpora have identical distributional properties. These are useful to give an upper bound on how well our methods could work in principle. For the second set of experiments, we give up the idealized phrase table. For the third set, we drop the second idealization and show how well we do using truly monolingual texts.
 
 \paraheader{Data.} For Spanish-English (es-en) experiments we use the Spanish and English sections of the Europarl v5 corpus\footnote{Europarl filenames include dates, making temporal signatures easy to compute.} \cite{Koehn:2005}. When estimating monolingual parameters, we treat the two sides of the corpus as two {\em independent monolingual} corpora.  Our development data was comprised of {\em news-test2008} and {\em news-syscomb2009}, and our test set was {\em news-test2009} \cite{callisonburch-EtAl:2010:WMT}.  Our seed dictionary has entries for 49,795 source tokens\footnote{Translation results are robust to substantially reducing dictionary size; we omit the experiments due to space constraints.}.
 For Urdu-English (ur-en) experiments in \secref{sect:exp:indep} we use the parallel corpus and development and test sets distributed for the NIST 2009 Open MT Evaluation Workshop.  We estimate monolingual parameters from genuinely monolingual Urdu and English corpora annotated with publication dates (145 and 159 million tokens, respectively), which we have collected by crawling online news sites.  %Note: we have been collecting similar resources for a number of low density languages, and we plan to make them available to the community.  
@@ -425,7 +425,9 @@ Since our experiments are complex, we release our software for full reproducibil
 
 \section{Results} \label{sect:results}
 
-\paragraph{Lesion experiments (Experiments 1-4)}  \label{sect:exp:lesions}
+\subsection{Replacing bilingual features with features estimated from monolingual data}\label{sect:exp:lesions}
+
+\paragraph{Lesion experiments (Experiments 1-4)}
 
 We begin with a series of experiments where we remove individual features derived from an aligned bitext in order to get a sense of their relative contributions to the overall system performance on the English-Spanish language pair (see \figref{fig:lesionreplacement}). When both phrase and orientation features are derived from word alignments ({\bf B/B}, the standard features functions defined in \secref{sect:bckg:smt}), the system reaches 21.87 BLEU.  Next we replace orientation features with random values ({\bf B/--}) and drop phrase features ({\bf --/B}).  While phrase table features account for a substantial performance difference (9 BLEU points), dropping orientation features affects the system score relatively little.  This is not surprising, since the word order is generally preserved in Spanish to English translations.  Finally, both dropping phrase scores and replacing orientation features with random values ({\bf --/--}) results in 5.5 BLEU, a 16.4 point drop.
 
@@ -435,16 +437,6 @@ Next, we replace the feature functions with their monolingual equivalents, hopin
 
 \paragraph{Augmenting standard features with monolingual features (Experiment 10)} \label{sect:exp:augment}
 We perform an additional experiment to determine whether there is any information estimated in monolingual scores that is not captured by the standard feature set derived from the bitext. Indeed, we see a 1 BLEU point increase when we supplement the original phrase table with phrasal and lexical monolingual features ({\bf BPL/B}). Therefore, our monolingually estimated scores capture some novel information not contained in the standard feature set.
-
-\subsection{Truly independent monolingual corpora} \label{sect:exp:indep}
-
-We now turn to estimating monolingual features from truly independent monolingual corpora we collected from web crawls for a pair of unrelated languages, Urdu and English.  While we cannot recover as much of the lost performance (see \figref{fig:urdu}) as we did in the idealized setup of the Spanish-English experiments, the monolingual features are informative and take us a long way toward inducing a reasonable model.  Monolingual corpora are more plentiful than parallel data, and we expect system performance to improve further with more available data.
-
-\begin{figure}[t]
-\includegraphics[width=\linewidth]{../figures/urdu/urdulegendanni.pdf}
-\caption{Performance in English-Urdu experiments, where monolingual parameters are estimated from truly  monolingual data.}
-\label{fig:urdu}
-\end{figure}
 
 
 %\begin{figure}[t]
@@ -501,6 +493,17 @@ Dict+Induc+Lex-I & Ph+Lx-Mono & 12.65 \\
 \caption{Spanish-English decoding with the dictionary-composed phrase table (Dict), induced phrase pairs (Induc), and lexically induced OOVs (Lex-I) scored with lexical monolingual features (Lx-Mono) and phrasal monolingual features (Ph-Mono). All experiments shown in this table use random reordering features.}\label{table:new-phrase-tables}
 \end{center}
 \end{table}
+
+\subsection{Truly independent monolingual corpora} \label{sect:exp:indep}
+
+We now turn to estimating monolingual features from truly independent monolingual corpora we collected from web crawls for a pair of unrelated languages, Urdu and English.  While we cannot recover as much of the lost performance (see \figref{fig:urdu}) as we did in the idealized setup of the Spanish-English experiments, the monolingual features are informative and take us a long way toward inducing a reasonable model.  Monolingual corpora are more plentiful than parallel data, and we expect system performance to improve further with more available data.
+
+\begin{figure}[t]
+\vskip -0.11in
+\includegraphics[width=\linewidth]{../figures/urdu/urdulegendanni.pdf}
+\caption{Performance in English-Urdu experiments, where monolingual parameters are estimated from truly  monolingual data.}
+\label{fig:urdu}
+\end{figure}
 
 %\subsection{Single language}
 
