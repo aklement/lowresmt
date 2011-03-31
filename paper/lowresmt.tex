@@ -457,12 +457,13 @@ As alternatives to using the Moses phrase table, which is based on the word-alig
 %\todopi{Anni}{make these two paragraphs relevant to Urdu as well as Spanish, assuming experiments finish} 
 We use monolingual feature scores to prune the induced phrase pairs from over 500 million to 1.1 million and dictionary-composed pairs from 74 million to about 500 thousand. We include the top five lexically induced translations for OOV unigrams.
 
-BLEU scores resulting from using different combinations of phrase pair sets and features are shown in Table \ref{table:new-phrase-tables}. In all experiments using phrase pairs from multiple sources, we add a feature to indicate whether a given phrase pair came from the dictionary-composed or lexically induced tables or from the large table of induced phrase pairs.
+BLEU scores resulting from using different combinations of phrase pair sets and features are shown in Table \ref{table:new-phrase-tables}. In all experiments using phrase pairs from multiple sources, we add a feature to indicate whether each phrase pair came from the dictionary-composed or lexically induced tables or from the large table of induced phrase pairs.
 % As shown, using the dictionary-based table without monolingual features and using the induced phrase pairs (with features) both result in relatively poor translation performance. However, 
-Adding monolingual features to the dictionary-composed table improves the BLEU score to 
-11.52, and combining the dictionary-composed table with the induced phrase pairs further improves the BLEU score to 12.25. Finally, combining all three alternative phrase pair sources results in a surprisingly competitive BLEU score of 12.65. 
+%Adding monolingual features to the dictionary-composed table improves the BLEU score to 
+%11.52, and combining the dictionary-composed table with the induced phrase pairs further improves the BLEU score to 12.25. Finally, 
+Combining all three alternative phrase pair sources and performing end-to-end MT \emph{entirely without a sentence-aligned parallel corpus} results in a BLEU score of 12.65. This score is equivalent to that of training an SMT system on about 100k words of bitext, and it is more than double that of translating using a clean phrase table and target side language model but no bilingually estimated features (see \figref{fig:lesionreplacement}, Exp 5: -/M).
 
-Although our alternative phrase pair sources do not reach the performance level of the Moses phrase table, they are promising because they show that it is possible to perform end-to-end MT without a sentence-aligned parallel corpus. %We believe that this is a promising direction for future work.
+%Although our alternative phrase pair sources do not reach the performance level of the Moses phrase table, they are promising because they show that it is possible to perform end-to-end MT without a sentence-aligned parallel corpus. %We believe that this is a promising direction for future work.
 
 %\begin{figure}[h]
 %\vskip 0.1in
@@ -498,7 +499,7 @@ Dict+Induc+Lex-I & Ph+Lx-Mono & 12.65 \\
 
 \subsection{Truly independent monolingual corpora} \label{sect:exp:indep}
 
-We now turn to estimating monolingual features from truly independent monolingual corpora we collected from web crawls for a pair of unrelated languages, Urdu and English.  While we cannot recover as much of the lost performance (see \figref{fig:urdu}) as we did in the idealized setup of the Spanish-English experiments, the monolingual features are informative and take us a long way toward inducing a reasonable model.  Monolingual corpora are more plentiful than parallel data, and we expect system performance to improve further with more available data.
+We now turn to estimating monolingual features from truly independent monolingual corpora we collected from web crawls for a pair of unrelated languages, Urdu (a true low-resource language) and English.  While we cannot recover as much of the lost performance (see \figref{fig:urdu}) as we did in the idealized setup of the Spanish-English experiments, the monolingual features are very informative and take us a long way toward inducing a reasonable model.  Estimating features using \emph{completely independent monolingual corpora} brings us to within 7 BLEU points of the standard bilingually estimated model. %Monolingual corpora are more plentiful than parallel data, and we expect system performance to improve further with more available data.
 
 \begin{figure}[t]
 \vskip -0.11in
