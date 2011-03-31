@@ -418,7 +418,7 @@ The only bilingual resources that we use are seed dictionaries and a development
 %CUT FOR SPACE: We also prune the preceding, following, and discontinues phrases collected by {\tt \small CollectOccurs()} (see \figref{fig:algoreorder}) to contain at most 1,000, 1,000, and 3,000 least frequent phrases phrases, respectively.
 
 \vskip 0.05in
-The code for the experiments in this paper, and the monolingual data we collected and used in \secref{sect:exp:indep} along with similar corpora for 54 other low density languages is available at \url{http://anonymized}.
+The code for the experiments in this paper, and the monolingual data we collected and used in \secref{sect:exp:indep}, along with similar corpora for 54 other low density languages, is available at \url{url}.
 
 %Since our experiments are complex, we release our software for full reproducibility.  It includes source code and documentation describing the monolingual estimation proceedures for all parameters. We include large monolingual corpora and dictionaries for 55 low density languages. \url{url}
 
@@ -461,7 +461,8 @@ BLEU scores resulting from using different combinations of phrase pair sets and 
 % As shown, using the dictionary-based table without monolingual features and using the induced phrase pairs (with features) both result in relatively poor translation performance. However, 
 %Adding monolingual features to the dictionary-composed table improves the BLEU score to 
 %11.52, and combining the dictionary-composed table with the induced phrase pairs further improves the BLEU score to 12.25. Finally, 
-Combining all three alternative phrase pair sources and performing end-to-end MT \emph{entirely without a sentence-aligned parallel corpus} results in a BLEU score of 12.65. This score is equivalent to that of training an SMT system on about 100k words of bitext, and it is more than double that of translating using a clean phrase table and target side language model but no bilingually estimated features (see \figref{fig:lesionreplacement}, Exp 5: -/M).
+Combining all three alternative phrase pair sources and performing end-to-end MT \emph{entirely without a sentence-aligned parallel corpus} results in a BLEU score of 12.65. This score is equivalent to that of training an SMT system on about 100k words of bitext, and it is more than double that of %a setup similar to previous work \cite{Carbonell2006}, which translates
+translating using a clean phrase table and target side language model but no bilingually estimated features (see \figref{fig:lesionreplacement}, Exp 5: -/M).
 
 %Although our alternative phrase pair sources do not reach the performance level of the Moses phrase table, they are promising because they show that it is possible to perform end-to-end MT without a sentence-aligned parallel corpus. %We believe that this is a promising direction for future work.
 
