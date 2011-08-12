@@ -15,7 +15,7 @@ snames <- 1.3
 pdf(file="lesionreplacement.pdf", height=4, width=11, onefile=TRUE, family='Helvetica', pointsize=12)
 par(mar=c(1.0,4.8,1.0,0.5), new=FALSE, cex.lab=slabels)
 
-bp <-barplot(x, density=fillz, col=colorz, angle=anglez, space=spacez, ylab="BLEU", cex.lab=slabels, cex.axis=saxis, cex.names=snames, ylim=c(0, 25), legend=F)
+bp <-barplot(x, density=fillz, col=colorz, angle=anglez, space=spacez, ylab="BLEU", cex.lab=slabels, cex.axis=saxis, cex.names=snames, ylim=c(0, 26), legend=F)
 grid(nx = 0, ny = NULL, col = "black", lty = "dotted", lwd = 1, equilogs = FALSE)
 #legend("topright", as.character(c$Title), cex=slabels, density=fillz, fill=colorz, bty="y", bg="white")
 box()
