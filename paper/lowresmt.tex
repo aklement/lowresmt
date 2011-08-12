@@ -407,10 +407,14 @@ Shorter and more frequent phrases (e.g. punctuation) are more likely to appear i
 
 \section{Experimental Setup} \label{sect:expsetup}
 
-We conduct three sets of experiments. The first uses a fixed phrase table that is extracted from a bitext but whose parameters are re-estimated by treating the parallel corpus as two monolingual texts. This is an idealized setup for two reasons: we assume that a high quality phrase table is given, and that the monolingual corpora have identical distributional properties. These are useful to give an upper bound on how well our methods could work in principle. For the second set of experiments, we give up the idealized phrase table. For the third set, we drop the second idealization and show how well we do using truly monolingual texts.
+In our experimental setup, we use a fixed set of phrase translation pairs that is extracted from a bitext, but we reestimate the translation and reordering parameters using monolingual texts. This is an idealized setup because we assume that a high quality phrase table is given. However, it enables us to test the quality of our monolingual features directly. In future work, we will explore inducing the phrase table itself without using a large bitext.
+%For the second set of experiments, we give up the idealized phrase table. For the third set, we drop the second idealization and show how well we do using truly monolingual texts.
 
-\paraheader{Data.} For Spanish-English (es-en) experiments in Sections \ref{sect:exp:lesions} and \ref{sect:exp:pt} we use the Spanish and English sections of the Europarl v5 corpus\footnote{Europarl filenames include dates, making temporal signatures easy to compute.} \cite{Koehn:2005}. When estimating monolingual parameters, we treat the two sides of the corpus as two {\em independent monolingual} corpora.  Our development data was comprised of {\em news-test2008} and {\em news-syscomb2009}, and our test set was {\em news-test2009} \cite{callisonburch-EtAl:2010:WMT}.  Our seed dictionary has entries for 49,795 source tokens\footnote{Translation results are robust to substantially reducing dictionary size; we omit the experiments due to space constraints.}.
-For Urdu-English (ur-en) experiments in \secref{sect:exp:indep} we use the parallel corpus and development and test sets distributed for the NIST 2009 Open MT Evaluation Workshop.  We estimate monolingual parameters from genuinely monolingual Urdu and English corpora annotated with publication dates (145 and 159 million tokens, respectively), which we have collected by crawling online news sites.  %Note: we have been collecting similar resources for a number of low density languages, and we plan to make them available to the community.  
+\paraheader{Data.} In Section \ref{sect:exp:lesions}, we present results on Spanish-English MT. We use the Spanish and English sections of the Europarl v5 corpus %\footnote{Europarl filenames include dates, making temporal signatures easy to compute.} 
+\cite{Koehn:2005}. 
+%When estimating monolingual parameters, we treat the two sides of the corpus as two {\em independent monolingual} corpora.  
+Our development data was comprised of {\em news-test2008} and {\em news-syscomb2009}, and our test set was {\em news-test2009} \cite{callisonburch-EtAl:2010:WMT}.  Our seed dictionary has entries for 49,795 source tokens\footnote{Translation results are robust to substantially reducing dictionary size; we omit the experiments due to space constraints.}. We estimate monolingual features using samples of the Spanish and English Gigaword corpora\footnote{We use the entirety of the following English and Spanish Gigaword sections: Agence France-Presse (afp), Associated Press Worldstream (apw), and Xinhua News Agency (xin).} and of the set of English and Spanish Wikipedia articles that contain interlingual links to one another\footnote{We use a subset of about 60,000 paired, interlingually linked pages.}. 
+%For Urdu-English (ur-en) experiments in \secref{sect:exp:indep} we use the parallel corpus and development and test sets distributed for the NIST 2009 Open MT Evaluation Workshop.  We estimate monolingual parameters from genuinely monolingual Urdu and English corpora annotated with publication dates (145 and 159 million tokens, respectively), which we have collected by crawling online news sites.  %Note: we have been collecting similar resources for a number of low density languages, and we plan to make them available to the community.  
 Our seed dictionary has entries for 25,377 source tokens.
 The only bilingual resources that we use are seed dictionaries and a development set to tune feature weights in minimum error rate training.  However, these bitexts are very small (2,553 and 981 sentences for es-en and ur-en, respectively).  
 
@@ -418,7 +422,7 @@ The only bilingual resources that we use are seed dictionaries and a development
 %CUT FOR SPACE: We also prune the preceding, following, and discontinues phrases collected by {\tt \small CollectOccurs()} (see \figref{fig:algoreorder}) to contain at most 1,000, 1,000, and 3,000 least frequent phrases phrases, respectively.
 
 \vskip 0.05in
-The code for the experiments in this paper, and the monolingual data we collected and used in \secref{sect:exp:indep}, along with similar corpora for 54 other low density languages, is available at \url{url}.
+The code for the experiments in this paper is available at \url{url}. \todo{Add live dropbox URL} %and the monolingual data we collected, along with similar corpora for 54 other low density languages, is available at \url{url}.
 
 %Since our experiments are complex, we release our software for full reproducibility.  It includes source code and documentation describing the monolingual estimation proceedures for all parameters. We include large monolingual corpora and dictionaries for 55 low density languages. \url{url}
 
@@ -435,10 +439,10 @@ We begin with a series of experiments where we remove individual features derive
 
 \paragraph{Adding equivalent monolingual features (Experiments 5-9)}
 
-Next, we replace the feature functions with their monolingual equivalents, hoping to regain much of the 16.4 BLEU point loss that resulted from dropping all features.  Adding orientation features estimated from monolingual data alone ({\bf --/M})  recovers 5 BLEU points. Adding phrasal monolingual scores ({\bf P/--}) and lexical monolingual scores ({\bf L/--}) separately recover 8.4 and 10.6 BLEU points, respectively, and 11 points together. Like the phrase table features derived from the bitext, our monolingual features contribute more to performance than the reordering feature. Supplementing the stripped phrase table with all three monolingually estimated features ({\bf PL/M}) yields an even higher gain of {\bf 11.6 BLEU} points, or {\bf over 70\% of the BLEU score} loss that occurred when we dropped all features from the phrase table. Our monolingual features successfully recover much of the information contained in the features derived from bitext.  Note that the achieved score is equivalent to a standard bilingually estimated system trained on a parallel corpus of roughly 500,000 words (learning curve is omitted due to space constraints).
+Next, we replace the feature functions with their monolingual equivalents, hoping to regain much of the 16.4 BLEU point loss that resulted from dropping all features.  Adding orientation features estimated from monolingual data alone ({\bf --/M})  recovers 5 BLEU points. Adding phrasal monolingual scores ({\bf P/--}) and lexical monolingual scores ({\bf L/--}) separately recover 10.1 and 11.3 BLEU points, respectively, and 12.6 points together. Like the phrase table features derived from the bitext, our monolingual features contribute more to performance than the reordering feature. Supplementing the stripped phrase table with all three monolingually estimated features ({\bf PL/M}) yields an even higher gain of {\bf 13.3 BLEU} points, or {\bf over 80\% of the BLEU score} loss that occurred when we dropped all features from the phrase table. Our monolingual features successfully recover much of the information contained in the features derived from bitext.  Note that the achieved score is equivalent to a standard bilingually estimated system trained on a parallel corpus of roughly 500,000 \todo{is this still the same?} words (learning curve is omitted due to space constraints).
 
 \paragraph{Augmenting standard features with monolingual features (Experiment 10)}
-We perform an additional experiment to determine whether there is any information estimated in monolingual scores that is not captured by the standard feature set derived from the bitext. Indeed, we see a 1 BLEU point increase when we supplement the original phrase table with phrasal and lexical monolingual features ({\bf BPL/B}). Therefore, our monolingually estimated scores capture some novel information not contained in the standard feature set.
+We perform an additional experiment to determine whether there is any information estimated in monolingual scores that is not captured by the standard feature set derived from the bitext. Indeed, we see a 1.5 BLEU point increase when we supplement the original phrase table with phrasal and lexical monolingual features ({\bf BPL/B}). Therefore, our monolingually estimated scores capture some novel information not contained in the standard feature set.
 
 
 %\begin{figure}[t]
@@ -451,62 +455,18 @@ We perform an additional experiment to determine whether there is any informatio
 %\vskip -0.2in
 %\end{figure}
 
-\subsection{Phrase table extraction}\label{sect:exp:pt}
-As alternatives to using the Moses phrase table, which requires a word-aligned parallel corpus, we generate Spanish phrase tables in three other ways (see \secref{sect:extract}): combining and permuting dictionary translations (dictionary-composed); using lexicon induction methods to identify candidate word translations for OOV unigrams (lexically induced); and inducing multi-word translations from the bilingual text treated as monolingual corpora (induced phrase pairs). We compute lexical and phrasal monolingual feature scores for all phrase pairs. To score lexical features, we use the word alignments inherent to both the dictionary-based translations and the lexically induced translations. We use an aligner \cite{DeNero07} to generate word alignments for the induced phrase pairs. In these experiments, we used random reordering features.
 
-%\todopi{Anni}{make these two paragraphs relevant to Urdu as well as Spanish, assuming experiments finish} 
-We use monolingual feature scores to prune the induced phrase pairs from over 500 million to 1.1 million and dictionary-composed pairs from 74 million to about 500 thousand. We include the top five lexically induced translations for OOV unigrams.
 
-BLEU scores resulting from using different combinations of phrase pair sets and features are shown in Table \ref{table:new-phrase-tables}. In all experiments using phrase pairs from multiple sources, we add a feature to indicate whether each phrase pair came from the dictionary-composed or lexically induced tables or from the large table of induced phrase pairs.
-% As shown, using the dictionary-based table without monolingual features and using the induced phrase pairs (with features) both result in relatively poor translation performance. However, 
-%Adding monolingual features to the dictionary-composed table improves the BLEU score to 
-%11.52, and combining the dictionary-composed table with the induced phrase pairs further improves the BLEU score to 12.25. Finally, 
-Combining all three alternative phrase pair sources and performing end-to-end MT \emph{entirely without a sentence-aligned parallel corpus} results in a BLEU score of 12.65. This score is equivalent to that of training an SMT system on 100k words of bitext, and it significantly surpasses the \cite{Carbonell2006} baseline in \figref{fig:lesionreplacement}, Exp 4.
+%\subsection{Truly independent monolingual corpora} \label{sect:exp:indep}
 
-%Although our alternative phrase pair sources do not reach the performance level of the Moses phrase table, they are promising because they show that it is possible to perform end-to-end MT without a sentence-aligned parallel corpus. %We believe that this is a promising direction for future work.
+%We now turn to estimating monolingual features from truly independent monolingual corpora we collected from web crawls for a pair of unrelated languages, Urdu (a true low-resource language) and English.  While we cannot recover as much of the lost performance (see \figref{fig:urdu}) as we did in the idealized setup of the Spanish-English experiments, the monolingual features take us a long way toward inducing a reasonable model.  We show that it is possible to estimate features using \emph{completely independent monolingual corpora}.% brings us to within 7 BLEU points of the standard bilingually estimated model. %Monolingual corpora are more plentiful than parallel data, and we expect system performance to improve further with more available data.
 
-%\begin{figure}[h]
-%\vskip 0.1in
-%\begin{center}
-%\includegraphics[width=\linewidth]{../figures/phrasetable/phrasetable.pdf}
-%\caption{MT performance using extracted phrase tables: dictionary-based table with no features ({\bf 1}), dictionary-based tables with phrasal monolingual scores ({\bf 2}), induced phrase pairs with monolingual features ({\bf 3}), combined dictionary-based table and induced phrase pairs with lexical and phrasal monolingual scores ({\bf 4}), and combined dictionary-based, lexically induced, and induced phrase pairs with lexical and phrasal monolingual scores ({\bf 5}). }
-%\label{fig:phrasetable}
-%\end{center}
-%\vskip -0.2in
+%\begin{figure}[t]
+%\vskip -0.11in
+%\includegraphics[width=\linewidth]{../figures/urdu/urdulegendanni.pdf}
+%\caption{Performance in English-Urdu experiments, where monolingual parameters are estimated from truly  monolingual data. See \figref{fig:lesionreplacement} for key.}
+%\label{fig:urdu}
 %\end{figure}
-
-
-\begin{table}
-\small
-\begin{center}
-\begin{tabular}{|c|c|c|}
-\hline
-Phrase Table & Monolingual Features & BLEU \\ %\multicolumn{2}{|c|} {BLEU}  \\ %\cline{3-4}
-%Table & Features &   \multicolumn{2}{|c|} {} \\ %{Spanish} & \multicolumn{1}{c|}{Urdu} \\ 
-\hline
-Dict & None & 9.09 \\
-Dict & Ph-Mono & 11.52 \\
-%Dict-composed & Align-Mono & Random & 11.63 \\
-Induc & Ph-Mono &  8.97 \\
-%Induced & Align-Mono & Random & If-time \\
-Dict+Induc & Ph+Lx-Mono & 12.25 \\
-Dict+Induc+Lex-I & Ph+Lx-Mono & 12.65 \\
-\hline
-\end{tabular}
-\caption{Spanish-English decoding with the dictionary-composed phrase table (Dict), induced phrase pairs (Induc), and lexically induced OOVs (Lex-I) scored with lexical monolingual features (Lx-Mono) and phrasal monolingual features (Ph-Mono). All experiments shown in this table use random reordering features.}\label{table:new-phrase-tables}
-\end{center}
-\end{table}
-
-\subsection{Truly independent monolingual corpora} \label{sect:exp:indep}
-
-We now turn to estimating monolingual features from truly independent monolingual corpora we collected from web crawls for a pair of unrelated languages, Urdu (a true low-resource language) and English.  While we cannot recover as much of the lost performance (see \figref{fig:urdu}) as we did in the idealized setup of the Spanish-English experiments, the monolingual features take us a long way toward inducing a reasonable model.  We show that it is possible to estimate features using \emph{completely independent monolingual corpora}.% brings us to within 7 BLEU points of the standard bilingually estimated model. %Monolingual corpora are more plentiful than parallel data, and we expect system performance to improve further with more available data.
-
-\begin{figure}[t]
-\vskip -0.11in
-\includegraphics[width=\linewidth]{../figures/urdu/urdulegendanni.pdf}
-\caption{Performance in English-Urdu experiments, where monolingual parameters are estimated from truly  monolingual data. See \figref{fig:lesionreplacement} for key.}
-\label{fig:urdu}
-\end{figure}
 
 %\subsection{Single language}
 
@@ -534,12 +494,12 @@ We now turn to estimating monolingual features from truly independent monolingua
 %In moving from Spanish--English translation to translation from other, less-similar languages, we expect to face new challenges. Estimating orientation probabilities, for example, for languages with very different grammars may demand a more sophisticated algorithm. However, our work here lays the foundation for this important future work.
 
 In this work, we use abundant monolingual data to induce a full end-to-end machine translation system, reducing the dependence on the expensive and scarce parallel texts required by state-of-the-art SMT. % We demonstrate empirically that monolingual data can get us a long way toward high quality machine translation. 
-Specifically, we define monolingual equivalents of the phrase-based translation model parameters and demonstrate that they are capable of recovering over 70\% of the performance of the standard phrase based machine translation system.  Next, we propose several methods to induce a phrase table and show that the resulting end-to-end system significantly improves over the sole comparable past approach.  Finally, we show that monolingual data takes us a long way toward inducing a good translation model for a true low-resource language (Urdu).
+Specifically, we define monolingual equivalents of the phrase-based translation model parameters and demonstrate that they are capable of recovering over 80\% of the performance of the standard phrase based machine translation system.  %Next, we propose several methods to induce a phrase table and show that the resulting end-to-end system significantly improves over the sole comparable past approach.  Finally, we show that monolingual data takes us a long way toward inducing a good translation model for a true low-resource language (Urdu).
 
 %This work presents a promising direction for reducing the expensive and sparse parallel data that is assumed by state-of-the-art SMT.  
 %It remains to be seen if increasing the amount of monolingual data that we use will afford continuous improvements, or if we need a more complex translation model. 
 
-There are many interesting questions and directions for future work.  Utilizing small bitexts in combination with our monolingual parameter estimation techniques is a realistic resource condition and may improve performance further. We will also explore using richer feature sets and more principled methods for constructing the phrase table. For example, when extracting phrase tables, rather than heuristically pruning the space of possible phrase pairs before scoring them, we will use approximate scoring techniques, such as Locality Sensitive Hashing \cite{Charikar2002,VanDurme2010} in order to consider a large space of potential phrase pairs.
+There are many interesting questions and directions for future work.  First, we plan to develop methods for inducing a phrase table, which we assumed in this work. Additionally, utilizing small bitexts in combination with our monolingual parameter estimation techniques is a realistic resource condition and may improve performance further. We will also explore using richer feature sets and more principled methods for constructing the phrase table. For example, when extracting phrase tables, rather than heuristically pruning the space of possible phrase pairs before scoring them, we will use approximate scoring techniques, such as Locality Sensitive Hashing \cite{Charikar2002,VanDurme2010} in order to consider a large space of potential phrase pairs.
 
 %CONDENSED ABOVE FOR SPACE When extracting phrase tables in \secref{sect:extract}, we resorted to pruning the space of possible phrase translations before scoring them, because considering the entire space of phrase pairs is computationally infeasible.  However, relying less on pruning heuristics and being able to consider more pairs is likely to lead to better phrase tables.  Approximate scoring techniques, such as Locality Sensitive Hashing \cite{Charikar2002,VanDurme2010} would enable us to substantially expand the space of candidates we could feasibly consider.
 
