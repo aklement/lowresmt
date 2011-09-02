@@ -3,7 +3,7 @@ c <- read.table(file="lesionfeaturetype.txt", sep = "\t", head=TRUE)
 x <- c$BLEU
 #names(x) <- c$Title
 
-colorz <- c("green", "blue", "orange", "red", "orange", "blue", "blue", "blue", "blue", "orange", "green", "green")
+colorz <- c("green", "blue", "orange", "red", "orange", "deepskyblue", "deepskyblue", "deepskyblue", "deepskyblue", "blue", "green", "green")
 fillz <- c(15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15)
 anglez <- c(135, 135, 135, 135, 45, 45, 45, 45, 45, 45, 45, 45)
 spacez <- c(0.4, 0.4, 0.4, 0.4, 1.2, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 1.2)
@@ -12,7 +12,7 @@ saxis <- 1.3
 slabels <- 1.3
 snames <- 1.3
 
-pdf(file="lesionfeaturetype.pdf", height=4, width=11, onefile=TRUE, family='Helvetica', pointsize=12)
+pdf(file="lesionfeaturetyperaw.pdf", height=4, width=11, onefile=TRUE, family='Helvetica', pointsize=12)
 par(mar=c(1.0,4.8,1.0,0.5), new=FALSE, cex.lab=slabels)
 
 bp <-barplot(x, density=fillz, col=colorz, angle=anglez, space=spacez, ylab="BLEU", cex.lab=slabels, cex.axis=saxis, cex.names=snames, ylim=c(0, 26), legend=F)
