@@ -3,10 +3,10 @@ c <- read.table(file="lesionreplacement.txt", sep = "\t", head=TRUE)
 x <- c$BLEU
 #names(x) <- c$Title
 
-colorz <- c("green", "blue", "orange", "red", "orange", "deepskyblue", "deepskyblue", "deepskyblue", "blue", "green", "green")
-fillz <- c(15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15)
-anglez <- c(135, 135, 135, 135, 45, 45, 45, 45, 45, 45, 45)
-spacez <- c(0.4, 0.4, 0.4, 0.4, 1.2, 0.4, 0.4, 0.4, 0.4, 0.4, 1.2)
+colorz <- c("green", "blue", "orange", "red", "orange", "blue", "blue", "blue", "green", "green")
+fillz <- c(15, 15, 15, 15, 15, 15, 15, 15, 15, 15)
+anglez <- c(135, 135, 135, 135, 45, 45, 45, 45, 45, 45)
+spacez <- c(0.4, 0.4, 0.4, 0.4, 1.2, 0.4, 0.4, 0.4, 0.4, 1.2)
 
 saxis <- 1.3
 slabels <- 1.3

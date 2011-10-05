@@ -1,11 +1,12 @@
 BLEU	Title	Comment
-21.87	A.A	
-21.49	A.-	
-12.86	-.A	
-5.50	-.-	
-10.15	-.M	REDONE(PST,OLD=9.89) REDONE AGAIN 8/19/11 (OLD=10.51) 
-15.57	P.-	REDONE 8/12/11 (OLD=13.88)
-16.78	L.-	REDONE 8/12/11 (OLD=16.14)
-18.06	PL.-	REDONE 8/12/11 (OLD=16.48)
-18.79	PL.M	REDONE(PST,OLD=15.20) REDONE AGAIN 8/12/11 (OLD=17.08)
-23.36	APL.A	REDONE 8/12/11 (OLD=22.90)
+21.87	B.B	
+21.54	B.-	random was: 21.49
+12.86	-.B	
+4.00	-.-	random was: 5.50
+10.52	-.M	
+15.35	tm.-	random was: 15.37
+14.02	o.-	random was: 14.08
+14.78	c.-	random was: 14.88
+16.85	M.-	random was: 16.81
+17.50	M.M	
+22.92	BM.B	

@@ -1,0 +1,13 @@
+BLEU	Title	Comment
+21.87	B.B	
+21.54	B.-	random was: 21.49
+12.86	-.B	
+4.00	-.-	
+10.15	-.M	
+13.13	TM.-	random was: 13.15
+14.02	O.-	random was: 14.08
+14.07	C.-	random was: 14.20
+17.00	TP.-	random was: 16.83
+17.92	MON.-	random was: 18.06
+18.79	MON.M	
+23.36	BMON.B	
