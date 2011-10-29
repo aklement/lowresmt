@@ -92,7 +92,7 @@ Most of the prior work on lexicon induction is motivated by the idea that it cou
 
 \begin{itemize}
   \item In \secref{sect:bckg:lexind} we analyze the challenges of using bilingual lexicon induction for statistical machine translation (performance on low frequency items, and moving from words to phrases).
-  \item In \secref{sect:score} we use multiple cues present in monolingual data to estimate lexical and phrasal translation probabilities.
+  \item In Sections \ref{sect:phrasalfeats} and \ref{sect:lexfeats} we use multiple cues present in monolingual data to estimate lexical and phrasal translation probabilities.
   \item In \secref{sect:order} we propose a novel algorithm for estimating phrase reordering features from monolingual texts.
   \item Finally, in \secref{sect:results} we perform a lesion study in which all feature functions are systematically dropped from a phrase table and then replaced with monolingually estimated equivalents.  We report end-to-end translation quality with a fixed phrase-table with monolingually estimated parameters. 
 \end{itemize}
@@ -178,7 +178,9 @@ Additional related work on learning translations from monolingual corpora is dis
 
 \begin{figure}[t]
 \begin{center}
+\vspace{-.5cm}
 \includegraphics[width=\linewidth]{../figures/lexinductnew/lexinductnew.pdf}
+\vspace{-.5cm}
 \caption{Accuracy of single-word translations induced using contextual similarity as a function of the source word corpus frequency.  Accuracy is the proportion of the source words with at least one correct (bilingual dictionary) translation in the top 1 and top 10 candidate lists.  }
 \label{fig:lexinduct}
 \end{center}
@@ -210,11 +212,33 @@ In this work, we avoid this problem by assuming that a limited set of phrase pai
 
 \section{Monolingual Parameter Estimation} \label{sect:mono}
 
+We use  bilingual lexicon induction to estimate the parameters of a phrase-based translation model from monolingual data. Instead of scores estimated from bilingual parallel data, we make use of cues present in monolingual data to provide multiple orthogonal estimates of similarity between a pair of phrases. 
+
+%In Sections \ref{sect:phrasalfeats} and \ref{sect:lexfeats}, we introduce two kinds of scores we call {\em phrasal} and {\em lexical similarity} features.  The former score entire phrases, while the latter use word-level alignments between the phrase pairs to calculate lexical scores.  The motivation is analogous to the two kinds of features we reviewed in \secref{sect:bckg:smt}: lexical similarity features are informative for rare phrases that have less reliable phrasal similarity scores because of sparse counts. 
+
+\subsection{Phrasal similarity features} \label{sect:phrasalfeats}
+
+
+
 \begin{figure}[t]
 \includegraphics[width=\linewidth]{../figures/contextual/contextual}
 \caption{Scoring contextual similarity of \emph{phrases}: first, contextual vectors are projected using a small seed dictionary and then compared with the target language candidates.}
 \label{fig:contextual}
 \end{figure}
+
+
+\paraheader{Contextual similarity.}  We extend the vector space approach of \newcite{Rapp:1999} to compute similarity between \emph{phrases} in the source and target languages.  More formally, assume that $(s_{1}, s_{2}, \dots s_{N})$ and $(t_{1}, t_{2}, \dots t_{M})$ are (arbitrarily indexed) source and target vocabularies, respectively.  A source phrase $f$ is represented with an $N$- and target phrase $e$ with an $M$-dimensional vector (see \figref{fig:contextual}).  
+The the values of the vector representing a phrase correspond to how often each of the words in that vocabulary appeared within a two word window of the phrase.  These counts are collected using the monolingual corpora. 
+After the values have been computed, contextual vector $f$ is projected onto English vector space using the translations in a seed bilingual dictionary to project the values into their appropriate positions in an English vector. This sparse projected vector is compared to the vectors representing all English phrases $e$.  Each phrase in a the phrase table is assigned a contextual similarity score $c(f, e)$ based on the similarity between the projection of $f$ and $e$.  
+
+Various means of computing the component values and vector similarity measures have been proposed in literature (e.g. \newcite{Rapp:1999}, \newcite{Fung:1998}).  Following \newcite{Fung:1998}, we compute the value of the $k$-th component of $f$'s contextual vector  as follows: 
+\begin{equation*}
+w_{k} = n_{f,k} \times (log( {n / n_{k}}) + 1)
+\end{equation*}
+\noindent where $n_{f,k}$ and $n_{k}$ are the number of times $s_{k}$ appears in the context of $f$ and in the entire corpus, and $n$ is the maximum number of occurrences of any word in the data.  Intuitively, the more frequently $s_{k}$ appears with $f$ and the less common it is in the corpus in general, the higher its component value.  Similarity between two resulting vectors is measured as a cosine of the angle between them.
+
+%\mtodo{Give an example Spanish phrase and the English phrases that it has the highest similarity with}
+
 
 \begin{figure}[t]
 \includegraphics[width= \linewidth]{../figures/temporal/temporal}
@@ -222,23 +246,8 @@ In this work, we avoid this problem by assuming that a limited set of phrase pai
 \label{fig:temporal}
 \end{figure}
 
-\subsection{Phrase scoring} \label{sect:score}
 
-In place of phrase scores estimated from bilingual alignments, we propose to make use of cues present in monolingual data to provide multiple orthogonal estimates of similarity between a pair of phrases. In this section, we introduce two kinds of scores we call {\em phrasal} and {\em lexical similarity} features.  The former score entire phrases, while the latter use word-level alignments between the phrase pairs to calculate lexical scores.  The motivation is analogous to the two kinds of features we introduced in \secref{sect:bckg:smt}: lexical similarity features are informative for rare phrases that have less reliable phrasal similarity scores because of sparse counts. 
-%These behave analogously to the phrasal and lexical features in \secref{sect:bckg:smt}.
 
-\subsubsection{Phrasal similarity features} \label{sect:phrasalfeats}
-
-\paraheader{Contextual similarity.}  We extend the vector space approach of \newcite{Rapp:1999} to compute similarity between \emph{phrases} in the source and target languages.  More formally, assume that $(s_{1}, s_{2}, \dots s_{N})$ and $(t_{1}, t_{2}, \dots t_{M})$ are (arbitrarily indexed) source and target vocabularies, respectively.  A source phrase $f$ is represented with an $N$ and target phrase $e$ with an $M$ dimensional vector (see \figref{fig:contextual}).  Only the components corresponding to words that appear in the context of a phrase in data take on non-zero values. Next, $f$'s contextual vector is projected by mapping its components to the target language space using the small number of word-word translations taken from a seed dictionary.
-%, but retaining the source component value.  
-Finally, the pair ($f, e$) is scored by computing similarity between the target  and projected source vectors.  Various means of computing the component values and vector similarity measures have been proposed in literature (e.g. \newcite{Rapp:1999}, \newcite{Fung:1998}).  Following \newcite{Fung:1998}, we compute the value of the $k$-th component of $f$'s contextual vector  as follows: 
-\begin{equation*}
-w_{k} = n_{f,k} \times (log( {n / n_{k}}) + 1)
-\end{equation*}
-
-\noindent where $n_{f,k}$ and $n_{k}$ are the number of times $s_{k}$ appears in the context of $f$ and in the entire corpus, and $n$ is the maximum number of occurrences of any word in the data.  Intuitively, the more frequently $s_{k}$ appears with $f$ and the less common it is in the corpus in general, the higher its component value.  Similarity between two resulting vectors is measured as a cosine of the angle between them.
-
-%\mtodo{Give an example Spanish phrase and the English phrases that it has the highest similarity with}
 
 \paraheader{Temporal similarity.} In addition to contextual similarity, phrases in two different languages may be scored in terms of their temporal similarity \cite{alfonseca-ciaramita-hall:2009:EMNLP}.  The intuition is that news stories from different countries will tend to discuss the same world events on the same day.  The frequencies of phrases over time give them a particular signature that will tend to spike on the same dates across languages.  For instance, if the phrase {\it asian tsunami} is used frequently during a particular time span, the number of mentions of the Spanish phrase {\it maremoto asi\'{a}tico} is very likely to increase in the same timeframe. \figref{fig:temporal} illustrates how the temporal distribution of {\it to terrorists} is more similar to the Spanish {\it a los terroristas} than to other Spanish phrases.  Such temporal similarity between a pair of phrases provides another weak signal we can use to score them.   To generate the signature for a given phrase, we first sort the set of (time-stamped) documents of our corpus into a sequence of equally sized temporal bins and count the number of phrase occurrences in each bin.   Following \newcite{Klementiev:2006b}, we then use the cosine distance between a pair of normalized temporal signatures to score the corresponding phrase pair.
 
@@ -252,7 +261,7 @@ w_{k} = n_{f,k} \times (log( {n / n_{k}}) + 1)
 
 \paraheader{Topic similarity.}\mtodo{Spin this as a new feature! Also: explain it in a little more detail} Phrases and their translations are likely to appear in articles written about the same topic in two languages.  Thus, topic or category information associated with monolingual data can also be used to indicate similarity between a phrase and its candidate translation.  In order to score a pair of phrases, we can collect their topic signatures by counting their occurrences in each topic and then comparing the resulting vectors.  We again use the cosine similarity measure on the normalized topic signatures.  In our experiments, we use interlingual links between wikipedia articles to estimate topic similarity.  That is, we treat each linked article pair as a topic and collect counts for each phrase across all articles in its corresponding language.
 
-\subsubsection{Lexical similarity features}  \label{sect:lexfeats}
+\subsection{Lexical similarity features}  \label{sect:lexfeats}
 
 \paraheader{Contextual, Temporal and Topic similarity.}  Another way to estimate the quality of a phrasal translation is to score the similarity of individual words within the phrases.  To compute these lexical similarity features, we first average similarity scores (contextual or temporal) over all aligned words across the two phrases.  We then scale the score by the proportion of aligned words in the two phrases, effectively penalizing poorly aligned phrase pairs. Because individual words are more frequent than multiword phrases, the accuracy of their induced translations tends to be higher (see Figure \ref{fig:lexinduct}). Combining the phrasal and lexical features results in better translation quality than phrasal features alone. \mtodo{Mention that it is the average of both forward and backward alignments?}
 
