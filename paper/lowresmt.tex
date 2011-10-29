@@ -79,9 +79,9 @@ The parameters of statistical translation models are typically estimated from la
 
 The parameters of statistical models of translation are typically estimated from large bilingual parallel corpora \cite{Brown:1993}.  However, these resources are not available for most language pairs and they are expensive to produce in quantities sufficient for building a good translation system.
 \nocite{Germann2001}
-In this work, we take an entirely different approach: we use cheap and plentiful monolingual resources to induce an end-to-end statistical machine translation system.  In particular, we extend the long line of work on inducing translation lexicons (beginning with \newcite{Rapp:1995}) and propose to use multiple independent cues present in monolingual texts to estimate lexical and phrasal translation probabilities for large MT scale phrase-tables.  We then introduce a novel algorithm to estimate reordering features from monolingual data alone, and report the performance of a phrase-based statistical model \cite{Koehn:2003} estimated on these monolingual features.
+In this work, we take an entirely different approach: we use cheap and plentiful monolingual resources to induce an end-to-end statistical machine translation system.  In particular, we extend the long line of work on inducing translation lexicons (beginning with \newcite{Rapp:1995}) and propose to use multiple independent cues present in monolingual texts to estimate lexical and phrasal translation probabilities for large, MT-scale phrase-tables.  We then introduce a novel algorithm to estimate reordering features from monolingual data alone, and report the performance of a phrase-based statistical model \cite{Koehn:2003} estimated on these monolingual features.
 
-Most of the prior work on lexicon induction is motivated by the idea that it could be applied to machine translation but stops short of actually doing so.  Lexicon induction holds the potential to create machine translation systems for languages which do not have extensive parallel corpora.  Training would only require two large monolingual corpora and a small bilingual dictionary, if one is available.  The idea is that intrinsic properties of monolingual data (possibly, along with a handful of bilingual pairs to act as example mappings) can provide independent but informative cues to learn translations, because words (and phrases) behave similarly across languages.  This work is the first attempt to extend and apply these ideas to an end-to-end machine translation pipeline.  While we make an explicit assumption that a table of phrasal translations is given a priori, we induce every other parameter of a full phrase-based translation system from monolingual data alone.  The contributions of this work are:
+Most of the prior work on lexicon induction is motivated by the idea that it could be applied to machine translation but stops short of actually doing so.  Lexicon induction holds the potential to create machine translation systems for languages which do not have extensive parallel corpora.  Training would only require two large monolingual corpora and a small bilingual dictionary, if one is available.  The idea is that intrinsic properties of monolingual data (possibly along with a handful of bilingual pairs to act as example mappings) can provide independent but informative cues to learn translations, because words (and phrases) behave similarly across languages.  This work is the first attempt to extend and apply these ideas to an end-to-end machine translation pipeline.  While we make an explicit assumption that a table of phrasal translations is given a priori, we induce every other parameter of a full phrase-based translation system from monolingual data alone.  The contributions of this work are:
 
 %\todop{Chris}{Now that we have an Urdu experiment, we should emphasize it in text / in the list below / in the abstract?}
 %\todop{Chris}{Motivate the "no parallel data" setting (e.g. from commented out text?) here and possibly in the abstract.}
@@ -116,7 +116,7 @@ We attempt to estimate the parameters of a phrase-based translation model (descr
 
 \subsection{Parameters of phrase-based SMT} \label{sect:bckg:smt}
 
-Statistical machine translation (SMT) was first formulated as a series of probabilistic models that learn word-to-word correspondences from sentence-aligned bilingual parallel corpora \cite{Brown:1993}.  
+Statistical machine translation (SMT) was first formulated as a series of probabilistic models that learn word-to-word correspondences from sentence-aligned bilingual parallel corpora \cite{Brown:1993}.  \nocite{Brown1988}
 %
 Current methods, including {\em phrase-based} \cite{Och:2002,Koehn:2003} and {\em hierarchical} models \cite{Chiang:2005}, typically start by word-aligning a bilingual parallel corpus \cite{Och2003}.  They extract multi-word phrases that are consistent with the Viterbi word alignments, and use these phrases to build new translations.    A variety of parameters are estimated using the bitexts.  Here we review the parameters of the standard phrase-based translation  model \cite{Moses}, which we will later show how to re-estimate using monolingual texts.  These parameters are:
 
@@ -158,8 +158,6 @@ We use the same log linear formulation and MERT but propose alternatives derived
 
 \subsection{Bilingual lexicon induction for SMT} \label{sect:bckg:lexind}
 
-%\todo{ccb - give a better 1 paragraph intro to bilingual lexicon induction.  Point to Section \ref{sect:related-work} for a review of related work}
-
 {\it Bilingual lexicon induction} describes the class of algorithms that attempt to learn translations from monolingual corpora.   \newcite{Rapp:1995} was the first to propose using non-parallel texts to learn the translations of words.  Using large, unrelated English and German corpora (with 163m and 135m words) and a small German-English bilingual dictionary (with 22k entires), \newcite{Rapp:1999} demonstrated that reasonably accurate translations could be learned for 100 German nouns that were not contained in the seed bilingual dictionary.  His algorithm worked by 
 (1) building context vector representing an unknown German word by counting its co-occurrence with all the other words in the German monolingual corpus,
 (2) projecting this German vector onto the vector space of English using the seed bilingual dictionary,
@@ -179,35 +177,25 @@ Additional related work on learning translations from monolingual corpora is dis
 % In this work, we extend these ideas and utilize four independent metrics to score {\em phrasal} translation candidates.  
 
 \begin{figure}[t]
-%\vskip 0.1in
 \begin{center}
 \includegraphics[width=\linewidth]{../figures/lexinductnew/lexinductnew.pdf}
-\caption{Accuracy of top 1 and top 10 single-word translations induced using contextual similarity (defined in \secref{sect:phrasalfeats}) from the unaligned monolingual English and Spanish sections of the Europarl corpus as a function of the source word corpus frequency.  Accuracy is the proportion of the source words with at least one correct (bilingual dictionary) translation in the top 1 and top 10 candidate lists.}
+\caption{Accuracy of single-word translations induced using contextual similarity as a function of the source word corpus frequency.  Accuracy is the proportion of the source words with at least one correct (bilingual dictionary) translation in the top 1 and top 10 candidate lists.  }
 \label{fig:lexinduct}
 \end{center}
 \vskip -0.2in
 \end{figure}
 
 
-%Our methods for estimating model parameters build on the long line of work in bilingual lexicon induction from monolingual corpora. 
-
 In this paper, we apply bilingual lexicon induction methods to statistical machine translation.  Given the obvious benefits of not having to rely on scarce bilingual parallel training data, it is surprising that  bilingual lexicon induction has not previously been used for SMT.
-There are several 
-%inherent challenges that make its application to SMT difficult.  
-open questions that make its applicability to SMT uncertain. 
-Previous research into bilingual lexicon induction learned translations only for a small number of high frequency words (e.g. 100 nouns in \newcite{Rapp:1995}, 1,000 most frequent words in \newcite{Koehn:2002}, or 2,000 most frequent nouns in \newcite{Haghighi:2008}).  Although previous work reported high translation accuracy, it may be misleading to extrapolate the results to SMT, where it is necessary to translate a much larger set of words and phrases, including many low frequency  items. 
+There are several open questions that make its applicability to SMT uncertain.  Previous research into bilingual lexicon induction learned translations only for a small number of high frequency words (e.g. 100 nouns in \newcite{Rapp:1995}, 1,000 most frequent words in \newcite{Koehn:2002}, or 2,000 most frequent nouns in \newcite{Haghighi:2008}).  Although previous work reported high translation accuracy, it may be misleading to extrapolate the results to SMT, where it is necessary to translate a much larger set of words and phrases, including many low frequency  items. 
 
-\todo{ccb - start again here}
- dictionaries. \figref{fig:lexinduct} plots the quality of single-word translations induced using contextual similarity (defined in \secref{sect:phrasalfeats}) from the unaligned monolingual English and Spanish sections of the Europarl corpus\footnote{\secref{sect:expsetup} describes the data and parameters in detail.} as a function of source word corpus frequency. Unsurprisingly, frequent terms have a substantially better chance of being paired with a correct translation.  These concerns are exacerbated when we move to multi-token phrases.  As with phrase translation features estimated from parallel data, longer phrases are more sparse, making similarity scores less reliable than for single words. 
+As a preliminary study we plotted the accuracy of translations against the frequency of the source words in the monolingual corpus.  \figref{fig:lexinduct} shows the result for translations induced using contextual similarity (defined in \secref{sect:phrasalfeats}). Unsurprisingly, frequent terms have a substantially better chance of being paired with a correct translation, with words that only occur once having a low chance of being translated accurately.\footnote{For a description of the experimental setup that was used to  produce these translations, see Experiment 8 in Section \ref{sec:results:bitext}.}  This problem is exacerbated when we move to multi-token phrases.  As with phrase translation features estimated from parallel data, longer phrases are more sparse, making similarity scores less reliable than for single words. 
 
+Another impediment (not addressed in this paper) for using lexicon induction for SMT is the number of translations that must be learned.   Learning translations for all words in the source language requires $n^2$ vector comparisons, since each word in source language vocabulary must be compared against the vectors for all words in the target language vocabulary.   The size of the $n^2$ comparisons hugely increases if we compare vectors for multi-word phrases instead of just words. 
 %
-%Scaling these methods up to MT sized bilingual dictionaries substantially degrades their performance due to sparsity issues. High accuracy results reported in most of the 
-%
+In this work, we avoid this problem by assuming that a limited set of phrase pairs is given a priori (but without scores).  By limiting ourselves to phrases in a phrase table, we vastly limit the search space of possible translations.  This is an idealization because high quality translations are guaranteed to be present.   However, as our lesion experiments in Section \ref{sect:exp:lesions} show, a phrase table without accurate translation probability estimates is insufficient to produce high quality translations.  We show that lexicon induction methods can be used to replace bilingual estimation of phrase- and lexical-translation probabilities.  
 
-
-\todo{ccb - talk about pairwise comparisons?}
-
-In this work, we make an explicit assumption that a set of phrase pairs is given a priori, and extend lexicon induction methods to estimate their phrase and lexical translation probabilities.  Sparsity is a major concern when scoring MT sized phrase tables, and we propose to deal with in two ways.  First, in \secref{sect:phrasalfeats} we propose to use multiple cues intrinsic to monolingual data as independent evidence when scoring translation candidates.  Second,  in \secref{sect:lexfeats}, we introduce additional similarity estimates less prone to phrasal sparsity issues.
+%Sparsity is a major concern when scoring MT sized phrase tables, and we propose to deal with in two ways.  First, in \secref{sect:phrasalfeats} we propose to use multiple cues intrinsic to monolingual data as independent evidence when scoring translation candidates.  Second,  in \secref{sect:lexfeats}, we introduce additional similarity estimates less prone to phrasal sparsity issues.
 
 %In \secref{sect:exp:lesions} we show that monolingual features are very informative and reliable in our setting; even when added alongside the feature functions derived from parallel data, they yield substantial BLEU score improvements (over a point in our Spanish-English MT experiments).
 
