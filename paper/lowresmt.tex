@@ -109,7 +109,7 @@ Most of the prior work on lexicon induction is motivated by the idea that it cou
 
 \section{Background} \label{sect:bckg}
 
-We attempt to estimate the parameters of a phrase-based translation model (described in \ref{sect:bckg:smt}) using techniques from bilingual lexicon induction (\ref{sect:bckg:lexind}).  This allows us to replace expensive/rare bilingual parallel training data with  two large monolingual corpora, a small bilingual dictionary, and ~1,000 sentence bilingual development set, which are comparatively plentiful/inexpensive.
+We attempt to estimate the parameters of a phrase-based translation model (described in \ref{sect:bckg:smt}) using techniques from bilingual lexicon induction (\ref{sect:bckg:lexind}).  This allows us to replace expensive/rare bilingual parallel training data with  two large monolingual corpora, a small bilingual dictionary, and $\approx$1,000 sentence bilingual development set, which are comparatively plentiful/inexpensive.
 
 %These parallel resources are only available for a small set of language pairs and are very expensive to compile in sufficient quantities.  
 %In this work, we estimate the parameters of the phrase-based formalism from {\em monolingual} texts, which are much more plentiful. 
@@ -123,7 +123,7 @@ Current methods, including {\em phrase-based} \cite{Och:2002,Koehn:2003} and {\e
 \begin{figure}[t]
 %\vskip 0.1in
 \begin{center}
-%\vspace{-.35cm}
+\vspace{-.35cm}
 \includegraphics[width=0.8 \linewidth]{../figures/reorderfeats/reorderfeats.pdf}
 \caption{The reordering probabilities from the phrase-based models are estimated from bilingual data by calculating how often in the parallel corpus a phrase pair $(f, e)$ is orientated with the preceding phrase pair in the 3 types of orientations (monotone, swapped, and discontinuous). }
 \label{fig:reorderfeats} 
