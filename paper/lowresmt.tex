@@ -259,7 +259,8 @@ w_{k} = n_{f,k} \times (log( {n / n_{k}}) + 1)
 %Also
 %\cite{Schafer:2002}}
 
-\paraheader{Topic similarity.}\mtodo{Spin this as a new feature! Also: explain it in a little more detail} Phrases and their translations are likely to appear in articles written about the same topic in two languages.  Thus, topic or category information associated with monolingual data can also be used to indicate similarity between a phrase and its candidate translation.  In order to score a pair of phrases, we can collect their topic signatures by counting their occurrences in each topic and then comparing the resulting vectors.  We again use the cosine similarity measure on the normalized topic signatures.  In our experiments, we use interlingual links between wikipedia articles to estimate topic similarity.  That is, we treat each linked article pair as a topic and collect counts for each phrase across all articles in its corresponding language.
+\paraheader{Topic similarity.}\mtodo{Spin this as a new feature! Also: explain it in a little more detail} Phrases and their translations are likely to appear in articles written about the same topic in two languages.  Thus, topic or category information associated with monolingual data can also be used to indicate similarity between a phrase and its candidate translation.  In order to score a pair of phrases, we can collect their topic signatures by counting their occurrences in each topic and then comparing the resulting vectors.  We again use the cosine similarity measure on the normalized topic signatures.  In our experiments, we use interlingual links between wikipedia articles to estimate topic similarity.  We treat each linked article pair as a topic and collect counts for each phrase across all articles in its corresponding language.
+Our topic similarity feature is similar in spirit to polylingual topic models \cite{Mimno:2009}, but this is the first time that it has been aligned to bilingual lexicon induction.
 
 \subsection{Lexical similarity features}  \label{sect:lexfeats}
 
@@ -267,20 +268,10 @@ w_{k} = n_{f,k} \times (log( {n / n_{k}}) + 1)
 
 \paraheader{Orthographic / phonetic similarity.} Etymologically related words often retain similar spelling across languages with the same writing system, and edit distance can be used to measure their similarity.  We use word alignments as before to score entire phrases for orthographic similarity.\mtodo{Not done quite the same as above but will glance over it.} We can also extend this idea to language pairs not sharing the same writing system since many cognates, borrowed words, and names remain phonetically similar.  Transliterations can be generated for tokens in a source phrase (e.g. \newcite{Knight1997}), with phonetic similarity computed as before.
 
-Various other similarity scores can be computed depending on the available monolingual data and its associated metadata (see, e.g. \newcite{Schafer:2002}). All of these can be incorporated into our log linear translation model as additional feature functions.
+Various other similarity scores can be computed depending on the available monolingual data and its associated metadata (see, e.g. \newcite{Schafer:2002}). All of these could be incorporated into our log linear translation model as additional feature functions.
 
 %\skipheader In our experiments in \secref{sect:exp}, we will focus on the similarity scores introduced in this section.  However, note that various other similarity scores\mtodo{list them} can be computed depending on the available monolingual data and its associated metadata (see, e.g. \newcite{Schafer:2002}).
 
-
-\begin{figure}[t]
-%\vskip 0.1in
-\begin{center}
-\includegraphics[width=0.8 \linewidth]{../figures/monoreord/monoreord.pdf}
-\caption{Collecting phrase orientation statistics for a en-de phrase pair (\emq{profile}, \emq{Profils}) from non-parallel sentences (the German sentence translates as  \emq{Creating a Facebook profile is easy}). The longest preceding phrase \emq{Facebook} in source, has a phrase table translation \emq{in Facebook} appearing after the target phrase.}
-\label{fig:monoreord}
-\end{center}
-\vskip -0.2in
-\end{figure}
 
 \subsection{Reordering} \label{sect:order}
 
@@ -346,6 +337,18 @@ Various other similarity scores can be computed depending on the available monol
   \caption{Estimating orientation scores from monolingual data.} \label{fig:algoreorder}
   \vskip -0.2in
 \end{algorithm}
+
+
+\begin{figure}[t]
+%\vskip 0.1in
+\begin{center}
+\includegraphics[width=0.8 \linewidth]{../figures/monoreord/monoreord.pdf}
+\caption{Collecting phrase orientation statistics for a en-de phrase pair (\emq{profile}, \emq{Profils}) from non-parallel sentences (the German sentence translates as  \emq{Creating a Facebook profile is easy}). The longest preceding phrase \emq{Facebook} in source, has a phrase table translation \emq{in Facebook} appearing after the target phrase.}
+\label{fig:monoreord}
+\end{center}
+\vskip -0.2in
+\end{figure}
+
 
 \todo{ccb - rewrite the first paragraph}
 
