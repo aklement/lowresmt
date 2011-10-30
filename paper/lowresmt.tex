@@ -355,7 +355,7 @@ shorter and more frequent phrases (e.g. punctuation) are more likely to appear i
 
 Our algorithm for learning the reordering parameters is given in  in \figref{fig:algoreorder}.  The algorithm estimates a probability distribution over monotone, swap, and discontinuous orientations ($p_m$, $p_s$, $p_d$) for a phrase pair ($f, e$) from two monolingual corpora $C_f$ and $C_e$.  It begins by calling {\tt \small CollectOccurs} to collect the longest matching phrase table phrases preceding $f$ in source monolingual data ($B_f$), as well as preceding ($B_e$), following ($A_e$), and discontinuous ($D_e$) phrases with $e$ in the target language data.  For each unique phrase $f'$ preceding $f$, translations are then looked up in the phrase table $\emph{T}$.  Next, we count\footnote{$\#_{L}(x)$ returns the count of object x in list L.} how many translations $e'$ of $'$ appeared before, after or were discontinuous with $e$ in the target language data.  Finally, the counts are normalized and returned.  %The algorithm requires a single pass through the data to collect contextual phrases for the entire phrase table and its running time is quadratic in the size of the table.\mtodo{Check}
 
-These normalized counts are the values for $p_o(\textnormal{orientation}|f,e)$, which allow us to estimate all of the parameters of the phrase-based translation model from monolingual corpora.
+These normalized counts are the values for $p_o(\textnormal{orientation}|f,e)$. This allows us to estimate all of the parameters of the phrase-based translation model from monolingual corpora.
 
 
 %\subsection{Extracting a phrase table without a bitext}  \label{sect:extract}
