@@ -109,7 +109,7 @@ Most of the prior work on lexicon induction is motivated by the idea that it cou
 
 \section{Background} \label{sect:bckg}
 
-We attempt to estimate the parameters of a phrase-based translation model (described in \ref{sect:bckg:smt}) using techniques from bilingual lexicon induction (\ref{sect:bckg:lexind}).  This allows us to replace expensive/rare bilingual parallel training data with  monolingual texts and small bilingual dictionaries, which are comparatively plentiful/inexpensive.
+We attempt to estimate the parameters of a phrase-based translation model (described in \ref{sect:bckg:smt}) using techniques from bilingual lexicon induction (\ref{sect:bckg:lexind}).  This allows us to replace expensive/rare bilingual parallel training data with  two large monolingual corpora, a small bilingual dictionary, and ~1,000 sentence bilingual development set, which are comparatively plentiful/inexpensive.
 
 %These parallel resources are only available for a small set of language pairs and are very expensive to compile in sufficient quantities.  
 %In this work, we estimate the parameters of the phrase-based formalism from {\em monolingual} texts, which are much more plentiful. 
@@ -154,7 +154,7 @@ The features are combined in a log linear model, and their weights are set throu
  %   p(\mathbf{e} | \mathbf{f}) & \propto & \exp \sum_{i=1}^{n}{\lambda_i h_i (\mathbf{e}, \mathbf{f})} \label{log-linear-formulation}\\
  %   \hat{e} & = & \argmax_{e}{p(\mathbf{e} | \mathbf{f}) }
  % \end{eqnarray*}
-We use the same log linear formulation and MERT but propose alternatives derived directly from monolingual data for all parameters except for the phrase pairs themselves.\footnote{We \emph{do} require a small bitext of approximately 1,000 sentences to use as a development set for parameter tuning.}
+We use the same log linear formulation and MERT but propose alternatives derived directly from monolingual data for all parameters except for the phrase pairs themselves. Our pipeline still requires a small bitext of approximately 1,000 sentences to use as a development set for parameter tuning.
 
 \subsection{Bilingual lexicon induction for SMT} \label{sect:bckg:lexind}
 
