@@ -81,14 +81,8 @@ The parameters of statistical models of translation are typically estimated from
 \nocite{Germann2001}
 In this work, we take an entirely different approach: we use cheap and plentiful monolingual resources to induce an end-to-end statistical machine translation system.  In particular, we extend the long line of work on inducing translation lexicons (beginning with \newcite{Rapp:1995}) and propose to use multiple independent cues present in monolingual texts to estimate lexical and phrasal translation probabilities for large, MT-scale phrase-tables.  We then introduce a novel algorithm to estimate reordering features from monolingual data alone, and report the performance of a phrase-based statistical model \cite{Koehn:2003} estimated on these monolingual features.
 
-Most of the prior work on lexicon induction is motivated by the idea that it could be applied to machine translation but stops short of actually doing so.  Lexicon induction holds the potential to create machine translation systems for languages which do not have extensive parallel corpora.  Training would only require two large monolingual corpora and a small bilingual dictionary, if one is available.  The idea is that intrinsic properties of monolingual data (possibly along with a handful of bilingual pairs to act as example mappings) can provide independent but informative cues to learn translations, because words (and phrases) behave similarly across languages.  This work is the first attempt to extend and apply these ideas to an end-to-end machine translation pipeline.  While we make an explicit assumption that a table of phrasal translations is given a priori, we induce every other parameter of a full phrase-based translation system from monolingual data alone.  The contributions of this work are:
-
-%\todop{Chris}{Now that we have an Urdu experiment, we should emphasize it in text / in the list below / in the abstract?}
-%\todop{Chris}{Motivate the "no parallel data" setting (e.g. from commented out text?) here and possibly in the abstract.}
-%\todop{Chris}{Add a bullet that we are publishing data? Will also mention it in the \secref{sect:exp}.}
-%Current statistical machine translation (SMT) methods (e.g. \cite{Koehn:2003,Chiang:2005}) crucially rely on vast amounts of sentence aligned translations in order to achieve state of the art performance.  These resources are only available for very few language pairs because producing them in sufficient quantities is an expensive and time consuming endeavor.  Moreover, the SMT system performance tends to drop if test data comes from a different domain then the parallel data used in training\mtodo{Need a good MT adaptation reference}.  
-
-%The rest of the paper is organized as follows.  \secref{sect:bckg} begins with the relevant background on the phrase-based SMT framework we will use in the rest of the paper and continues to give a brief overview of the existing work on inducing translation lexicons. \secref{sect:mono} motivates and introduces translation and reordering features induced from monolingual data alone.   \secref{sect:exp} studies the informativeness of these features as they are added to the Machine Translation pipeline.  Finally, \secref{sect:conc} concludes and discusses directions for future work.
+Most of the prior work on lexicon induction is motivated by the idea that it could be applied to machine translation but stops short of actually doing so.  Lexicon induction holds the potential to create machine translation systems for languages which do not have extensive parallel corpora.  Training would only require two large monolingual corpora and a small bilingual dictionary, if one is available.  The idea is that intrinsic properties of monolingual data (possibly along with a handful of bilingual pairs to act as example mappings) can provide independent but informative cues to learn translations, because words (and phrases) behave similarly across languages.  This work is the first attempt to extend and apply these ideas to an end-to-end machine translation pipeline.  While we make an explicit assumption that a table of phrasal translations is given a priori, we induce every other parameter of a full phrase-based translation system from monolingual data alone.  
+The contributions of this work are:
 
 \begin{itemize}
   \item In \secref{sect:bckg:lexind} we analyze the challenges of using bilingual lexicon induction for statistical machine translation (performance on low frequency items, and moving from words to phrases).
@@ -96,6 +90,15 @@ Most of the prior work on lexicon induction is motivated by the idea that it cou
   \item In \secref{sect:order} we propose a novel algorithm for estimating phrase reordering features from monolingual texts.
   \item Finally, in \secref{sect:results} we perform a lesion study in which all feature functions are systematically dropped from a phrase table and then replaced with monolingually estimated equivalents.  We report end-to-end translation quality with a fixed phrase-table with monolingually estimated parameters. 
 \end{itemize}
+
+%%%%%%
+
+%\todop{Chris}{Now that we have an Urdu experiment, we should emphasize it in text / in the list below / in the abstract?}
+%\todop{Chris}{Motivate the "no parallel data" setting (e.g. from commented out text?) here and possibly in the abstract.}
+%\todop{Chris}{Add a bullet that we are publishing data? Will also mention it in the \secref{sect:exp}.}
+%Current statistical machine translation (SMT) methods (e.g. \cite{Koehn:2003,Chiang:2005}) crucially rely on vast amounts of sentence aligned translations in order to achieve state of the art performance.  These resources are only available for very few language pairs because producing them in sufficient quantities is an expensive and time consuming endeavor.  Moreover, the SMT system performance tends to drop if test data comes from a different domain then the parallel data used in training\mtodo{Need a good MT adaptation reference}.  
+
+%The rest of the paper is organized as follows.  \secref{sect:bckg} begins with the relevant background on the phrase-based SMT framework we will use in the rest of the paper and continues to give a brief overview of the existing work on inducing translation lexicons. \secref{sect:mono} motivates and introduces translation and reordering features induced from monolingual data alone.   \secref{sect:exp} studies the informativeness of these features as they are added to the Machine Translation pipeline.  Finally, \secref{sect:conc} concludes and discusses directions for future work.
 
 %Current statistical machine translation (SMT) methods (e.g. \cite{Koehn:2003,Chiang:2005}) crucially rely on vast amounts of sentence aligned translations in order to achieve state of the art performance.  These resources are only available for very few language pairs because producing them in sufficient quantities is an expensive and time consuming endeavor.  Moreover, the SMT system performance tends to drop if test data comes from a different domain then the parallel data used in training\mtodo{Need a good MT adaptation reference}.  
 
@@ -120,16 +123,6 @@ Statistical machine translation (SMT) was first formulated as a series of probab
 %
 Current methods, including {\em phrase-based} \cite{Och:2002,Koehn:2003} and {\em hierarchical} models \cite{Chiang:2005}, typically start by word-aligning a bilingual parallel corpus \cite{Och2003}.  They extract multi-word phrases that are consistent with the Viterbi word alignments, and use these phrases to build new translations.    A variety of parameters are estimated using the bitexts.  Here we review the parameters of the standard phrase-based translation  model \cite{Moses}, which we will later show how to re-estimate using monolingual texts.  These parameters are:
 
-\begin{figure}[t]
-%\vskip 0.1in
-\begin{center}
-%\vspace{-.35cm}
-\includegraphics[width=0.8 \linewidth]{../figures/reorderfeats/reorderfeats.pdf}
-\caption{The reordering probabilities from the phrase-based models are estimated from bilingual data by calculating how often in the parallel corpus a phrase pair $(f, e)$ is orientated with the preceding phrase pair in the 3 types of orientations (monotone, swapped, and discontinuous). }
-\label{fig:reorderfeats} 
-\end{center}
-%\vskip -0.2in
-\end{figure}
 
 \begin{my_itemize}
 \item \emph{Phrase pairs}.  
@@ -338,6 +331,17 @@ The three phrasal and four lexical similarity scores are incorporated into the  
   \caption{Estimating orientation scores from monolingual data.} \label{fig:algoreorder}
   \vskip -0.2in
 \end{algorithm}
+
+\begin{figure}[t]
+%\vskip 0.1in
+\begin{center}
+%\vspace{-.35cm}
+\includegraphics[width=0.8 \linewidth]{../figures/reorderfeats/reorderfeats.pdf}
+\caption{The reordering probabilities from the phrase-based models are estimated from bilingual data by calculating how often in the parallel corpus a phrase pair $(f, e)$ is orientated with the preceding phrase pair in the 3 types of orientations (monotone, swapped, and discontinuous). }
+\label{fig:reorderfeats} 
+\end{center}
+%\vskip -0.2in
+\end{figure}
 
 
 \begin{figure}[t]
