@@ -341,6 +341,7 @@ The three phrasal and four lexical similarity scores are incorporated into the  
 \begin{figure}[t]
 %\vskip 0.1in
 \begin{center}
+\vspace{-.5cm}
 \includegraphics[width=0.8 \linewidth]{../figures/monoreord/monoreord.pdf}
 \caption{Collecting phrase orientation statistics for a en-de phrase pair (\emq{profile}, \emq{Profils}) from non-parallel sentences (the German sentence translates as  \emq{Creating a Facebook profile is easy}). The longest preceding phrase \emq{Facebook} in source, has a phrase table translation \emq{in Facebook} appearing after the target phrase.}
 \label{fig:monoreord}
@@ -353,7 +354,7 @@ The remaining component of phrase-based SMT model is the reordering model. We in
 %\todo{ccb - rewrite the first paragraph}
 Figure \ref{fig:reorderfeats} illustrates how the phrase pair orientation statistics are estimated in the standard phrase-based SMT pipeline.  For a phrase pair like ($f =$ \emq{Profils}, $e =$ \emq{profile}), we count its orientation with the previously translated phrase pair ($f' =$ \emq{in Facebook}, $e' =$ \emq{Facebook}) across all translated sentence pairs in the bitext.  
 
-In our pipeline we do not have translated sentence pairs.  Instead, we look for monolingual sentences in the source corpus which contain the source phrase that we are interested in, like $f =$ \emq{Profils}, and at least one other phrase that we have a translation for, like $f' =$ \emq{in Facebook}.  We then look for all target language sentences in the target monolingual corpus that contain the translation of $f$ (here $e =$ \emq{profile}) and any translation of $f'$.  \figref{fig:monoreord} illustrates that it is possible to find evidence for $p_o(\textnormal{swapped}| \textnormal{Profils},\textnormal{profile})$, even from the non-parallel, non-translated sentences drawn from two independent monolingual corpora.  By looking for foreign sentences containing pairs of adjacent foreign phrases $(f, f')$ and English sentences containing their corresponding translations $(e, e')$, then we are able to increment orientation counts for $(f, e)$ by looking at whether $e$ and $e'$ are adjacent, swapped, or discontinuous, much in the same way that was done in Figure \ref{fig:reorderfeats}.
+In our pipeline we do not have translated sentence pairs.  Instead, we look for monolingual sentences in the source corpus which contain the source phrase that we are interested in, like $f =$ \emq{Profils}, and at least one other phrase that we have a translation for, like $f' =$ \emq{in Facebook}.  We then look for all target language sentences in the target monolingual corpus that contain the translation of $f$ (here $e =$ \emq{profile}) and any translation of $f'$.  \figref{fig:monoreord} illustrates that it is possible to find evidence for $p_o(\textnormal{swapped}| \it{ Profils},\it{ profile})$, even from the non-parallel, non-translated sentences drawn from two independent monolingual corpora.  By looking for foreign sentences containing pairs of adjacent foreign phrases $(f, f')$ and English sentences containing their corresponding translations $(e, e')$, we are able to increment orientation counts for $(f, e)$ by looking at whether $e$ and $e'$ are adjacent, swapped, or discontinuous, much in the same way as in Fig.~\ref{fig:reorderfeats}.
 
 One subtly of our method is that 
 %In the phrase-based SMT pipeline, phrase pair orientation statistics are collected using word alignments.  We keep a similar reordering model formulation but infer its parameters from monolingual data instead.  The orientation information for a phrase pair ($f$, $e$) is collected from source and target sentences containing ($f$, $e$) as well as other phrase pairs.  Suppose one such sentence pair contains another pair of phrases ($f'$, $e'$), and that $f'$ is immediately adjacent to $f$.  The idea is to check whether $e'$ stays in the same order with $e$, swaps, or becomes discontinuous in the target sentence. Consider the simple example in \figref{fig:monoreord}: the phrase pair is ($f =$ \emq{profile}, $e =$ \emq{Profils}), and a given pair of non-parallel sentences also contains a phrase table entry ($f' =$ \emq{Facebook}, $e' =$ \emq{in Facebook}).  In this example, the phrase $f'$ preceding $f$ in the source sentence swaps order with $e$ in the target.  When we collect these counts over large monolingual corpora, we expect the swap, monotone, and discontinuous counts to provide good estimates for the orientation features (\figref{fig:algoreorder}).
@@ -457,12 +458,15 @@ The code for the experiments in this paper is available at \url{url}. \todo{Add 
 \begin{figure*}[t]
 %\vskip 0.1in
 \begin{center}
-\includegraphics[width=.85\linewidth]{../figures/lesionfeaturetype/bigchart.pdf}
-\caption{Contributions of individual features to overall system performance in Spanish-English experiments derived from (1) parallel texts (experiments 1-4), (2) their monolingual equivalents derived from Europarl data (experiments 5-10), and (3) monolingual equivalents derived from truly monolingual corpora (experiments 12-18).  Over 80\% of lost performance can be recovered with monolingual features estimated using monolingual corpora alone.  Moreover, when added alongside the features derived from parallel data (experiments 11, 19), monolingual features account for for over 1 BLEU point gain (experiment 10).}
+\includegraphics[width=.27\linewidth]{../figures/legend.pdf}\includegraphics[width=.73\linewidth]{../figures/europarl.pdf}
+\caption{Contributions of individual features to overall system performance in Spanish-English experiments derived from parallel texts (experiments 1-4), their monolingual equivalents derived from Europarl data (experiments 5-10)}
 \label{fig:lesionreplacement}
 \end{center}
 \vskip -0.2in
 \end{figure*}
+
+
+
 
 \section{Experimental Results} \label{sect:results}
 
@@ -473,7 +477,20 @@ We begin by removing each of the standard bilingually estimated features from th
 \subsection{Lesion experiments (Experiments 1-4)}\label{sect:exp:lesions}
 %\paragraph{Lesion experiments (Experiments 1-4)}
 
-We begin with a series of experiments where we remove individual features derived from an aligned bitext in order to get a sense of their relative contributions to the overall system performance on the English-Spanish language pair (see \figref{fig:lesionreplacement}). When both phrase and orientation features are derived from word alignments ({\bf B/B}, the standard features functions defined in \secref{sect:bckg:smt}), the system reaches 21.87 BLEU.  Next we replace orientation features with random values ({\bf B/--}) and drop phrase features ({\bf --/B}).  While phrase table features account for a substantial performance difference (9 BLEU points), dropping orientation features affects the system score relatively little.  This is not surprising, since the word order is generally preserved in Spanish to English translations.  Finally, both dropping phrase scores and replacing orientation features with random values ({\bf --/--}) results in 5.5 BLEU, a 16.4 point drop.  This is similar to the only prior art on end-to-end MT without parallel data \cite{Carbonell2006}, which scores translation with a language model alone.
+
+\begin{figure}[t]
+%\vskip 0.1in
+\begin{center}
+\includegraphics[width=\linewidth]{../figures/monolingual.pdf}
+\caption{monolingual equivalents derived from truly monolingual corpora (experiments 12-18).  Over 80\% of lost performance can be recovered with monolingual features estimated using monolingual corpora alone.  Moreover, when added alongside the features derived from parallel data (experiments 11, 19), monolingual features account for for over 1 BLEU point gain (experiment 10).}
+\label{fig:lesionreplacement}
+\end{center}
+\vskip -0.2in
+\end{figure}
+
+
+We begin with a series of experiments where we remove individual features derived from an aligned bitext in order to get a sense of their relative contributions to the overall system performance on the English-Spanish language pair (see \figref{fig:lesionreplacement}). When both phrase and orientation features are derived from word alignments ({\bf B/B}, the standard features functions defined in \secref{sect:bckg:smt}), the system reaches 21.87 BLEU.  Next we replace orientation features with random values ({\bf B/--}) and drop phrase features ({\bf --/B}).  While phrase table features account for a substantial performance difference (9 BLEU points), dropping orientation features affects the system score relatively little.  This is not surprising, since the word order is generally preserved in Spanish to English translations.  Finally, both dropping phrase scores and replacing orientation features with random values ({\bf --/--}) results in 5.5 BLEU, a 16.4 point drop.  
+%This is similar to the only prior art on end-to-end MT without parallel data \cite{Carbonell2006}, which scores translation with a language model alone.
 
 \subsection{Adding equivalent monolingual features estimated using the {\em bitext} (Experiments 5-10)}\label{sec:results:bitext}
 
