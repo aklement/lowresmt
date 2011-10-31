@@ -67,7 +67,7 @@
 %The parameters of statistical translation models are typically estimated from large bilingual parallel corpora.  However, these resources  are not available for most language pairs and are expensive to produce from scratch.  In this work, 
 We estimate the parameters of a phrase-based statistical machine translation system from 
 %cheap 
-\emph{monolingual} corpora instead of a \emph{bilingual parallel corpus}.  We extend existing research on bilingual lexicon induction to estimate lexical and phrasal translation probabilities for MT scale phrase-tables. We propose a novel algorithm to estimate re-ordering probabilities from monolingual data. We report translation results for an end-to-end translation system using these monolingual features alone.  In principle, our method only requires two large monolingual corpora, a small bilingual dictionary, and a small bitext for tuning feature weights.  In this paper, we examine an idealization where a phrase-table is given.  We examine the degradation in translation performance when bilingually estimated translation probabilities are removed, and show that 80\%+ of the loss can be recovered with monolingually estimated features alone.  We further show that our monolingual features add 1.5 BLEU points when combined with standard bilingually estimated phrase-based features. 
+\emph{monolingual} corpora instead of a \emph{bilingual parallel corpus}.  We extend existing research on bilingual lexicon induction to estimate lexical and phrasal translation probabilities for MT scale phrase-tables. We propose a novel algorithm to estimate re-ordering probabilities from monolingual data. We report translation results for an end-to-end translation system using these monolingual features alone.  In principle, our method only requires two large monolingual corpora, a small bilingual dictionary, and a small bitext for tuning feature weights.  In this paper, we examine an idealization where a phrase-table is given.  We examine the degradation in translation performance when bilingually estimated translation probabilities are removed, and show that 80\%+ of the loss can be recovered with monolingually estimated features alone.  We further show that our monolingual features add 1.5 BLEU points when combined with standard bilingually estimated phrase table features. 
 % We perform a feature lesion study that shows how much translation performance decreases when parameters estimated from bitext are removed and how much of that loss can be restored when monolingually-estimated equivalents are added.  We show that more than 81\% of the loss can be recovered with monolingual data alone.  We also show that the monolingual features we introduce account for about 1.5 BLEU point gain when added to the standard phrase-based pipeline.
 
 % Large volumes of parallel text are required before translation models produce high quality translations, but sufficiently large corpora are available for  very few language pairs.  On the other hand, monolingual data is widely available and cheap to collect.  In this work, we propose a set of cues derived from monolingual resources and systematically introduce them in a phrase-based machine translation pipeline \emph{in place} of features induced from parallel data.  We show on two language pairs that monolingual data can take us a long way toward  inducing a high quality machine translation system.
@@ -79,11 +79,11 @@ We estimate the parameters of a phrase-based statistical machine translation sys
 
 % ------------------------------------------------
 
+\vspace{-.5cm}
 \section{Introduction} \label{sect:intro}
 
-The parameters of statistical models of translation are typically estimated from large bilingual parallel corpora \cite{Brown:1993}.  However, these resources are not available for most language pairs and they are expensive to produce in quantities sufficient for building a good translation system.
-\nocite{Germann2001}
-In this work, we take an entirely different approach: we use cheap and plentiful monolingual resources to induce an end-to-end statistical machine translation system.  In particular, we extend the long line of work on inducing translation lexicons (beginning with \newcite{Rapp:1995}) and propose to use multiple independent cues present in monolingual texts to estimate lexical and phrasal translation probabilities for large, MT-scale phrase-tables.  We then introduce a novel algorithm to estimate reordering features from monolingual data alone, and report the performance of a phrase-based statistical model \cite{Koehn:2003} estimated on these monolingual features.
+The parameters of statistical models of translation are typically estimated from large bilingual parallel corpora \cite{Brown:1993}.  However, these resources are not available for most language pairs and they are expensive to produce in quantities sufficient for building a good translation system \cite{Germann2001}.
+We attempt an entirely different approach: we use cheap and plentiful monolingual resources to induce an end-to-end statistical machine translation system.  In particular, we extend the long line of work on inducing translation lexicons (beginning with \newcite{Rapp:1995}) and propose to use multiple independent cues present in monolingual texts to estimate lexical and phrasal translation probabilities for large, MT-scale phrase-tables.  We then introduce a novel algorithm to estimate reordering features from monolingual data alone, and report the performance of a phrase-based statistical model \cite{Koehn:2003} estimated on these monolingual features.
 
 Most of the prior work on lexicon induction is motivated by the idea that it could be applied to machine translation but stops short of actually doing so.  Lexicon induction holds the potential to create machine translation systems for languages which do not have extensive parallel corpora.  Training would only require two large monolingual corpora and a small bilingual dictionary, if one is available.  The idea is that intrinsic properties of monolingual data (possibly along with a handful of bilingual pairs to act as example mappings) can provide independent but informative cues to learn translations, because words (and phrases) behave similarly across languages.  This work is the first attempt to extend and apply these ideas to an end-to-end machine translation pipeline.  While we make an explicit assumption that a table of phrasal translations is given a priori, we induce every other parameter of a full phrase-based translation system from monolingual data alone.  The contributions of this work are:
 
@@ -95,10 +95,11 @@ Most of the prior work on lexicon induction is motivated by the idea that it cou
 %The rest of the paper is organized as follows.  \secref{sect:bckg} begins with the relevant background on the phrase-based SMT framework we will use in the rest of the paper and continues to give a brief overview of the existing work on inducing translation lexicons. \secref{sect:mono} motivates and introduces translation and reordering features induced from monolingual data alone.   \secref{sect:exp} studies the informativeness of these features as they are added to the Machine Translation pipeline.  Finally, \secref{sect:conc} concludes and discusses directions for future work.
 
 \begin{itemize}
-  \item In \secref{sect:bckg:lexind} we analyze the challenges of using bilingual lexicon induction for statistical machine translation (performance on low frequency items, and moving from words to phrases).
+  \item In \secref{sect:bckg:lexind} we analyze the challenges of using bilingual lexicon induction for statistical MT (performance on low frequency items, and moving from words to phrases).
   \item In Sections \ref{sect:phrasalfeats} and \ref{sect:lexfeats} we use multiple cues present in monolingual data to estimate lexical and phrasal translation probabilities.
   \item In \secref{sect:order} we propose a novel algorithm for estimating phrase reordering features from monolingual texts.
-  \item Finally, in \secref{sect:results} we perform a lesion study in which all feature functions are systematically dropped from a phrase table and then replaced with monolingually estimated equivalents.  We report end-to-end translation quality with a fixed phrase-table with monolingually estimated parameters. 
+  \item Finally, in \secref{sect:results} we systematically drop  feature functions  from a phrase table and then replace with monolingually estimated equivalents, reporting end-to-end translation quality.
+  % with a fixed phrase-table with monolingually estimated parameters. 
 \end{itemize}
 
 %Current statistical machine translation (SMT) methods (e.g. \cite{Koehn:2003,Chiang:2005}) crucially rely on vast amounts of sentence aligned translations in order to achieve state of the art performance.  These resources are only available for very few language pairs because producing them in sufficient quantities is an expensive and time consuming endeavor.  Moreover, the SMT system performance tends to drop if test data comes from a different domain then the parallel data used in training\mtodo{Need a good MT adaptation reference}.  
@@ -123,18 +124,6 @@ We attempt to estimate the parameters of a phrase-based translation model (descr
 Statistical machine translation (SMT) was first formulated as a series of probabilistic models that learn word-to-word correspondences from sentence-aligned bilingual parallel corpora \cite{Brown:1993}.  \nocite{Brown1988}
 %
 Current methods, including {\em phrase-based} \cite{Och:2002,Koehn:2003} and {\em hierarchical} models \cite{Chiang:2005}, typically start by word-aligning a bilingual parallel corpus \cite{Och2003}.  They extract multi-word phrases that are consistent with the Viterbi word alignments, and use these phrases to build new translations.    A variety of parameters are estimated using the bitexts.  Here we review the parameters of the standard phrase-based translation  model \cite{Moses}, which we will later show how to re-estimate using monolingual texts.  These parameters are:
-
-\begin{figure}[t]
-%\vskip 0.1in
-\begin{center}
-\vspace{-.35cm}
-\includegraphics[width=0.8 \linewidth]{../figures/reorderfeats/reorderfeats.pdf}
-\caption{The reordering probabilities from the phrase-based models are estimated from bilingual data by calculating how often in the parallel corpus a phrase pair $(f, e)$ is orientated with the preceding phrase pair in the 3 types of orientations (monotone, swapped, and discontinuous). }
-\label{fig:reorderfeats} 
-\end{center}
-%\vskip -0.2in
-\end{figure}
-
 \begin{my_itemize}
 \item \emph{Phrase pairs}.  
 Phrase extraction heuristics \cite{Venugopal2003,Tillmann2003,Och2004} produce a set of phrase pairs $(e, f)$ that are consistent with the word alignments.  
@@ -159,6 +148,20 @@ The features are combined in a log linear model, and their weights are set throu
  %   \hat{e} & = & \argmax_{e}{p(\mathbf{e} | \mathbf{f}) }
  % \end{eqnarray*}
 We use the same log linear formulation and MERT but propose alternatives derived directly from monolingual data for all parameters except for the phrase pairs themselves. Our pipeline still requires a small bitext of approximately 1,000 sentences to use as a development set for parameter tuning.
+
+
+\begin{figure}[t]
+%\vskip 0.1in
+\begin{center}
+\vspace{-.35cm}
+\includegraphics[width=0.8 \linewidth]{../figures/reorderfeats/reorderfeats.pdf}
+\caption{The reordering probabilities from the phrase-based models are estimated from bilingual data by calculating how often in the parallel corpus a phrase pair $(f, e)$ is orientated with the preceding phrase pair in the 3 types of orientations (monotone, swapped, and discontinuous). }
+\label{fig:reorderfeats} 
+\end{center}
+%\vskip -0.2in
+\end{figure}
+
+
 
 \subsection{Bilingual lexicon induction for SMT} \label{sect:bckg:lexind}
 
