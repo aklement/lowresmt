@@ -261,6 +261,7 @@ w_{k} = n_{f,k} \times (log( {n / n_{k}}) + 1)
 \paraheader{Topic similarity.}\mtodo{Spin this as a new feature! Also: explain it in a little more detail} Phrases and their translations are likely to appear in articles written about the same topic in two languages.  Thus, topic or category information associated with monolingual data can also be used to indicate similarity between a phrase and its candidate translation.  In order to score a pair of phrases, we can collect their topic signatures by counting their occurrences in each topic and then comparing the resulting vectors.  We again use the cosine similarity measure on the normalized topic signatures.  In our experiments, we use interlingual links between wikipedia articles to estimate topic similarity.  We treat each linked article pair as a topic and collect counts for each phrase across all articles in its corresponding language.
 Our Wikipedia-based topic similarity feature $w(f, e)$, is similar in spirit to polylingual topic models \cite{Mimno:2009}, but this is the first time that it has been aligned to bilingual lexicon induction.
 
+\vspace{-.1cm}
 \subsection{Lexical similarity features}  \label{sect:lexfeats}
 
 In addition to the three phrase similarity features used in our model -- $c(f, e), t(f, e)$ and $w(f, e)$ -- we include four additional {\it lexical similarity features} for each of phrase pair.  The first three lexical features $c_{lex}(f, e), t_{lex}(f, e)$ and $w_{lex}(f, e)$ are the lexical equivalents of the phrase-level {\it contextual, temporal} and {\it wikipedia topic} similarity scores.  They score the similarity of individual words within the phrases.  To compute these lexical similarity features, we average similarity scores over all possible word alignments across the two phrases. 
@@ -272,6 +273,7 @@ We can also extend this idea to language pairs not sharing the same writing syst
 
 The three phrasal and four lexical similarity scores are incorporated into the  log linear translation model as feature functions, replacing the bilingually estimated phrase translation probabilities $\phi$ and lexical weighting probabilities $w$.  Our seven similarity scores are not only ones that could be incorporated into the translation model. Various other similarity scores can be computed depending on the available monolingual data and its associated metadata (see, e.g. \newcite{Schafer:2002}).
 
+\vspace{-.1cm}
 \subsection{Reordering} \label{sect:order}
 
 \SetAlFnt{\relsize{-1.5}}
@@ -333,7 +335,7 @@ The three phrasal and four lexical similarity scores are incorporated into the  
   
   \vskip 0.2cm \hrule \vskip 0.2cm
 
-  \caption{Estimating orientation scores from monolingual data.} \label{fig:algoreorder}
+  \caption{Algorithm for estimating reordering probabilities from monolingual data.} \label{fig:algoreorder}
   \vskip -0.2in
 \end{algorithm}
 
