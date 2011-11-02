@@ -424,6 +424,54 @@ These normalized counts are the values we use as estimates of $p_o(\textnormal{o
 
 \section{Experimental Setup} \label{sect:expsetup}
 
+
+
+
+\begin{table*}
+\begin{tabular}{ll}
+
+\begin{tabular}{lrrr}
+\multicolumn{4}{c}{Monolingual training corpora}\\
+\hline
+ & Europarl & Gigaword & Wikipedia\\
+\hline
+% date range & 4/15/96-10/22/09	& 5/12/94-12/31/08\\
+date range & 4/96-10/09 & 5/94-12/08	& n/a\\
+uniq dates & 829 & 5,249 & n/a \\
+Spanish articles & n/a & XXX & XXX \\
+English articles& n/a & XXX & XXX \\
+Spanish lines	& 1,307,339 & 22,862,835 & XXX\\
+English lines	& 1,307,339 & 67,341,030 & XXX\\
+Spanish words & 28,248,930 & 774,813,847 & XXX \\
+English words & 27,335,006 & 1,827,065,374 & 1,827,065,374\\
+%
+\end{tabular}
+&
+
+\begin{tabular}{lr}
+\multicolumn{2}{c}{Spanish-English phrase table}\\
+\hline
+Phrase pairs & 3,093,228\\
+Spanish phrases & 89,386\\
+English phrases & 926,138\\
+\hline
+Spanish unigrams & 13,216\\
+\multicolumn{1}{r}{Avg \# translations}  & 98.7\\
+Spanish bigrams & 41,426\\
+\multicolumn{1}{r}{Avg \# translations}  & 31.9\\
+Spanish trigrams & 34,744\\
+\multicolumn{1}{r}{Avg \# translations}  & 13.5\\
+\end{tabular}
+\\
+
+\end{tabular}
+
+\caption{Statistics about the monolingual training data.  The dates were paired, so dates that had articles in one language but not the other were discarded.
+}\label{table:training-data}
+\end{table*}
+
+
+
 In all  of our experiments, we use a fixed set of phrase translation pairs that is extracted from a bitext, but we estimate all other parameters from monolingual data alone.   The phrase pairs are drawn from a Spanish-English phrase table that is the result of running Moses SMT toolkit \cite{Moses} over the full Europarl v5 parallel corpus \cite{Koehn:2005}.
 
 In the first set of experiments, we treat the two sides of a bitext as independent, monolingual corpora (following \newcite{Haghighi:2008}). That is, we do away with sentence alignments and estimate the features based on corpora which we know have very similar phrasal and temporal monolingual distributions.  Our goal is to get a sense for how much lost performance we can hope to regain from monolingual features in this idealized setup.  In the second set of experiments, we throw away this idealization and estimate the features from truly monolingual corpora. In both cases, we explore the relative contribution of different types of features. Both sets of experiments assume that a high quality phrase table is given. This assumption enables us to test the quality of our monolingual features directly. In future work, we will explore inducing the phrase table itself without using a large bitext.
