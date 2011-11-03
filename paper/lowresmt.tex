@@ -15,12 +15,16 @@
 %\usepackage{fullpage}
 \usepackage{url}
 \usepackage{color}
+\usepackage{colortbl}
 \usepackage[vlined,figure]{algorithm2e}
 \usepackage{graphicx} 
+
+
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 
 \definecolor{red}{rgb}{1,0,0}
+\definecolor{lightgray}{cmyk}{0,0,0,.08}
 
 \newcommand{\mnote}[1]{\marginpar{%
   \vskip-\baselineskip
@@ -364,6 +368,56 @@ One subtly of our method is that
 %Note that multiple phrases may immediately precede $f$ and appear in the phrase table; however, we only use the longest of them to collect reordering counts.  
 shorter and more frequent phrases (e.g. punctuation) are more likely to appear in multiple orientations with a given phrase, and therefore provide poor evidence of re-ordering.  Therefore, we (a) collect the longest contextual phrases (which also appear in the phrase table) for reordering feature estimation, and (b) prune the set of sentences so that we only keep a small set of least frequent contextual phrases (this has the effect of dropping many function words and punctuation marks and and relying more heavily on multi-word content phrases to estimate the reordering).\footnote{The pruning step has an additional benefit of minimizing the memory needed for orientation feature estimations.}
 
+
+% ------------------------------------------------
+
+\begin{table*}[t]
+\begin{tabular}{ll}
+
+\begin{tabular}{lrrr}
+\multicolumn{4}{c}{Monolingual training corpora}\\
+\hline
+ & Europarl & Gigaword & Wikipedia\\
+\hline
+% date range & 4/15/96-10/22/09	& 5/12/94-12/31/08\\
+date range & 4/96-10/09 & 5/94-12/08	& n/a\\
+uniq shared dates & 829 & 5,249 & n/a \\
+% number of Spanish and English articles is overestimated;
+% that's the full set rather than just the ones in the paired dates that we used.
+Spanish articles & n/a & 3,727,954 & 59,463 \\
+English articles& n/a & 4,862,876 & 59,463 \\
+Spanish lines	& 1,307,339 & 22,862,835 & 2,598,269\\
+English lines	& 1,307,339 & 67,341,030 & 3,630,041\\
+Spanish words & 28,248,930 & 774,813,847 & 39,738,084 \\
+English words & 27,335,006 & 1,827,065,374 & 61,656,646\\
+%
+\end{tabular}
+&
+
+\begin{tabular}{lr}
+\multicolumn{2}{c}{Spanish-English phrase table}\\
+\hline
+Phrase pairs & 3,093,228\\
+Spanish phrases & 89,386\\
+English phrases & 926,138\\
+\hline
+Spanish unigrams & 13,216\\
+\rowcolor{lightgray} Avg \# translations & 98.7\\
+Spanish bigrams & 41,426\\
+\rowcolor{lightgray} Avg \# translations & 31.9\\
+Spanish trigrams & 34,744\\
+\rowcolor{lightgray} Avg \# translations & 13.5\\
+\end{tabular}
+\\
+
+\end{tabular}
+
+\caption{Statistics about the monolingual training data and the phrase table that was used in all of the experiments. 
+% The dates were paired, so dates that had articles in one language but not the other were discarded.
+}\label{table:training-data+phrase-table}
+\end{table*}
+% ------------------------------------------------
+
 Our algorithm for learning the reordering parameters is given on \figref{fig:algoreorder}.  The algorithm estimates a probability distribution over monotone, swap, and discontinuous orientations ($p_m$, $p_s$, $p_d$) for a phrase pair ($f, e$) from two monolingual corpora $C_f$ and $C_e$.  It begins by calling {\tt \small CollectOccurs} to collect the longest matching phrase table phrases preceding $f$ in source monolingual data ($B_f$), as well as preceding ($B_e$), following ($A_e$), and discontinuous ($D_e$) phrases with $e$ in the target language data.  For each unique phrase $f'$ preceding $f$, translations are then looked up in the phrase table $\emph{T}$.  Next, we count\footnote{$\#_{L}(x)$ returns the count of object x in list L.} how many translations $e'$ of $'$ appeared before, after or were discontinuous with $e$ in the target language data.  Finally, the counts are normalized and returned.  %The algorithm requires a single pass through the data to collect contextual phrases for the entire phrase table and its running time is quadratic in the size of the table.\mtodo{Check}
 %
 These normalized counts are the values we use as estimates of $p_o(\textnormal{orientation}|f,e)$. %This allows us to estimate all of the parameters of the phrase-based translation model from monolingual corpora.
@@ -419,91 +473,12 @@ These normalized counts are the values we use as estimates of $p_o(\textnormal{o
 
 %Second round of pruning: after monolingual feature extraction, before re-ordering estimation. \todo{Needs to be discussed after explanation of those methods?}
 
-% ------------------------------------------------
-
-
 \section{Experimental Setup} \label{sect:expsetup}
 
+We use the Spanish-English language pair to test our method for estimating the parameters of an SMT system from monolingual corpora.  This allows us to compare our method against the normal bilingual training procedure.  We expect bilingual training to result in higher translation quality, because it is a more direct method for learning translation probabilities.  We systematically remove different parameters from the standard phrase-based model, and then replace them with our monolingual equivalents.  Our goal is to recover as much of the loss as possible for each of the deleted bilingual components. 
 
-
-
-\begin{table*}
-\begin{tabular}{ll}
-
-\begin{tabular}{lrrr}
-\multicolumn{4}{c}{Monolingual training corpora}\\
-\hline
- & Europarl & Gigaword & Wikipedia\\
-\hline
-% date range & 4/15/96-10/22/09	& 5/12/94-12/31/08\\
-date range & 4/96-10/09 & 5/94-12/08	& n/a\\
-uniq dates & 829 & 5,249 & n/a \\
-Spanish articles & n/a & XXX & XXX \\
-English articles& n/a & XXX & XXX \\
-Spanish lines	& 1,307,339 & 22,862,835 & XXX\\
-English lines	& 1,307,339 & 67,341,030 & XXX\\
-Spanish words & 28,248,930 & 774,813,847 & XXX \\
-English words & 27,335,006 & 1,827,065,374 & 1,827,065,374\\
-%
-\end{tabular}
-&
-
-\begin{tabular}{lr}
-\multicolumn{2}{c}{Spanish-English phrase table}\\
-\hline
-Phrase pairs & 3,093,228\\
-Spanish phrases & 89,386\\
-English phrases & 926,138\\
-\hline
-Spanish unigrams & 13,216\\
-\multicolumn{1}{r}{Avg \# translations}  & 98.7\\
-Spanish bigrams & 41,426\\
-\multicolumn{1}{r}{Avg \# translations}  & 31.9\\
-Spanish trigrams & 34,744\\
-\multicolumn{1}{r}{Avg \# translations}  & 13.5\\
-\end{tabular}
-\\
-
-\end{tabular}
-
-\caption{Statistics about the monolingual training data.  The dates were paired, so dates that had articles in one language but not the other were discarded.
-}\label{table:training-data}
-\end{table*}
-
-
-
-In all  of our experiments, we use a fixed set of phrase translation pairs that is extracted from a bitext, but we estimate all other parameters from monolingual data alone.   The phrase pairs are drawn from a Spanish-English phrase table that is the result of running Moses SMT toolkit \cite{Moses} over the full Europarl v5 parallel corpus \cite{Koehn:2005}.
-
-In the first set of experiments, we treat the two sides of a bitext as independent, monolingual corpora (following \newcite{Haghighi:2008}). That is, we do away with sentence alignments and estimate the features based on corpora which we know have very similar phrasal and temporal monolingual distributions.  Our goal is to get a sense for how much lost performance we can hope to regain from monolingual features in this idealized setup.  In the second set of experiments, we throw away this idealization and estimate the features from truly monolingual corpora. In both cases, we explore the relative contribution of different types of features. Both sets of experiments assume that a high quality phrase table is given. This assumption enables us to test the quality of our monolingual features directly. In future work, we will explore inducing the phrase table itself without using a large bitext.
-%For the second set of experiments, we give up the idealized phrase table. For the third set, we drop the second idealization and show how well we do using truly monolingual texts.
-
-
-
-\paraheader{Data.} In Section \ref{sect:results}, we present results on Spanish-English MT. 
-%
-Our first set of experiments treats the Spanish and English sections of the Europarl v5 corpus
-% \cite{Koehn:2005} 
-as two independent, monolingual corpora. We estimate contextual, temporal\footnote{Europarl filenames include dates, making temporal signatures easy to compute.}, and reordering features using this idealized data setup for the given phrase table. 
-%
-Then, in the second set of experiments, we estimate the features using truly independent corpora. We estimate contextual and temporal monolingual features using a subset of the Spanish and English Gigaword corpora\footnote{We use the entirety of the following English and Spanish Gigaword sections: Agence France-Presse (afp), Associated Press Worldstream (apw), and Xinhua News Agency (xin).}, and we estimate monolingual topic similarity and an additional contextual feature using a sample of the set of English and Spanish Wikipedia articles that contain interlingual links to one another\footnote{We use a subset of about 60,000 paired, interlingually linked pages.}. We also estimate our monolingual reordering features using the Wikipedia data.
-%For Urdu-English (ur-en) experiments in \secref{sect:exp:indep} we use the parallel corpus and development and test sets distributed for the NIST 2009 Open MT Evaluation Workshop.  We estimate monolingual parameters from genuinely monolingual Urdu and English corpora annotated with publication dates (145 and 159 million tokens, respectively), which we have collected by crawling online news sites.  %Note: we have been collecting similar resources for a number of low density languages, and we plan to make them available to the community.  
-%Our seed dictionary has entries for 25,377 source tokens.
-%
-\mnote{What test set did we use?}
-In addition to the given phrase table, the only bilingual resources that we use are a seed dictionary containing entries for 49,795 source tokens\footnote{End-to-end translation results are robust to substantially reducing dictionary size; we omit the experiments due to space constraints.} and a development set comprised of {\em news-test2008} and {\em news-syscomb2009} \cite{callisonburch-EtAl:2010:WMT} to tune feature weights in minimum error rate training. Note though that the development bitext is very small (2,553 sentences).
-%However, these bitexts are very small (2,553 and 981 sentences for es-en and ur-en, respectively).  
-
-\paraheader{Software.} We use the Moses SMT toolkit \cite{Moses} and a language model trained on the English side of the parallel corporus.  With the exception of maximum phrase length (set to 3 in our experiments), default values were used for all of the parameters.  
-MERT is re-run for every experiment.  
-We collect contextual vectors for phrases over windows of two tokens on each side. %CUT FOR SPACE (provided it does not cross the sentence boundary).   
-We also prune the preceding, following, and discontinues phrases collected by {\tt \small CollectOccurs} (see \figref{fig:algoreorder}) to contain at most 1,000, 1,000, and 3,000 least frequent phrases phrases, respectively.
-%\vskip 0.05in
-The code for the experiments in this paper is available at \url{url}. \todo{Add live dropbox URL} %and the monolingual data we collected, along with similar corpora for 54 other low density languages, is available at \url{url}.
-
-%Since our experiments are complex, we release our software for full reproducibility.  It includes source code and documentation describing the monolingual estimation proceedures for all parameters. We include large monolingual corpora and dictionaries for 55 low density languages. \url{url}
-
-
-%We begin with a series of lesion experiments in which we drop feature functions estimated from parallel data.  %We then add equivalent but monolingually estimated features in reverse order to see how much of the lost performance can be regained.  \figref{fig:lesionreplacement} gives all of the results, which are explained below. Finally, we move on to phrase table induction experiments.
+The standard phrase-based model that we use as our top-line is the Moses system \cite{Moses} trained over the full Europarl v5 parallel corpus \cite{Koehn:2005}.   With the exception of maximum phrase length (set to 3 in our experiments), default values were used for all of the parameters.  All experiments use a trigram language model trained on the English half of the Europarl corpus using SRILM with Kneser-Ney smoothing. 
+To tune feature weights in minimum error rate training, we use a development bitext with 2,553 sentence pairs.  We use the development and test data distributed in WMT shared task \cite{callisonburch-EtAl:2010:WMT}.\footnote{Specifcially, {\em news-test2008} plus {\em news-syscomb2009} for dev and {\em newstest2009} for test.}   The test set is translated newswire articles consisting of 2,525 single-reference sentence pairs.   MERT was re-run for every experiment. 
 
 
 \begin{figure*}[t]
@@ -515,6 +490,25 @@ The code for the experiments in this paper is available at \url{url}. \todo{Add 
 \end{center}
 \vskip -0.2in
 \end{figure*}
+
+We estimate the parameters of our model from two sets of monolingual data, given in Table \ref{table:training-data+phrase-table}:
+\begin{itemize}
+\item First, we treat the two sides of the Europarl parallel corpus as independent, monolingual corpora.   \newcite{Haghighi:2008} also used this method to show how well translations could be learned from monolingual corpora under ideal conditions, where the contextual and temporal distribution of words in the two monolingual corpora are practically identical.   
+\item Next, we estimate the features from truly monolingual corpora.  To estimate the {\it contextual} and {\it temporal} similarity features, we use the Spanish and English Gigaword corpora.\footnote{We use the
+%Agence France-Presse (afp), Associated Press Worldstream (apw), and Xinhua News Agency (xin)
+afp, apw and xin sections of the corpora.}
+These corpora are substantially larger than the Europarl corpora, providing 27x as much Spanish and 67x as much English for contextual similarity, and 6x as many paired dates for temporal similarity. 
+%Using real monolingual corpora also allows us 
+ {\it Topical} similarity is estimated using Spanish and English Wikipedia articles that are paired with inter-language links.
+\end{itemize}
+To project context vectors for Spanish to English, we use are a bilingual dictionary containing entries for 49,795 Spanish words.\footnote{End-to-end translation quality is robust to substantially reducing dictionary size; results omitted due to space constraints.}  The context vectors for words and phrases collect co-occurrence counts using a two-word window on either side.
+
+The title of our paper uses the word {\it towards}, because we assume that an inventory of phrase pairs is given. 
+Future work shall explore inducing the phrase table itself from monolingual texts.  
+Across all of our experiments, we use the phrase table that bilingual model learned from the Europarl parallel corpus.  We keep its phrase pairs, but we drop all of its scores.  Table \ref{table:training-data+phrase-table} gives details of the phrase pairs.  For our experiments, we estimated similarity scores and re-ordering probabilities for more than 3 million phrase pairs.  The set of possible translations were constrained for each source phrase, and therefore were likely to contain good translations.  However, the average number of possible translations was high (ranging from nearly 100 translations for each unigram to 14 for each trigram).  These contain a lot of noise, and result in inferior end-to-end translation quality without good estimates of their translation quality, as the experiments in Section \ref{sect:exp:lesions} will show.
+
+\paraheader{Software.} Because many details of our estimation procedures must be omitted for space, we distribute our full set of code, along with scripts for running our experiments, and output translations.  These may be downed from  \url{url}. \todo{Add  dropbox URL}.
+
 
 
 
@@ -528,16 +522,6 @@ We begin by removing each of the standard bilingually estimated features from th
 \subsection{Lesion experiments (Experiments 1-4)}\label{sect:exp:lesions}
 %\paragraph{Lesion experiments (Experiments 1-4)}
 
-
-\begin{figure}[t]
-%\vskip 0.1in
-\begin{center}
-\includegraphics[width=\linewidth]{../figures/monolingual.pdf}
-\caption{monolingual equivalents derived from truly monolingual corpora (experiments 12-18).  Over 80\% of lost performance can be recovered with monolingual features estimated using monolingual corpora alone.  Moreover, when added alongside the features derived from parallel data (experiments 11, 19), monolingual features account for for over 1 BLEU point gain (experiment 10).}
-\label{fig:lesionreplacement}
-\end{center}
-\vskip -0.2in
-\end{figure}
 
 
 We begin with a series of experiments where we remove individual features derived from an aligned bitext in order to get a sense of their relative contributions to the overall system performance on the English-Spanish language pair (see \figref{fig:lesionreplacement}). When both phrase and orientation features are derived from word alignments ({\bf B/B}, the standard features functions defined in \secref{sect:bckg:smt}), the system reaches 21.87 BLEU.  Next we replace orientation features with random values ({\bf B/--}) and drop phrase features ({\bf --/B}).  While phrase table features account for a substantial performance difference (9 BLEU points), dropping orientation features affects the system score relatively little.  This is not surprising, since the word order is generally preserved in Spanish to English translations.  Finally, both dropping phrase scores and replacing orientation features with random values ({\bf --/--}) results in 5.5 BLEU, a 16.4 point drop.  
@@ -557,6 +541,18 @@ We now show a similar set of experiments as in the previous section, but this ti
 %Instead of treating two sides of the parallel corpus as independent, monolingual corpora, we estimate our features using truly monolingual corpora. 
 %As explained in \secref{sect:expsetup}, we estimate contextual and temporal features using subsets of the Spanish and English Gigaword corpora, and we estimate an additional contextual feature, the topical feature, and reordering features using a sample of Spanish and English Wikipedia pages. 
 Adding orientation features alone ({\bf --/M}) recovers 4.7 BLEU points, about 0.3 less than adding orientation features estimated using the bitext. Experiments 13-16 show how each monolingually estimated feature impacts MT performance. Each feature is independently capable of recovering at least 7.5 BLEU points above the featureless table. The topical feature is the most independently informative and alone recovers over 11 BLEU points. Together, the four monolingually estimated features ({\bf M/-}) recover over 12.5 points and result in a BLEU score of 18.06. Also using our monolingually estimated reordering feature ({\bf M/M}) yields a total gain of {\bf 13.3 BLEU} points, or {\bf over 81\%} of the BLEU point loss that occurred when we dropped all features from the phrase table.  This result is roughly equivalent to training the standard system on about 60,000 lines of bitext (see \figref{fig:mtlearn}).
+
+
+\begin{figure}[t]
+%\vskip 0.1in
+\begin{center}
+\includegraphics[width=\linewidth]{../figures/monolingual.pdf}
+\caption{monolingual equivalents derived from truly monolingual corpora (experiments 12-18).  Over 80\% of lost performance can be recovered with monolingual features estimated using monolingual corpora alone.  Moreover, when added alongside the features derived from parallel data (experiments 11, 19), monolingual features account for for over 1 BLEU point gain (experiment 10).}
+\label{fig:lesionreplacement}
+\end{center}
+\vskip -0.2in
+\end{figure}
+
 
 \begin{figure}[t]
 %\vskip 0.1in
