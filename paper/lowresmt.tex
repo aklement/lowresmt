@@ -273,9 +273,8 @@ In addition to the three phrase similarity features used in our model -- $c(f, e
 Because individual words are more frequent than multiword phrases, the accuracy of $c_{lex},  t_{lex}$, and $w_{lex}$  tends to be higher than their phrasal equivalents (this is similar to the effect observed in Figure \ref{fig:lexinduct}). 
 
 \paraheader{Orthographic / phonetic similarity.}  The final lexical similarity feature that we incorporate is $o(f, e)$, which measure the orthographic similarity between words in the translations. 
-Etymologically related words often retain similar spelling across languages with the same writing system, and low string edit distance sometimes signals translation equivalency.  
-We can also extend this idea to language pairs not sharing the same writing system since many cognates, borrowed words, and names remain phonetically similar.  Transliterations can be generated for tokens in a source phrase (e.g. \newcite{Knight1997}), with $o(f, e)$ now calculating phonetic similarity rather than orthographic.
-
+Etymologically related words often retain similar spelling across languages with the same writing system, and low string edit distance sometimes signals translation equivalency.  \newcite{BergKirkpatrick2011} present  methods for learning correspondences between the alphabets of two languages.
+We can also extend this idea to language pairs not sharing the same writing system since many cognates, borrowed words, and names remain phonetically similar.  Transliterations can be generated for tokens in a source phrase \cite{Knight1997}, with $o(f, e)$ calculating phonetic similarity rather than orthographic.  
 The three phrasal and four lexical similarity scores are incorporated into the  log linear translation model as feature functions, replacing the bilingually estimated phrase translation probabilities $\phi$ and lexical weighting probabilities $w$.  Our seven similarity scores are not only ones that could be incorporated into the translation model. Various other similarity scores can be computed depending on the available monolingual data and its associated metadata (see, e.g. \newcite{Schafer:2002}).
 
 \vspace{-.1cm}
@@ -491,7 +490,9 @@ To tune feature weights in minimum error rate training, we use a development bit
 %\vskip 0.1in
 \begin{center}
 \includegraphics[width=.27\linewidth]{../figures/legend.pdf}\includegraphics[width=.73\linewidth]{../figures/europarl.pdf}
-\caption{Much of the loss in BLEU score when bilingually estimated features are removed from a  Spanish-English translation system (experiments 1-4) can be recovered when they are replaced with monolingual equivalents estimated from monolingual Europarl data (experiments 5-10).}
+\caption{Much of the loss in BLEU score when bilingually estimated features are removed from a  Spanish-English translation system (experiments 1-4) can be recovered when they are replaced with monolingual equivalents estimated from monolingual Europarl data (experiments 5-10). 
+The labels indicate how the different types of parameters are estimated, the first part is for phrase-table features, the second is for reordering probabilities. % {\bf B} stands for bilingual estimation, {\bf M} stands for monolingual estimation, {\bf -} indicates omission of the parameter, and lowercase letters are the different individual monolingual similarity scores. 
+}
 \label{fig:lesionreplacement}
 \end{center}
 \vskip -0.2in
@@ -527,7 +528,6 @@ Across all of our experiments, we use the phrase table that the bilingual model 
 
 Figures \ref{fig:lesionreplacement} and \ref{fig:realmonolingual} give our experimental results.  Figure \ref{fig:lesionreplacement} shows the performance of the standard phrase-based model when each of the  bilingually estimated features are removed.  It shows how much of the performance loss can be recovered using our monolingual features when they are estimated from the Europarl training corpus but treating each side as an independent, monolingual corpus.  Figure \ref{fig:realmonolingual} shows the recovery when using truly monolingual corpora to estimate the parameters. 
 
-For all experiments, we use mnemonic labels indicating how the different sets of parameters are estimated.  The labels contain two parts, the first for the phrase-table features, the second for the reordering probabilities.  {\bf B} stands for bilingual estimation, {\bf M} stands for monolingual estimation, {\bf -} indicates omission of the parameter, and lowercase letters are the different individual monolingual similarity scores. 
 
 % ccb - squeezing for space
 \vspace{-.2cm}
@@ -572,17 +572,20 @@ Combining the monolingually estimated reordering features with the monolingually
 Finally, we supplement the standard bilingually estimated model parameters with our monolingual features we see a {\bf 1.5} BLEU point increase over the standard model ({\bf BM/B}). Therefore, our monolingually estimated scores capture some novel information not contained in the standard feature set. 
 
 % ------------------------------------------------
-\section{Related Work} \label{sect:related-work}
+\section{Additional Related Work} \label{sect:related-work}
 
-Recent work on lexical induction includes \newcite{Haghighi:2008} who made use of contextual and orthographic clues to learn a generative model from monolingual texts and a seed lexicon.  \newcite{Mimno:2009}  proposed a polylingual topic model and matched high probability words in each topic across languages.  While effective for a small number of topics, it is unlikely to scale well to large multilingual dictionaries. \newcite{BergKirkpatrick2011} learn a correspondence between the alphabets of two languages for cognate identification, which will not generalize to general etymologically unrelated translations. 
+\newcite{Carbonell2006} described a data-driven machine translation system that used no parallel text. It produced translation lattices using a bilingual dictionary and scored them using an n-gram language model.  Their method has no notion of translation similarity aside from a  bilingual dictionary.
 
-%\todop{Chris}{Additional reference pointed out by reviewers worth including?}
-\newcite{Carbonell2006} described a data-driven machine translation system that used no parallel text. It produced translation lattices using a bilingual dictionary and scored them using an n-gram language model.  This method is similar to our baseline which eliminates the translation probabilities from a phrase-table, and scores the output only with an n-gram language model.  
+\newcite{ravi-knight:2011:ACL-HLT} treat MT without parallel training data as a decipherment task.  The learn a word substation cypher from monolingual texts, and extend this to learn translations for 270 time expressions and 500 subtitle phrases. Although promising, their method has not been applied to full scale MT. 
 
-We examine scenarios where large bilingual parallel corpora are not available.  A variety of past research has focused on overcoming this bottleneck by mining parallel or comparable corpora from the web \cite{Munteanu:2006,Schwenk2008,Rauf2009,Smith2010,Uszkoreit:2010}.  Methods for acquiring bitexts are complimentary but orthogonal to our research goals.  We focus on the ``no bitext'' condition, but a logical follow-on would be to bootstrap from a small bitext.
+Most work on learning translations from monolingual texts only examine frequent words. \newcite{Huang2005} and \newcite{daumeiii-jagarlamudi:2011:ACL-HLT2011} are exceptions that improve MT by inducing translations for OOV words and phrases. 
 
-\todo{Update with citations: \newcite{Lambert2011}, \newcite{Chen2008}, \newcite{Foster2007}. See comments in .tex.  Also \newcite{ravi-knight:2011:ACL-HLT}, and \newcite{daumeiii-jagarlamudi:2011:ACL-HLT2011}}
+A variety of past research has focused on mining parallel or comparable corpora from the web \cite{Munteanu:2006,Smith2010,Uszkoreit:2010}.  Others use an existing SMT system to discover parallel sentences within independent monolingual texts, and use them to re-train and enhance the system \cite{Schwenk2008,Chen2008,Schwenk2009,Rauf2009,Lambert2011}.  These are complimentary but orthogonal to our research goals.  
+%We focus on the ``no bitext'' condition, but a logical follow-on would be to bootstrap from a small bitext.
 
+%\todo{Update with citations: \newcite{Lambert2011},  See comments in .tex.  Also , and }
+
+%\newcite{Foster2007}
 
 
 \nocite{Munteanu:2006,Smith2010,Uszkoreit:2010}
@@ -626,7 +629,31 @@ We examine scenarios where large bilingual parallel corpora are not available.  
 
 
 
-\section{Summary and Discussion}
+\section{Conclusion}
+
+
+%\section*{Acknowledgments}
+%The authors would like each other and their parents.
+
+%\newpage
+\bibliographystyle{acl}
+% you bib file should really go here 
+\bibliography{lowresmt}
+
+\end{document}
+
+
+% Learning curve omitted for space.
+
+\begin{figure}[t]
+%\vskip 0.1in
+\begin{center}
+\includegraphics[width=\linewidth]{../figures/mtlearning/esenlearning.pdf}
+\caption{Performance of the Moses pipeline ({\bf B/B}) vs. the amount of Spanish-English Europarl training data.}
+\label{fig:mtlearn}
+\end{center}
+\vskip -0.2in
+\end{figure}
 
 The experiments show that weak but independent cues present in plentiful monolingual data can be used to induce a competitive translation model.  Over 81\% of the performance of the standard model estimated using bitext is recovered when the monolingual features we introduced are used alone.  Moreover, the monolingual features clearly contain a useful signal not captured by the standard bilingual features; when added to the standard phrase-based machine translation pipeline, they account for about 1.5 BLEU point gain.  
 
@@ -710,25 +737,3 @@ There are many interesting questions and directions for future work.  First, we 
 %\item Build complete systems for X low-resource languages.
 %\end{itemize}
 
-%\section*{Acknowledgments}
-%The authors would like each other and their parents.
-
-%\newpage
-\bibliographystyle{acl}
-% you bib file should really go here 
-\bibliography{lowresmt}
-
-\end{document}
-
-
-% Learning curve omitted for space.
-
-\begin{figure}[t]
-%\vskip 0.1in
-\begin{center}
-\includegraphics[width=\linewidth]{../figures/mtlearning/esenlearning.pdf}
-\caption{Performance of the Moses pipeline ({\bf B/B}) vs. the amount of Spanish-English Europarl training data.}
-\label{fig:mtlearn}
-\end{center}
-\vskip -0.2in
-\end{figure}
