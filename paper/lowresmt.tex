@@ -71,7 +71,7 @@
 %The parameters of statistical translation models are typically estimated from large bilingual parallel corpora.  However, these resources  are not available for most language pairs and are expensive to produce from scratch.  In this work, 
 We estimate the parameters of a phrase-based statistical machine translation system from 
 %cheap 
-\emph{monolingual} corpora instead of a \emph{bilingual} parallel corpus.  We extend existing research on bilingual lexicon induction to estimate lexical and phrasal translation probabilities for MT scale phrase-tables. We propose a novel algorithm to estimate re-ordering probabilities from monolingual data. We report translation results for an end-to-end translation system using these monolingual features alone.  In principle, our method only requires two large monolingual corpora, a small bilingual dictionary, and a small bitext for tuning feature weights.  In this paper, we examine an idealization where a phrase-table is given.  We examine the degradation in translation performance when bilingually estimated translation probabilities are removed, and show that 80\%+ of the loss can be recovered with monolingually estimated features alone.  We further show that our monolingual features add 1.5 BLEU points when combined with standard bilingually estimated phrase table features. 
+\emph{monolingual} corpora instead of a \emph{bilingual} parallel corpus.  We extend existing research on bilingual lexicon induction to estimate lexical and phrasal translation probabilities for MT scale phrase-tables. We propose a novel algorithm to estimate re-ordering probabilities from monolingual data. We report translation results for an end-to-end translation system using these monolingual features alone.  In principle, our method only requires two large monolingual corpora, a small bilingual dictionary, and a small bitext for tuning feature weights.  In this paper, we examine an idealization where a phrase-table is given.  We examine the degradation in translation performance when bilingually estimated translation probabilities are removed, and show that 82\%+ of the loss can be recovered with monolingually estimated features alone.  We further show that our monolingual features add 1.5 BLEU points when combined with standard bilingually estimated phrase table features. 
 % We perform a feature lesion study that shows how much translation performance decreases when parameters estimated from bitext are removed and how much of that loss can be restored when monolingually-estimated equivalents are added.  We show that more than 81\% of the loss can be recovered with monolingual data alone.  We also show that the monolingual features we introduce account for about 1.5 BLEU point gain when added to the standard phrase-based pipeline.
 
 % Large volumes of parallel text are required before translation models produce high quality translations, but sufficiently large corpora are available for  very few language pairs.  On the other hand, monolingual data is widely available and cheap to collect.  In this work, we propose a set of cues derived from monolingual resources and systematically introduce them in a phrase-based machine translation pipeline \emph{in place} of features induced from parallel data.  We show on two language pairs that monolingual data can take us a long way toward  inducing a high quality machine translation system.
@@ -275,6 +275,7 @@ Because individual words are more frequent than multiword phrases, the accuracy 
 \paraheader{Orthographic / phonetic similarity.}  The final lexical similarity feature that we incorporate is $o(f, e)$, which measures the orthographic similarity between words in the translations. 
 Etymologically related words often retain similar spelling across languages with the same writing system, and low string edit distance sometimes signals translation equivalency.  \newcite{BergKirkpatrick2011} present  methods for learning correspondences between the alphabets of two languages.
 We can also extend this idea to language pairs not sharing the same writing system since many cognates, borrowed words, and names remain phonetically similar.  Transliterations can be generated for tokens in a source phrase \cite{Knight1997}, with $o(f, e)$ calculating phonetic similarity rather than orthographic.  
+
 The three phrasal and four lexical similarity scores are incorporated into the  log linear translation model as feature functions, replacing the bilingually estimated phrase translation probabilities $\phi$ and lexical weighting probabilities $w$.  Our seven similarity scores are not the only ones that could be incorporated into the translation model. Various other similarity scores can be computed depending on the available monolingual data and its associated metadata (see, e.g. \newcite{Schafer:2002}).
 
 \vspace{-.1cm}
@@ -541,7 +542,7 @@ Experiments 1-4 remove bilingually estimated parameters from the standard model.
 %\vskip 0.1in
 \begin{center}
 \includegraphics[width=\linewidth]{../figures/monolingual.pdf}
-\caption{Performance of monolingual features derived from truly monolingual corpora. Over 80\% of the BLEU score loss can be recovered.}
+\caption{Performance of monolingual features derived from truly monolingual corpora. Over 82\% of the BLEU score loss can be recovered.}
 \label{fig:realmonolingual}
 \end{center}
 \vskip -0.2in
@@ -553,7 +554,7 @@ Experiments 1-4 remove bilingually estimated parameters from the standard model.
 
 Experiments 5-10 show how much our monolingual equivalents could recover when the monolingual corpora are drawn from the two sides of the bitext.   For instance, our algorithm for estimating reordering probabilities from monolingual data ({\bf --/M}) adds 5 BLEU points, which is 73\% of the potential recovery going from the model ({\bf --/--}) to the model with bilingual reordering features ({\bf --/B}). 
 
-Of the {\bf t}emporal, {\bf o}rthographic, and {\bf c}ontextual monolingual features the temporal feature performs the best.  Together ({\bf M/--}), they recover more than each individually.  Combining monolingually estimated reordering and phrase table  features ({\bf M/M}) yields a total gain of 12 BLEU points, or 76\% of the BLEU score loss that occurred when we dropped all features from the phrase table. 
+Of the {\bf t}emporal, {\bf o}rthographic, and {\bf c}ontextual monolingual features the temporal feature performs the best.  Together ({\bf M/--}), they recover more than each individually.  Combining monolingually estimated reordering and phrase table  features ({\bf M/M}) yields a total gain of 13.5 BLEU points, or over 75\% of the BLEU score loss that occurred when we dropped all features from the phrase table. 
 %Our monolingual features successfully recover much of the information contained in the features derived from bitext.  %Note that the achieved score is equivalent to a standard bilingually estimated system trained on a parallel corpus of roughly 500,000 \todo{is this still the same?} words (learning curve is omitted due to space constraints).
 However, this is with ``monolingual'' corpora which have practically identical phrasal and temporal distributions. 
 
@@ -564,7 +565,7 @@ However, this is with ``monolingual'' corpora which have practically identical p
 Experiments 12-18 drop the idealization, and instead estimate all of the features from truly monolingual corpora.
 Our novel algorithm for estimating reordering holds up well -- recovering 69\% of the loss -- only 0.4 less than when estimated from the Europarl monolingual texts.  The temporal similarity feature does not perform as well as when it was estimated using Europarl data, but the contextual feature does.  The topic similarity using Wikipedia performs the strongest of the individual features.  
  
-Combining the monolingually estimated reordering features with the monolingually estimated similarity features recovers ({\bf M/M}) yields a total gain of {\bf 13.3 BLEU} points, or {\bf over 81\%} of the BLEU point loss that occurred when we dropped all features from the phrase table.  This is equivalent to training the standard system on a bitext with roughly 60,000 lines or nearly 2 million words  (learning curve omitted for space).
+Combining the monolingually estimated reordering features with the monolingually estimated similarity features recovers ({\bf M/M}) yields a total gain of {\bf 14.8 BLEU} points, or {\bf over 82\%} of the BLEU point loss that occurred when we dropped all features from the phrase table.  This is equivalent to training the standard system on a bitext with roughly 60,000 lines or nearly 2 million words  (learning curve omitted for space).
 
 
 
@@ -630,6 +631,8 @@ A variety of past research has focused on mining parallel or comparable corpora 
 
 
 \section{Conclusion}
+
+In this work, we make an important step toward eliminating the need for large volumes of expensive parallel text in SMT. In particular, we have shown that orthogonal cues present in plentiful and cheap monolingual data can be used to estimate a set of informative similarity and reordering phrase pair feature scores. Using these features instead of standard bilingually estimated features results in only 18\% performance loss. Moreover, the monolingual features contain a useful signal not captured by the standard bilingual estimation; when added to the standard feature set, they account for about 1.5 BLEU point gain.
 
 
 %\section*{Acknowledgments}
