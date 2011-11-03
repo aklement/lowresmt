@@ -477,7 +477,7 @@ These normalized counts are the values we use as estimates of $p_o(\textnormal{o
 
 We use the Spanish-English language pair to test our method for estimating the parameters of an SMT system from monolingual corpora.  This allows us to compare our method against the normal bilingual training procedure.  We expect bilingual training to result in higher translation quality, because it is a more direct method for learning translation probabilities.  We systematically remove different parameters from the standard phrase-based model, and then replace them with our monolingual equivalents.  Our goal is to recover as much of the loss as possible for each of the deleted bilingual components. 
 
-The standard phrase-based model that we use as our top-line is the Moses system \cite{Moses} trained over the full Europarl v5 parallel corpus \cite{Koehn:2005}.   With the exception of maximum phrase length (set to 3 in our experiments), default values were used for all of the parameters.  All experiments use a trigram language model trained on the English half of the Europarl corpus using SRILM with Kneser-Ney smoothing. 
+The standard phrase-based model that we use as our top-line is the Moses system \cite{Moses} trained over the full Europarl v5 parallel corpus \cite{Koehn:2005}.   With the exception of maximum phrase length (set to 3 in our experiments), default values were used for all of the parameters.  All experiments use a trigram language model trained on the English side of the Europarl corpus using SRILM with Kneser-Ney smoothing. 
 To tune feature weights in minimum error rate training, we use a development bitext with 2,553 sentence pairs.  We use the development and test data distributed in WMT shared task \cite{callisonburch-EtAl:2010:WMT}.\footnote{Specifcially, {\em news-test2008} plus {\em news-syscomb2009} for dev and {\em newstest2009} for test.}   The test set is translated newswire articles consisting of 2,525 single-reference sentence pairs.   MERT was re-run for every experiment. 
 
 
@@ -491,21 +491,23 @@ To tune feature weights in minimum error rate training, we use a development bit
 \vskip -0.2in
 \end{figure*}
 
-We estimate the parameters of our model from two sets of monolingual data, given in Table \ref{table:training-data+phrase-table}:
+We estimate the parameters of our model from two sets of monolingual data, detailed in Table \ref{table:training-data+phrase-table}:
 \begin{itemize}
 \item First, we treat the two sides of the Europarl parallel corpus as independent, monolingual corpora.   \newcite{Haghighi:2008} also used this method to show how well translations could be learned from monolingual corpora under ideal conditions, where the contextual and temporal distribution of words in the two monolingual corpora are practically identical.   
 \item Next, we estimate the features from truly monolingual corpora.  To estimate the {\it contextual} and {\it temporal} similarity features, we use the Spanish and English Gigaword corpora.\footnote{We use the
 %Agence France-Presse (afp), Associated Press Worldstream (apw), and Xinhua News Agency (xin)
 afp, apw and xin sections of the corpora.}
 These corpora are substantially larger than the Europarl corpora, providing 27x as much Spanish and 67x as much English for contextual similarity, and 6x as many paired dates for temporal similarity. 
-%Using real monolingual corpora also allows us 
  {\it Topical} similarity is estimated using Spanish and English Wikipedia articles that are paired with inter-language links.
 \end{itemize}
-To project context vectors for Spanish to English, we use are a bilingual dictionary containing entries for 49,795 Spanish words.\footnote{End-to-end translation quality is robust to substantially reducing dictionary size; results omitted due to space constraints.}  The context vectors for words and phrases collect co-occurrence counts using a two-word window on either side.
+To project context vectors for Spanish to English, we use a bilingual dictionary containing entries for 49,795 Spanish words.
+%\footnote{End-to-end translation quality is robust to substantially reducing dictionary size; results omitted due to space constraints.}  
+Note that end-to-end translation quality is robust to substantially reducing dictionary size, but we omit these experiments due to space constraints.
+The context vectors for words and phrases collect co-occurrence counts using a two-word window on either side.
 
 The title of our paper uses the word {\it towards}, because we assume that an inventory of phrase pairs is given. 
 Future work shall explore inducing the phrase table itself from monolingual texts.  
-Across all of our experiments, we use the phrase table that bilingual model learned from the Europarl parallel corpus.  We keep its phrase pairs, but we drop all of its scores.  Table \ref{table:training-data+phrase-table} gives details of the phrase pairs.  For our experiments, we estimated similarity scores and re-ordering probabilities for more than 3 million phrase pairs.  The set of possible translations were constrained for each source phrase, and therefore were likely to contain good translations.  However, the average number of possible translations was high (ranging from nearly 100 translations for each unigram to 14 for each trigram).  These contain a lot of noise, and result in inferior end-to-end translation quality without good estimates of their translation quality, as the experiments in Section \ref{sect:exp:lesions} will show.
+Across all of our experiments, we use the phrase table that the bilingual model learned from the Europarl parallel corpus.  We keep its phrase pairs, but we drop all of its scores.  Table \ref{table:training-data+phrase-table} gives details of the phrase pairs.  For our experiments, we estimated similarity scores and re-ordering probabilities for more than 3 million phrase pairs.  The set of possible translations were constrained for each source phrase, and therefore were likely to contain good translations.  However, the average number of possible translations was high (ranging from nearly 100 translations for each unigram to 14 for each trigram).  These contain a lot of noise, and result in inferior end-to-end translation quality without good estimates of their translation quality, as the experiments in Section \ref{sect:exp:lesions} will show.
 
 \paraheader{Software.} Because many details of our estimation procedures must be omitted for space, we distribute our full set of code, along with scripts for running our experiments, and output translations.  These may be downed from  \url{url}. \todo{Add  dropbox URL}.
 
