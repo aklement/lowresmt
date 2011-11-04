@@ -60,9 +60,9 @@
 
 \title{Toward Statistical Machine Translation without Parallel Corpora}
 
-\author{}
- \author{Alex Klementiev \ \ \ \  Ann Irvine \ \ \ \ Chris Callison-Burch \ \ \ \ David Yarowsky \\
- Center for Language and Speech Processing \\ Johns Hopkins University}
+%\author{}
+% \author{Alex Klementiev \ \ \ \  Ann Irvine \ \ \ \ Chris Callison-Burch \ \ \ \ David Yarowsky \\
+% Center for Language and Speech Processing \\ Johns Hopkins University}
 \date{}
 
 \begin{document}
@@ -71,7 +71,12 @@
 %The parameters of statistical translation models are typically estimated from large bilingual parallel corpora.  However, these resources  are not available for most language pairs and are expensive to produce from scratch.  In this work, 
 We estimate the parameters of a phrase-based statistical machine translation system from 
 %cheap 
-\emph{monolingual} corpora instead of a \emph{bilingual} parallel corpus.  We extend existing research on bilingual lexicon induction to estimate lexical and phrasal translation probabilities for MT scale phrase-tables. We propose a novel algorithm to estimate re-ordering probabilities from monolingual data. We report translation results for an end-to-end translation system using these monolingual features alone.  In principle, our method only requires two large monolingual corpora, a small bilingual dictionary, and a small bitext for tuning feature weights.  In this paper, we examine an idealization where a phrase-table is given.  We examine the degradation in translation performance when bilingually estimated translation probabilities are removed, and show that 82\%+ of the loss can be recovered with monolingually estimated features alone.  We further show that our monolingual features add 1.5 BLEU points when combined with standard bilingually estimated phrase table features. 
+\emph{monolingual} corpora instead of a \emph{bilingual} parallel corpus.  We extend existing research on bilingual lexicon induction to estimate {\em both} lexical and phrasal translation probabilities for MT-scale phrase-tables. We propose a novel algorithm to estimate re-ordering probabilities from monolingual data. We report translation results for an end-to-end translation system using these monolingual features alone.  
+%
+Our method only requires monolingual corpora in source and target languages, a small bilingual dictionary, and a small bitext for tuning feature weights.
+%In principle, our method only requires two large monolingual corpora, a small bilingual dictionary, and a small bitext for tuning feature weights. 
+%
+ In this paper, we examine an idealization where a phrase-table is given.  We examine the degradation in translation performance when bilingually estimated translation probabilities are removed, and show that 82\%+ of the loss can be recovered with monolingually estimated features alone.  We further show that our monolingual features add 1.5 BLEU points when combined with standard bilingually estimated phrase table features. 
 % We perform a feature lesion study that shows how much translation performance decreases when parameters estimated from bitext are removed and how much of that loss can be restored when monolingually-estimated equivalents are added.  We show that more than 81\% of the loss can be recovered with monolingual data alone.  We also show that the monolingual features we introduce account for about 1.5 BLEU point gain when added to the standard phrase-based pipeline.
 
 % Large volumes of parallel text are required before translation models produce high quality translations, but sufficiently large corpora are available for  very few language pairs.  On the other hand, monolingual data is widely available and cheap to collect.  In this work, we propose a set of cues derived from monolingual resources and systematically introduce them in a phrase-based machine translation pipeline \emph{in place} of features induced from parallel data.  We show on two language pairs that monolingual data can take us a long way toward  inducing a high quality machine translation system.
@@ -257,12 +262,10 @@ w_{k} = n_{f,k} \times (log( {n / n_{k}}) + 1)
 \includegraphics[width= \linewidth]{../figures/temporal/temporal}
 \caption{Temporal histograms of the English phrase {\em to terrorists}, its Spanish translation {\em a los terroristas}, and the phrase {\em y riqueza} (and wealth) collected from monolingual texts spanning a 13 year period. While the correct translation has a good temporal match, the non-translation {\em y riqueza} has a distinctly different signature.}
 \label{fig:temporal}
+\vspace{-0.3cm}
 \end{figure}
 
-
-
-
-\paraheader{Temporal similarity.} In addition to contextual similarity, phrases in two different languages may be scored in terms of their temporal similarity \cite{alfonseca-ciaramita-hall:2009:EMNLP}.  The intuition is that news stories from different countries will tend to discuss the same world events on the same day.  The frequencies of phrases over time give them a particular signature that will tend to spike on the same dates across languages.  For instance, if the phrase {\it asian tsunami} is used frequently during a particular time span, the number of mentions of the Spanish phrase {\it maremoto asi\'{a}tico} is very likely to increase in the same timeframe. \figref{fig:temporal} illustrates how the temporal distribution of {\it to terrorists} is more similar to the Spanish {\it a los terroristas} than to other Spanish phrases.  We calculate the temporal similarity between a pair of phrases $t(f, e)$ using the method defined by \newcite{Klementiev:2006b}.   A temporal signature for each phrase is generated by sorting the set of (time-stamped) documents in the monolingual corpus into a sequence of equally sized temporal bins and by counting the number of phrase occurrences in each bin.  In our experiments, we set the window size to 1 day, so the size of temporal signatures is equal to the number of days spanned by our corpus.  Cosine distance is used to compare the normalized temporal signatures for a pair of phrases  $(f, e)$.
+\paraheader{Temporal similarity.} In addition to contextual similarity, phrases in two different languages may be scored in terms of their temporal similarity \cite{Schafer:2002,Klementiev:2006b,alfonseca-ciaramita-hall:2009:EMNLP}.  The intuition is that news stories from different countries will tend to discuss the same world events on the same day.  The frequencies of phrases over time give them a particular signature that will tend to spike on the same dates across languages.  For instance, if the phrase {\it asian tsunami} is used frequently during a particular time span, the number of mentions of the Spanish phrase {\it maremoto asi\'{a}tico} is very likely to increase in the same timeframe. \figref{fig:temporal} illustrates how the temporal distribution of {\it to terrorists} is more similar to the Spanish {\it a los terroristas} than to other Spanish phrases.  We calculate the temporal similarity between a pair of phrases $t(f, e)$ using the method defined by \newcite{Klementiev:2006b}.   A temporal signature for each phrase is generated by sorting the set of (time-stamped) documents in the monolingual corpus into a sequence of equally sized temporal bins and by counting the number of phrase occurrences in each bin.  In our experiments, we set the window size to 1 day, so the size of temporal signatures is equal to the number of days spanned by our corpus.  Cosine distance is used to compare the normalized temporal signatures for a pair of phrases  $(f, e)$.
 
 \paraheader{Topic similarity.}\mtodo{Spin this as a new feature! Also: explain it in a little more detail} Phrases and their translations are likely to appear in articles written about the same topic in two languages.  Thus, topic or category information associated with monolingual data can also be used to indicate similarity between a phrase and its candidate translation.  In order to score a pair of phrases, we can collect their topic signatures by counting their occurrences in each topic and then comparing the resulting vectors.  We again use the cosine similarity measure on the normalized topic signatures.  In our experiments, we use interlingual links between wikipedia articles to estimate topic similarity.  We treat each linked article pair as a topic and collect counts for each phrase across all articles in its corresponding language.  Thus, the size of a phrase topic signature is the number of article pairs with interlingual links in Wikipedia, and each component contains the number of times the phrase appears in (the appropriate side of) the corresponding pair.  Our Wikipedia-based topic similarity feature, $w(f, e)$, is similar in spirit to polylingual topic models \cite{Mimno:2009}, but it is scalable to full bilingual lexicon induction.
 
@@ -519,7 +522,7 @@ These corpora are substantially larger than the Europarl corpora, providing 27x 
 To project context vectors from Spanish to English, we use a bilingual dictionary containing entries for 49,795 Spanish words.
 %\footnote{End-to-end translation quality is robust to substantially reducing dictionary size; results omitted due to space constraints.}  
 Note that end-to-end translation quality is robust to substantially reducing dictionary size, but we omit these experiments due to space constraints.
-The context vectors for words and phrases collect co-occurrence counts using a two-word window on either side.
+The context vectors for words and phrases incorporate co-occurrence counts using a two-word window on either side.
 
 
 The title of our paper uses the word {\it towards} because we assume that an inventory of phrase pairs is given. 
@@ -545,7 +548,7 @@ Experiments 1-4 remove bilingually estimated parameters from the standard model.
 
 
 \begin{figure}[t]
-%\vskip 0.1in
+\vskip 0.2in
 \begin{center}
 \includegraphics[width=\linewidth]{../figures/monolingual.pdf}
 \caption{Performance of monolingual features derived from truly monolingual corpora. Over 82\% of the BLEU score loss can be recovered.}
@@ -576,12 +579,12 @@ Combining the monolingually estimated reordering features with the monolingually
 
 
 
-Finally, we supplement the standard bilingually estimated model parameters with our monolingual features we see a {\bf 1.5} BLEU point increase over the standard model ({\bf BM/B}). Therefore, our monolingually estimated scores capture some novel information not contained in the standard feature set. 
+Finally, we supplement the standard bilingually estimated model parameters with our monolingual features we see a {\bf 1.5 BLEU} point increase over the standard model ({\bf BM/B}). Therefore, our monolingually estimated scores capture some novel information not contained in the standard feature set. 
 
 % ------------------------------------------------
 \section{Additional Related Work} \label{sect:related-work}
 
-\newcite{Carbonell2006} described a data-driven machine translation system that used no parallel text. It produced translation lattices using a bilingual dictionary and scored them using an n-gram language model.  Their method has no notion of translation similarity aside from a  bilingual dictionary.
+\newcite{Carbonell2006} described a data-driven MT system that used no parallel text. It produced translation lattices using a bilingual dictionary and scored them using an n-gram language model.  Their method has no notion of translation similarity aside from a  bilingual dictionary.
 
 \newcite{ravi-knight:2011:ACL-HLT} treat MT without parallel training data as a decipherment task.  The learn a word substation cypher from monolingual texts, and extend this to learn translations for 270 time expressions and 500 subtitle phrases. Their method has not been applied to full scale MT. 
 
@@ -635,10 +638,15 @@ A variety of past research has focused on mining parallel or comparable corpora 
 %IWSLT, pages 182Ð189
 
 
-
+%\vspace{-0.05in}
 \section{Conclusion}
+%\vspace{-0.05in}
 
-In this work, we make an important step toward eliminating the need for large volumes of expensive parallel text in SMT. In particular, we have shown that orthogonal cues present in plentiful and cheap monolingual data can be used to estimate a set of informative similarity and reordering phrase pair feature scores. Using these features instead of standard bilingually estimated features results in only 18\% performance loss. Moreover, the monolingual features contain a useful signal not captured by the standard bilingual estimation; when added to the standard feature set, they account for about 1.5 BLEU point gain.
+%In this work, we make an important step toward eliminating the need for large volumes of expensive parallel text in statistical machine translation. In particular, we have shown that orthogonal cues present in plentiful and cheap monolingual data can be used to estimate a set of informative similarity and reordering phrase pair feature scores. Using these features instead of standard bilingually estimated features results in only 18\% performance loss. Moreover, the monolingual features contain a useful signal not captured by the standard bilingual estimation; when added to the standard feature set, they account for about 1.5 BLEU point gain.
+
+
+This paper has demonstrated a novel set of techniques for successfully estimating phrase-based SMT parameters from {\it monolingual} corpora, potentially circumventing the need for large bitexts, which are expensive to obtain for new languages and domains. We evaluated the performance of our algorithms in a full end-to-end translation system. Assuming that a bilingual-corpus-derived phrase table is available, we were able to recover over 82\% of BLEU loss from stripping bilingual-corpus-derived phrase-table probabilities by utilizing our monolingually-estimated features instead. We also showed that our monolingual features add 1.5 BLEU points when combined with standard bilingually estimated features.  Thus our  techniques have both stand-alone efficacy when large bilingual corpora are not available, and make a significant contribution to combined ensemble performance when they are.
+
 
 
 %\section*{Acknowledgments}
