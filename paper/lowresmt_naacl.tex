@@ -197,22 +197,25 @@ Additional related work on learning translations from monolingual corpora is dis
 
 % In this work, we extend these ideas and utilize four independent metrics to score {\em phrasal} translation candidates.  
 
-\begin{figure}[t]
-\begin{center}
+% cub - figure omitted for space
+%\begin{figure}[t]
+%\begin{center}
 %\vspace{-.5cm}
-\includegraphics[width=\linewidth]{../figures/lexinductnew/lexinductnew.pdf}
+%\includegraphics[width=\linewidth]{../figures/lexinductnew/lexinductnew.pdf}
 %\vspace{-.5cm}
-\caption{Accuracy of single-word translations induced using contextual similarity as a function of the source word corpus frequency.  Accuracy is the proportion of the source words with at least one correct (bilingual dictionary) translation in the top 1 and top 10 candidate lists.  }
-\label{fig:lexinduct}
-\end{center}
-\vskip -0.2in
-\end{figure}
+%\caption{Accuracy of single-word translations induced using contextual similarity as a function of the source word corpus frequency.  Accuracy is the proportion of the source words with at least one correct (bilingual dictionary) translation in the top 1 and top 10 candidate lists.  }
+%\label{fig:lexinduct}
+%\end{center}
+%\vskip -0.2in
+%\end{figure}
 
 
 In this paper, we apply bilingual lexicon induction methods to statistical machine translation.  Given the obvious benefits of not having to rely on scarce bilingual parallel training data, it is surprising that  bilingual lexicon induction has not previously been used for SMT.
 There are several open questions that make its applicability to SMT uncertain.  Previous research into bilingual lexicon induction learned translations only for a small number of high frequency words (e.g. 100 nouns in \newcite{Rapp:1995}, 1,000 most frequent words in \newcite{Koehn:2002}, or 2,000 most frequent nouns in \newcite{Haghighi:2008}).  Although previous work reported high translation accuracy, it may be misleading to extrapolate the results to SMT, where it is necessary to translate a much larger set of words and phrases, including many low frequency  items. 
 
-As a preliminary study we plotted the accuracy of translations against the frequency of the source words in the monolingual corpus.  \figref{fig:lexinduct} shows the result for translations induced using contextual similarity (defined in \secref{sect:phrasalfeats}). Unsurprisingly, frequent terms have a substantially better chance of being paired with a correct translation, with words that only occur once having a low chance of being translated accurately.\footnote{For a description of the experimental setup that was used to  produce these translations, see Experiment 8 in Section \ref{sec:results:bitext}.}  This problem is exacerbated when we move to multi-token phrases.  As with phrase translation features estimated from parallel data, longer phrases are more sparse, making similarity scores less reliable than for single words. 
+As a preliminary study we measured the accuracy of translations against the frequency of the source words in the monolingual corpus.\footnote{Figure omitted because of space constraints.} 
+% \figref{fig:lexinduct} shows the result for translations induced using contextual similarity (defined in \secref{sect:phrasalfeats}). 
+Unsurprisingly, frequent terms had a substantially better chance of being paired with a correct translation, with words that only occur once having a low chance of being translated accurately.\footnote{For a description of the experimental setup that was used to  produce these translations, see Experiment 8 in Section \ref{sec:results:bitext}.}  This problem is exacerbated when we move to multi-token phrases.  As with phrase translation features estimated from parallel data, longer phrases are more sparse, making similarity scores less reliable than for single words. 
 
 Another impediment (not addressed in this paper) for using lexicon induction for SMT is the number of translations that must be learned.   Learning translations for all words in the source language requires $n^2$ vector comparisons, since each word in the source language vocabulary must be compared against the vectors for all words in the target language vocabulary.   The size of the $n^2$ comparisons hugely increases if we compare vectors for multi-word phrases instead of just words. 
 %
@@ -373,60 +376,6 @@ One subtly of our method is that
 shorter and more frequent phrases (e.g. punctuation) are more likely to appear in multiple orientations with a given phrase, and therefore provide poor evidence of re-ordering.  Therefore, we (a) collect the longest contextual phrases (which also appear in the phrase table) for reordering feature estimation, and (b) prune the set of sentences so that we only keep a small set of least frequent contextual phrases (this has the effect of dropping many function words and punctuation marks and and relying more heavily on multi-word content phrases to estimate the reordering).\footnote{The pruning step has an additional benefit of minimizing the memory needed for orientation feature estimations.}
 
 
-% ------------------------------------------------
-
-\begin{table*}[t]
-
-\begin{center}
-\begin{tabular}{ll}
-% ccb - squeeze for space
-\footnotesize
-\begin{tabular}{lrrr}
-\multicolumn{4}{c}{Monolingual training corpora}\\
-\hline
- & Europarl & Gigaword & Wikipedia\\
-\hline
-% date range & 4/15/96-10/22/09	& 5/12/94-12/31/08\\
-date range & 4/96-10/09 & 5/94-12/08	& n/a\\
-uniq shared dates & 829 & 5,249 & n/a \\
-% number of Spanish and English articles is overestimated;
-% that's the full set rather than just the ones in the paired dates that we used.
-Spanish articles & n/a & 3,727,954 & 59,463 \\
-English articles& n/a & 4,862,876 & 59,463 \\
-Spanish lines	& 1,307,339 & 22,862,835 & 2,598,269\\
-English lines	& 1,307,339 & 67,341,030 & 3,630,041\\
-Spanish words & 28,248,930 & 774,813,847 & 39,738,084 \\
-English words & 27,335,006 & 1,827,065,374 & 61,656,646\\
-%
-\end{tabular}
-% ccb - squeeze for space
-\normalsize
-&
-% ccb - squeeze for space
-\footnotesize
-\begin{tabular}{lr}
-\multicolumn{2}{c}{Spanish-English phrase table}\\
-\hline
-Phrase pairs & 3,093,228\\
-Spanish phrases & 89,386\\
-English phrases & 926,138\\
-\hline
-Spanish unigrams & 13,216\\
-\rowcolor{lightgray} Avg \# translations & 98.7\\
-Spanish bigrams & 41,426\\
-\rowcolor{lightgray} Avg \# translations & 31.9\\
-Spanish trigrams & 34,744\\
-\rowcolor{lightgray} Avg \# translations & 13.5\\
-\end{tabular}
-% ccb - squeeze for space
-\normalsize
-\end{tabular}
-\end{center}
-\caption{\vspace{-.71cm}Statistics about the monolingual training data and the phrase table that was used in all of the experiments. \vspace{-.71cm}
-}\label{table:training-data+phrase-table}
-\end{table*}
-% ------------------------------------------------
-
 Our algorithm for learning the reordering parameters is given on \figref{fig:algoreorder}.  The algorithm estimates a probability distribution over monotone, swap, and discontinuous orientations ($p_m$, $p_s$, $p_d$) for a phrase pair ($f, e$) from two monolingual corpora $C_f$ and $C_e$.  It begins by calling {\tt \small CollectOccurs} to collect the longest matching phrase table phrases preceding $f$ in source monolingual data ($B_f$), as well as preceding ($B_e$), following ($A_e$), and discontinuous ($D_e$) phrases with $e$ in the target language data.  For each unique phrase $f'$ preceding $f$, translations are then looked up in the phrase table $\emph{T}$.  Next, we count\footnote{$\#_{L}(x)$ returns the count of object x in list L.} how many translations $e'$ of $f'$ appeared before, after or were discontinuous with $e$ in the target language data.  Finally, the counts are normalized and returned.  %The algorithm requires a single pass through the data to collect contextual phrases for the entire phrase table and its running time is quadratic in the size of the table.\mtodo{Check}
 %
 These normalized counts are the values we use as estimates of $p_o(\textnormal{orientation}|f,e)$. %This allows us to estimate all of the parameters of the phrase-based translation model from monolingual corpora.
@@ -437,7 +386,7 @@ These normalized counts are the values we use as estimates of $p_o(\textnormal{o
 
 %\paraheader{Phrase table induction.} As we argued in \secref{sect:bckg:lexind}, we cannot na\"{i}vely extend translation lexicon induction techniques to induce phrasal translations because the search space is too large. We must aggressively prune it.   Specifically, we compare phrases in the same frequency bands \cite{Uszkoreit:2010}, disallow unigram-trigram pairs, and prune very low frequency target phrases. We also use a filter that requires stemmed versions of each phrase-pair to contain at least one (source unigrams and bigrams) or two (source trigrams) word-pairs from a stemmed version of our bilingual dictionary.\footnote{Our stemmer truncates words to a max. of six characters.} %\todo{Alt wording:} We compare  each source side phrase only to target side phrases that occur in the same frequency band (according to the frequencies in two monolingual corpora). Of those target side phrases, we keep only the ones with at least one \mtodo{discuss dictionary parameters} word translating into a word in the source side phrase. 
 
-%To determine whether our pruning parameters are reasonable, we evaluate what percent of the items from a bilingually induced phrase table are retained.  Rather than consider all items from the phrase table (since many of them are bad), we consider only those phrase-pairs that are used by the decoder to translate a test set.\footnote{We use the Moses decoder's trace function to find the set of phrases it used in decoding our test set.} We compare our filtered phrase tables to this set of phrase translation rules and attempt to maintain as many of them as possible, while pruning the set of phrase pairs down to a manageable size. Table \ref{table:prune} shows results using the enumerated heuristics both with the dictionary filter (``Freq+Dict'') and without (``Freq Filter'').
+%To determine whether our pruning parameters are reasonable, we evaluate what percent of the items from a bilingually induced phrase table are retained.  Rather than consider all items from the phrase table (since many of them are bad), we consider only those phrase-pairs that are used by the decoder to translate a test set.\footnote{We use the Moses decoder's trace function to find the set of phrases it used in decoding our test set.} We compare our filtered phrase tables to this set of phrase translation rules and attempt to maintain as many of them as possible, while pruning the set of phrase pairs down to a manageable size. aref{table:prune} shows results using the enumerated heuristics both with the dictionary filter (``Freq+Dict'') and without (``Freq Filter'').
 
 %\paraheader{Dictionary-based phrase table.} We build a second phrase table by enumerating all combinations and permutations of up to three source word dictionary translations \cite{garera08a}. %CUT FOR SPACE Our Spanish--English dictionary has entries for 49,795 source tokens and the resulting phrase table has a large amount of overlap with the decoder table, as shown in Table \ref{table:prune} (``Dict combs''). 
 %CUT FOR SPACE: However, for the case of low-resource languages, dictionaries, in the cases that they even exist, are not as complete. We expect the performance of our dictionary-based phrase table to be an upper bound for the performance of an induced-dictionary-composed table for truly low-resource languages.
@@ -482,12 +431,60 @@ These normalized counts are the values we use as estimates of $p_o(\textnormal{o
 
 %Second round of pruning: after monolingual feature extraction, before re-ordering estimation. \todo{Needs to be discussed after explanation of those methods?}
 
+
 \section{Experimental Setup} \label{sect:expsetup}
 
 We use the Spanish-English language pair to test our method for estimating the parameters of an SMT system from monolingual corpora.  This allows us to compare our method against the normal bilingual training procedure.  We expect bilingual training to result in higher translation quality, because it is a more direct method for learning translation probabilities.  We systematically remove different parameters from the standard phrase-based model, and then replace them with our monolingual equivalents.  Our goal is to recover as much of the loss as possible for each of the deleted bilingual components. 
 
 The standard phrase-based model that we use as our top-line is the Moses system \cite{Moses} trained over the full Europarl v5 parallel corpus \cite{Koehn:2005}.   With the exception of maximum phrase length (set to 3 in our experiments), default values were used for all of the parameters.  All experiments use a trigram language model trained on the English side of the Europarl corpus using SRILM with Kneser-Ney smoothing. 
 To tune feature weights in minimum error rate training, we use a development bitext with 2,553 sentence pairs.  We use the development and test data distributed in WMT shared task \cite{callisonburch-EtAl:2010:WMT}.\footnote{Specifcially, {\em news-test2008} plus {\em news-syscomb2009} for dev and {\em newstest2009} for test.}   The test set is translated newswire articles consisting of 2,525 single-reference sentence pairs.   MERT was re-run for every experiment. 
+
+\begin{table}
+% ccb - squeeze for space
+\footnotesize
+\begin{tabular}{lrrr}
+\multicolumn{4}{c}{Monolingual training corpora}\\
+\hline
+ & Europarl & Gigaword & Wikipedia\\
+\hline
+% date range & 4/15/96-10/22/09	& 5/12/94-12/31/08\\
+date range & 4/96-10/09 & 5/94-12/08	& n/a\\
+shared dates & 829 & 5,249 & n/a \\
+% number of Spanish and English articles is overestimated;
+% that's the full set rather than just the ones in the paired dates that we used.
+{\sc es} articles & n/a & 3,727,954 & 59,463 \\
+{\sc en} articles& n/a & 4,862,876 & 59,463 \\
+{\sc es} lines	& 1,307,339 & 22,862,835 & 2,598,269\\
+{\sc en} lines	& 1,307,339 & 67,341,030 & 3,630,041\\
+{\sc es} words & 28,248,930 & 774,813,847 & 39,738,084 \\
+{\sc en} words & 27,335,006 & 1,827,065,374 & 61,656,646\\
+\normalsize
+\end{tabular}
+\vspace{-.31cm}
+\caption{Statistics about the monolingual training data. \vspace{-.71cm}
+}\label{table:training-data+phrase-table}
+\end{table}
+
+
+% ------------------------------------------------
+
+
+% ccb - table omitted for for space
+%\footnotesize
+%\begin{tabular}{lr}
+%\multicolumn{2}{c}{Spanish-English phrase table}\\
+%\hline
+%Phrase pairs & 3,093,228\\
+%Spanish phrases & 89,386\\
+%English phrases & 926,138\\
+%\hline
+%Spanish unigrams & 13,216\\
+%\rowcolor{lightgray} Avg \# translations & 98.7\\
+%Spanish bigrams & 41,426\\
+%\rowcolor{lightgray} Avg \# translations & 31.9\\
+%Spanish trigrams & 34,744\\
+%\rowcolor{lightgray} Avg \# translations & 13.5\\
+%\end{tabular}
 
 
 \begin{figure*}[t]
@@ -523,9 +520,12 @@ The context vectors for words and phrases incorporate co-occurrence counts using
 
 The title of our paper uses the word {\it towards} because we assume that an inventory of phrase pairs is given. 
 Future work shall explore inducing the phrase table itself from monolingual texts.  
-Across all of our experiments, we use the phrase table that the bilingual model learned from the Europarl parallel corpus.  We keep its phrase pairs, but we drop all of its scores.  Table \ref{table:training-data+phrase-table} gives details of the phrase pairs.  For our experiments, we estimated similarity scores and re-ordering probabilities for more than 3 million phrase pairs.  The set of possible translations were constrained for each source phrase, and therefore were likely to contain good translations.  However, the average number of possible translations was high (ranging from nearly 100 translations for each unigram to 14 for each trigram).  These contain a lot of noise, and result in inferior end-to-end translation quality without good estimates of their translation quality, as the experiments in Section \ref{sect:exp:lesions} will show.
+Across all of our experiments, we use the phrase table that the bilingual model learned from the Europarl parallel corpus.  We keep its phrase pairs, but we drop all of its scores.  
+%Table \ref{table:training-data+phrase-table} gives details of the phrase pairs.  
+For our experiments, we estimated similarity scores and re-ordering probabilities for more than 3 million phrase pairs.  The set of possible translations were constrained for each source phrase, and therefore were likely to contain good translations.  However, the average number of possible translations was high (ranging from nearly 100 translations for each unigram to 14 for each trigram).  These contain a lot of noise, and result in inferior end-to-end translation quality without good estimates of their translation quality, as Section \ref{sect:exp:lesions} will show.
 
 \paraheader{Software.} Because many details of our estimation procedures must be omitted for space, we distribute our full set of code, along with scripts for running our experiments, and output translations.  These may be downed from  \url{url}. %\todo{Add  dropbox URL}.
+
 
 
 % ccb - squeezing for space
@@ -581,19 +581,18 @@ Finally, we supplement the standard bilingually estimated model parameters with 
 \section{Additional Related Work} \label{sect:related-work}
 
 \newcite{Carbonell2006} described a data-driven MT system that used no parallel text. It produced translation lattices using a bilingual dictionary and scored them using an n-gram language model.  Their method has no notion of translation similarity aside from a  bilingual dictionary.
-
+%
 \newcite{ravi-knight:2011:ACL-HLT} treat MT without parallel training data as a decipherment task.  The learn a word substation cypher from monolingual texts, and extend this to learn translations for 270 time expressions and 500 subtitle phrases. Their method has not been applied to full scale MT. 
-
+%
 Most work on learning translations from monolingual texts only examine small numbers of frequent words. \newcite{Huang2005} and \newcite{daumeiii-jagarlamudi:2011:ACL-HLT2011} are exceptions that improve MT by mining translations for OOV items. 
 
-A variety of past research has focused on mining parallel or comparable corpora from the web \cite{Munteanu:2006,Smith2010,Uszkoreit:2010}.  Others use an existing SMT system to discover parallel sentences within independent monolingual texts, and use them to re-train and enhance the system \cite{Schwenk2008,Chen2008,Schwenk2009,Rauf2009,Lambert2011}.  These are complimentary but orthogonal to our research goals.  
-%We focus on the ``no bitext'' condition, but a logical follow-on would be to bootstrap from a small bitext.
+%A variety of past research has focused on mining parallel or comparable corpora from the web \cite{Munteanu:2006,Smith2010,Uszkoreit:2010}.  Others use an existing SMT system to discover parallel sentences within independent monolingual texts, and use them to re-train and enhance the system \cite{Schwenk2008,Chen2008,Schwenk2009,Rauf2009,Lambert2011}.  These are complimentary but orthogonal to our research goals.  
 
 %\todo{Update with citations: \newcite{Lambert2011},  See comments in .tex.  Also , and }
 
 %\newcite{Foster2007}
 
-
+\nocite{Schwenk2008,Chen2008,Schwenk2009,Rauf2009,Lambert2011}
 \nocite{Munteanu:2006,Smith2010,Uszkoreit:2010}
 
 %Investigations on Translation Model Adaptation Using Monolingual Data 
@@ -641,7 +640,7 @@ A variety of past research has focused on mining parallel or comparable corpora 
 %In this work, we make an important step toward eliminating the need for large volumes of expensive parallel text in statistical machine translation. In particular, we have shown that orthogonal cues present in plentiful and cheap monolingual data can be used to estimate a set of informative similarity and reordering phrase pair feature scores. Using these features instead of standard bilingually estimated features results in only 18\% performance loss. Moreover, the monolingual features contain a useful signal not captured by the standard bilingual estimation; when added to the standard feature set, they account for about 1.5 BLEU point gain.
 
 
-This paper has demonstrated a novel set of techniques for successfully estimating phrase-based SMT parameters from {\it monolingual} corpora, potentially circumventing the need for large bitexts, which are expensive to obtain for new languages and domains. We evaluated the performance of our algorithms in a full end-to-end translation system. Assuming that a bilingual-corpus-derived phrase table is available, we were able to recover over 82\% of BLEU loss from stripping bilingual-corpus-derived phrase-table probabilities by utilizing our monolingually-estimated features instead. We also showed that our monolingual features add 1.5 BLEU points when combined with standard bilingually estimated features.  Thus our  techniques have both stand-alone efficacy when large bilingual corpora are not available, and make a significant contribution to combined ensemble performance when they are.
+We have demonstrated a novel set of techniques for successfully estimating phrase-based SMT parameters from {\it monolingual} corpora, potentially circumventing the need for large bitexts, which are expensive to obtain for new languages and domains. We evaluated the performance of our algorithms in a full end-to-end translation system. Assuming that a bilingual-corpus-derived phrase table is available, we were able to recover over 82\% of BLEU loss from stripping bilingual-corpus-derived phrase-table probabilities by utilizing our monolingually-estimated features instead. We also showed that our monolingual features add 1.5 BLEU points when combined with standard bilingually estimated features.  Thus our  techniques have both stand-alone efficacy when large bilingual corpora are not available, and make a significant contribution to combined ensemble performance when they are.
 
 
 
