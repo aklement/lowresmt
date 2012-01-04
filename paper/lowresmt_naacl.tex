@@ -56,7 +56,7 @@
 }
 
 %\setlength\titlebox{6.5cm}    % Expanding the titlebox
-\setlength\titlebox{3.75cm}    % Expanding the titlebox
+\setlength\titlebox{2.5cm}    % Expanding the titlebox
 
 \title{Toward Statistical Machine Translation without Parallel Corpora}
 
@@ -103,13 +103,15 @@ Most of the prior work on lexicon induction is motivated by the idea that it cou
 
 %The rest of the paper is organized as follows.  \secref{sect:bckg} begins with the relevant background on the phrase-based SMT framework we will use in the rest of the paper and continues to give a brief overview of the existing work on inducing translation lexicons. \secref{sect:mono} motivates and introduces translation and reordering features induced from monolingual data alone.   \secref{sect:exp} studies the informativeness of these features as they are added to the Machine Translation pipeline.  Finally, \secref{sect:conc} concludes and discusses directions for future work.
 
-\begin{itemize}
-  \item In \secref{sect:bckg:lexind} we analyze the challenges of using bilingual lexicon induction for statistical MT (performance on low frequency items, and moving from words to phrases).
-  \item In Sections \ref{sect:phrasalfeats} and \ref{sect:lexfeats} we use multiple cues present in monolingual data to estimate lexical and phrasal translation scores.
-  \item In \secref{sect:order} we propose a novel algorithm for estimating phrase reordering features from monolingual texts.
-  \item Finally, in \secref{sect:results} we systematically drop  feature functions  from a phrase table and then replace with monolingually estimated equivalents, reporting end-to-end translation quality.
+\vspace{-.2cm}
+\begin{my_itemize}
+  \item We analyze the challenges of using bilingual lexicon induction for statistical MT (performance on low frequency items, and moving from words to phrases).
+  \item We use cues present in monolingual data to estimate lexical and phrasal translation scores.
+  \item We propose an algorithm for estimating phrase reordering features from monolingual texts.
+  \item Finally, we systematically drop  feature functions  from a phrase table and then replace with monolingually estimated equivalents, reporting end-to-end translation quality.
   % with a fixed phrase-table with monolingually estimated parameters. 
-\end{itemize}
+\end{my_itemize}
+\vspace{-.2cm}
 
 %Current statistical machine translation (SMT) methods (e.g. \cite{Koehn:2003,Chiang:2005}) crucially rely on vast amounts of sentence aligned translations in order to achieve state of the art performance.  These resources are only available for very few language pairs because producing them in sufficient quantities is an expensive and time consuming endeavor.  Moreover, the SMT system performance tends to drop if test data comes from a different domain then the parallel data used in training\mtodo{Need a good MT adaptation reference}.  
 
@@ -121,8 +123,9 @@ Most of the prior work on lexicon induction is motivated by the idea that it cou
 
 % ------------------------------------------------
 
+\vspace{-.2cm}
 \section{Background} \label{sect:bckg}
-\vspace{-.1cm}
+\vspace{-.2cm}
 
 We begin with a brief overview of the standard phrase-based statistical machine translation model to define the parameters we replace with monolingual alternatives.  We continue with a discussion of bilingual lexicon induction; we extend these methods to estimate the monolingual parameters in \secref{sect:mono}.   This approach allows us to replace expensive/rare bilingual parallel training data with two large monolingual corpora, a small bilingual dictionary, and $\approx$2,000 sentence bilingual development set, which are comparatively plentiful/inexpensive.
 
@@ -131,13 +134,14 @@ We begin with a brief overview of the standard phrase-based statistical machine 
 %These parallel resources are only available for a small set of language pairs and are very expensive to compile in sufficient quantities.  
 %In this work, we estimate the parameters of the phrase-based formalism from {\em monolingual} texts, which are much more plentiful. 
 
-\vspace{-.1cm}
+\vspace{-.15cm}
 \subsection{Parameters of phrase-based SMT} \label{sect:bckg:smt}
+\vspace{-.05cm}
 
 Statistical machine translation (SMT) was first formulated as a series of probabilistic models that learn word-to-word correspondences from sentence-aligned bilingual parallel corpora \cite{Brown:1993}.  \nocite{Brown1988}
 %
 Current methods, including {\em phrase-based} \cite{Och:2002,Koehn:2003} and {\em hierarchical} models \cite{Chiang:2005}, typically start by word-aligning a bilingual parallel corpus \cite{Och2003}.  They extract multi-word phrases that are consistent with the Viterbi word alignments, and use these phrases to build new translations.    A variety of parameters are estimated using the bitexts.  Here we review the parameters of the standard phrase-based translation  model \cite{Moses}, which we will later show how to estimate using monolingual texts instead.  These parameters are:
-\vspace{-.2cm}
+\vspace{-.195cm}
 \begin{my_itemize}
 \item \emph{Phrase pairs}.  
 Phrase extraction heuristics \cite{Venugopal2003,Tillmann2003,Och2004} produce a set of phrase pairs $(e, f)$ that are consistent with the word alignments.  
@@ -240,7 +244,7 @@ We use  bilingual lexicon induction to estimate the parameters of a phrase-based
 
 %In Sections \ref{sect:phrasalfeats} and \ref{sect:lexfeats}, we introduce two kinds of scores we call {\em phrasal} and {\em lexical similarity} features.  The former score entire phrases, while the latter use word-level alignments between the phrase pairs to calculate lexical scores.  The motivation is analogous to the two kinds of features we reviewed in \secref{sect:bckg:smt}: lexical similarity features are informative for rare phrases that have less reliable phrasal similarity scores because of sparse counts. 
 
-\subsection{Phrasal similarity features} \label{sect:phrasalfeats}
+\paragraph{Phrasal similarity features} \label{sect:phrasalfeats}
 
 
 
@@ -274,7 +278,7 @@ Various means of computing the component values and vector similarity measures h
 Phrases and their translations are likely to appear in articles written about the same topic in two languages.  Thus, topic or category information associated with monolingual data can also be used to indicate similarity between a phrase and its candidate translation.  In order to score a pair of phrases, we can collect their topic signatures by counting their occurrences in each topic and then comparing the resulting vectors.  We again use the cosine similarity measure on the normalized topic signatures.  In our experiments, we use interlingual links between wikipedia articles to estimate topic similarity.  We treat each linked article pair as a topic and collect counts for each phrase across all articles in its corresponding language.  Thus, the size of a phrase topic signature is the number of article pairs with interlingual links in Wikipedia, and each component contains the number of times the phrase appears in (the appropriate side of) the corresponding pair.  Our Wikipedia-based topic similarity feature, $w(f, e)$, is similar in spirit to polylingual topic models \cite{Mimno:2009}, but it is scalable to full bilingual lexicon induction.
 
 %\vspace{-.1cm}
-\subsection{Lexical similarity features}  \label{sect:lexfeats}
+\paragraph{Lexical similarity features}  \label{sect:lexfeats}
 
 In addition to the three phrase similarity features used in our model -- $c(f, e), t(f, e)$ and $w(f, e)$ -- we include four additional {\it lexical similarity features} for each of phrase pair.  The first three lexical features $c_{lex}(f, e), t_{lex}(f, e)$ and $w_{lex}(f, e)$ are the lexical equivalents of the phrase-level {\it contextual, temporal} and {\it wikipedia topic} similarity scores.  They score the similarity of individual words within the phrases.  To compute these lexical similarity features, we average similarity scores over all possible word alignments across the two phrases. 
 Because individual words are more frequent than multiword phrases, the accuracy of $c_{lex},  t_{lex}$, and $w_{lex}$  tends to be higher than their phrasal equivalents (this is similar to the effect observed in Figure \ref{fig:lexinduct}). 
@@ -286,7 +290,7 @@ We can also extend this idea to language pairs not sharing the same writing syst
 The three phrasal and four lexical similarity scores are incorporated into the  log linear translation model as feature functions, replacing the bilingually estimated phrase translation probabilities $\phi$ and lexical weighting probabilities $w$.  Our seven similarity scores are not the only ones that could be incorporated into the translation model. Various other similarity scores can be computed depending on the available monolingual data and its associated metadata (see, e.g. \newcite{Schafer:2002}).
 
 %\vspace{-.1cm}
-\subsection{Reordering} \label{sect:order}
+\paragraph{Reordering} \label{sect:order}
 
 \SetAlFnt{\relsize{-1.5}}
 
