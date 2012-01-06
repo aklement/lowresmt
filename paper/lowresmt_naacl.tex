@@ -184,10 +184,11 @@ We use the same log linear formulation and MERT but propose alternatives derived
 \subsection{Bilingual lexicon induction for SMT} \label{sect:bckg:lexind}
 
 {\it Bilingual lexicon induction} describes the class of algorithms that attempt to learn translations from monolingual corpora.   \newcite{Rapp:1995} was the first to propose using non-parallel texts to learn the translations of words.  Using large, unrelated English and German corpora (with 163m and 135m words) and a small German-English bilingual dictionary (with 22k entires), \newcite{Rapp:1999} demonstrated that reasonably accurate translations could be learned for 100 German nouns that were not contained in the seed bilingual dictionary.  His algorithm worked by 
-(1) building a context vector representing an unknown German word by counting its co-occurrence with all the other words in the German monolingual corpus,
-(2) projecting this German vector onto the vector space of English using the seed bilingual dictionary,
-(3) calculating the similarity of this sparse projected vector to vectors for English words that were constructed using the  English monolingual corpus, and
-(4) outputting the English words with the highest similarity as the most likely translations.
+building contextual vectors for a German noun and all English words, projecting the German vector using the seed bilingual dictionary, and looking for the most similar English vector. 
+%(1) building a context vector representing an unknown German word by counting its co-occurrence with all the other words in the German monolingual corpus,
+%(2) projecting this German vector onto the vector space of English using the seed bilingual dictionary,
+%(3) calculating the similarity of this sparse projected vector to vectors for English words that were constructed using the  English monolingual corpus, and
+%(4) outputting the English words with the highest similarity as the most likely translations.
 
 % the context of a given word as a clue to its translation.  The model populates a bilingual lexicon by using a small seed dictionary to project context vectors across two languages and to score their similarity. 
 %\newcite{Rapp:1995} was the first to propose using the context of a given word as a clue to its translation.  The model populates a bilingual lexicon by using a small seed dictionary to project context vectors across two languages and to score their similarity. 
@@ -249,17 +250,16 @@ We use  bilingual lexicon induction to estimate the parameters of a phrase-based
 
 
 
+\paraheader{Contextual similarity.}  We extend the vector space approach of \newcite{Rapp:1999} to compute similarity between \emph{phrases} in the source and target languages.  More formally, assume that $(s_{1}, s_{2}, \dots s_{N})$ and $(t_{1}, t_{2}, \dots t_{M})$ are (arbitrarily indexed) source and target vocabularies, respectively.  A source phrase $f$ is represented with an $N$- and target phrase $e$ with an $M$-dimensional vector (see \figref{fig:contextual}).  
+The component values of the vector representing a phrase correspond to how often each of the words in that vocabulary appeared within a two word window on either side of the phrase.  These counts are collected using the monolingual corpora. 
+After the values have been computed, a contextual vector $f$ is projected onto English vector space using the translations in a seed bilingual dictionary to map the component values into their appropriate positions in an English vector. This sparse projected vector is compared to the vectors representing all English phrases $e$.  Each phrase in the phrase table is assigned a contextual similarity score $c(f, e)$ based on the similarity between $e$ and the projection of $f$.  
+
 \begin{figure}[t]
 \includegraphics[width=\linewidth]{../figures/contextual/contextual}
 \caption{Scoring contextual similarity of \emph{phrases}: contextual vectors are projected using a small seed dictionary and then compared with the target language candidates.}
 \label{fig:contextual}
 \vspace{-0.4cm}
 \end{figure}
-
-
-\paraheader{Contextual similarity.}  We extend the vector space approach of \newcite{Rapp:1999} to compute similarity between \emph{phrases} in the source and target languages.  More formally, assume that $(s_{1}, s_{2}, \dots s_{N})$ and $(t_{1}, t_{2}, \dots t_{M})$ are (arbitrarily indexed) source and target vocabularies, respectively.  A source phrase $f$ is represented with an $N$- and target phrase $e$ with an $M$-dimensional vector (see \figref{fig:contextual}).  
-The component values of the vector representing a phrase correspond to how often each of the words in that vocabulary appeared within a two word window on either side of the phrase.  These counts are collected using the monolingual corpora. 
-After the values have been computed, a contextual vector $f$ is projected onto English vector space using the translations in a seed bilingual dictionary to map the component values into their appropriate positions in an English vector. This sparse projected vector is compared to the vectors representing all English phrases $e$.  Each phrase in the phrase table is assigned a contextual similarity score $c(f, e)$ based on the similarity between $e$ and the projection of $f$.  
 
 Various means of computing the component values and vector similarity measures have been proposed in literature (e.g. \newcite{Rapp:1999}, \newcite{Fung:1998}).  Following \newcite{Fung:1998}, we compute the value of the $k$-th component of $f$'s contextual vector  as $w_{k} = n_{f,k} \times (log( {n / n_{k}}) + 1)$ where $n_{f,k}$ and $n_{k}$ are the number of times $s_{k}$ appears in the context of $f$ and in the entire corpus, and $n$ is the maximum number of occurrences of any word in the data.  Intuitively, the more frequently $s_{k}$ appears with $f$ and the less common it is in the corpus in general, the higher its component value.  Similarity between two resulting vectors is measured as a cosine of the angle between them.
 
@@ -362,14 +362,14 @@ The three phrasal and four lexical similarity scores are incorporated into the  
 \begin{figure}[t]
 %\vskip 0.1in
 \begin{center}
-\vspace{-.85cm}
+\vspace{-.25cm}
 \includegraphics[width=0.7 \linewidth]{../figures/monoreord/monoreord.pdf}
 \vspace{-.25cm}
 \caption{Collecting phrase orientation statistics for a English-German phrase pair (\emq{profile}, \emq{Profils}) from non-parallel sentences (the German sentence translates as  \emq{Creating a Facebook profile is easy}). %The longest preceding phrase \emq{Facebook} in source, has a phrase table translation \emq{in Facebook} appearing after the target phrase.
 }
 \label{fig:monoreord}
 \end{center}
-\vskip -0.2in
+\vskip -0.27in
 \end{figure}
 
 The remaining component of phrase-based SMT model is the reordering model. We introduce a novel algorithm for estimating $p_o(\textnormal{orientation}|f,e)$ from two monolingual corpora instead a bitext.
@@ -380,7 +380,7 @@ In our pipeline we do not have translated sentence pairs.  Instead, we look for 
 One subtly of our method is that 
 %In the phrase-based SMT pipeline, phrase pair orientation statistics are collected using word alignments.  We keep a similar reordering model formulation but infer its parameters from monolingual data instead.  The orientation information for a phrase pair ($f$, $e$) is collected from source and target sentences containing ($f$, $e$) as well as other phrase pairs.  Suppose one such sentence pair contains another pair of phrases ($f'$, $e'$), and that $f'$ is immediately adjacent to $f$.  The idea is to check whether $e'$ stays in the same order with $e$, swaps, or becomes discontinuous in the target sentence. Consider the simple example in \figref{fig:monoreord}: the phrase pair is ($f =$ \emq{profile}, $e =$ \emq{Profils}), and a given pair of non-parallel sentences also contains a phrase table entry ($f' =$ \emq{Facebook}, $e' =$ \emq{in Facebook}).  In this example, the phrase $f'$ preceding $f$ in the source sentence swaps order with $e$ in the target.  When we collect these counts over large monolingual corpora, we expect the swap, monotone, and discontinuous counts to provide good estimates for the orientation features (\figref{fig:algoreorder}).
 %Note that multiple phrases may immediately precede $f$ and appear in the phrase table; however, we only use the longest of them to collect reordering counts.  
-shorter and more frequent phrases (e.g. punctuation) are more likely to appear in multiple orientations with a given phrase, and therefore provide poor evidence of re-ordering.  Therefore, we (a) collect the longest contextual phrases (which also appear in the phrase table) for reordering feature estimation, and (b) prune the set of sentences so that we only keep a small set of least frequent contextual phrases (this has the effect of dropping many function words and punctuation marks and and relying more heavily on multi-word content phrases to estimate the reordering).\footnote{The pruning step has an additional benefit of minimizing the memory needed for orientation feature estimations.}
+shorter and more frequent phrases (e.g. punctuation) are more likely to appear in multiple orientations with a given phrase, and therefore provide poor evidence of re-ordering.  Therefore, we (a) collect the longest contextual phrases (which also appear in the phrase table) for reordering feature estimation, and (b) prune the set of sentences so that we only keep a small set of least frequent contextual phrases (this has the effect of dropping many function words and punctuation marks and relying more heavily on multi-word content phrases to estimate the reordering).\footnote{The pruning step has an additional benefit of minimizing the memory needed for orientation feature estimations.}
 
 
 Our algorithm for learning the reordering parameters is given on \figref{fig:algoreorder}.  The algorithm estimates a probability distribution over monotone, swap, and discontinuous orientations ($p_m$, $p_s$, $p_d$) for a phrase pair ($f, e$) from two monolingual corpora $C_f$ and $C_e$.  It begins by calling {\tt \small CollectOccurs} to collect the longest matching phrase table phrases preceding $f$ in source monolingual data ($B_f$), as well as preceding ($B_e$), following ($A_e$), and discontinuous ($D_e$) phrases with $e$ in the target language data.  For each unique phrase $f'$ preceding $f$, translations are then looked up in the phrase table $\emph{T}$.  Next, we count\footnote{$\#_{L}(x)$ returns the count of object x in list L.} how many translations $e'$ of $f'$ appeared before, after or were discontinuous with $e$ in the target language data.  Finally, the counts are normalized and returned.  %The algorithm requires a single pass through the data to collect contextual phrases for the entire phrase table and its running time is quadratic in the size of the table.\mtodo{Check}
@@ -496,7 +496,7 @@ shared dates & 829 & 5,249 & n/a \\
 
 
 \begin{figure*}[t]
-%\vskip 0.1in
+\vskip -0.0in
 \begin{center}
 \includegraphics[width=.27\linewidth]{../figures/legend.pdf}\includegraphics[width=.73\linewidth]{../figures/europarl.pdf}
 \caption{Much of the loss in BLEU score when bilingually estimated features are removed from a  Spanish-English translation system (experiments 1-4) can be recovered when they are replaced with monolingual equivalents estimated from monolingual Europarl data (experiments 5-10). 
@@ -511,7 +511,7 @@ We estimate the parameters of our model from two sets of monolingual data, detai
 \begin{my_itemize}
 % ccb - squeezing for space
 \vspace{-.15cm}
-\item First, we treat the two sides of the Europarl parallel corpus as independent, monolingual corpora, where the contextual and temporal distributions of words across languages are practically identical.   %\newcite{Haghighi:2008} also used this method to show how well translations could be learned from monolingual corpora under ideal conditions, where the contextual and temporal distribution of words in the two monolingual corpora are practically identical.   
+\item First, we treat the two sides of the Europarl parallel corpus as independent, monolingual corpora, where the contextual and temporal distributions of phrases are similar across languages.   %\newcite{Haghighi:2008} also used this method to show how well translations could be learned from monolingual corpora under ideal conditions, where the contextual and temporal distribution of words in the two monolingual corpora are practically identical.   
 \item Next, we estimate the features from truly monolingual corpora.  To estimate the {\it contextual} and {\it temporal} similarity features, we use the Spanish and English Gigaword corpora.\footnote{We use the
 %Agence France-Presse (afp), Associated Press Worldstream (apw), and Xinhua News Agency (xin)
 afp, apw and xin sections of the corpora.}
@@ -539,7 +539,8 @@ For our experiments, we estimated similarity scores and re-ordering probabilitie
 \vspace{-.15cm}
 \section{Experimental Results} \label{sect:results}
 
-Figures \ref{fig:lesionreplacement} and \ref{fig:realmonolingual} give our experimental results.  Figure \ref{fig:lesionreplacement} shows the performance of the standard phrase-based model when each of the  bilingually estimated features are removed.  It shows how much of the performance loss can be recovered using our monolingual features when they are estimated from the Europarl training corpus but treating each side as an independent, monolingual corpus.  Figure \ref{fig:realmonolingual} shows the recovery when using truly monolingual corpora to estimate the parameters. 
+%Figures \ref{fig:lesionreplacement} and \ref{fig:realmonolingual} give our experimental results.  
+Figure \ref{fig:lesionreplacement} shows the performance of the standard phrase-based model when each of the  bilingually estimated features are removed.  It shows how much of the performance loss can be recovered using our monolingual features when they are estimated from the Europarl training corpus but treating each side as an independent, monolingual corpus.  Figure \ref{fig:realmonolingual} shows the recovery when using truly monolingual corpora to estimate the parameters. 
 
 
 % ccb - squeezing for space
@@ -547,11 +548,11 @@ Figures \ref{fig:lesionreplacement} and \ref{fig:realmonolingual} give our exper
 \paragraph{Lesion experiments}\label{sect:exp:lesions}
 %\paragraph{Lesion experiments (Experiments 1-4)}
 
-Experiments 1-4 remove bilingually estimated parameters from the standard model.  For Spanish-English the relative contribution of the phrase-table features (which include the phrase translation probabilities $\phi$ and the lexical weights $w$) is greater than the reordering probabilities.   When the reordering probability $p_o(\textnormal{orientation}|f,e)$ is eliminated, and replaced with a simple distance-based distortion feature that does not require a bitext to estimate, the score dips only marginally since the order of English and Spanish is reasonably similar.  However, when both the reordering and the phrase table features are dropped, leaving only the LM feature and the phrase penalty, the resulting translation quality is abysmal. with a total drop in score of over 17 BLEU points.   
+Experiments 1-4 remove bilingually estimated parameters from the standard model.  For Spanish-English the relative contribution of the phrase-table features (which include the phrase translation probabilities $\phi$ and the lexical weights $w$) is greater than the reordering probabilities.   When the reordering probability $p_o(\textnormal{orientation}|f,e)$ is eliminated, and replaced with a simple distance-based distortion feature that does not require a bitext to estimate, the score dips only marginally since the order of English and Spanish is reasonably similar.  However, when both the reordering and the phrase table features are dropped, leaving only the LM feature and the phrase penalty, the resulting translation quality is abysmal, with a total drop in score of over 17 BLEU points.   
 
 
 \begin{figure}[t]
-\vskip 0.2in
+\vskip 0in
 \begin{center}
 \includegraphics[width=\linewidth]{../figures/monolingual.pdf}
 \caption{Performance of monolingual features derived from truly monolingual corpora. Over 82\% of the BLEU score loss can be recovered.}
@@ -564,11 +565,11 @@ Experiments 1-4 remove bilingually estimated parameters from the standard model.
 \vspace{-.2cm}
 \paragraph{Adding equivalent monolingual features estimated using Europarl}\label{sec:results:bitext}
 
-Experiments 5-10 show how much our monolingual equivalents could recover when the monolingual corpora are drawn from the two sides of the bitext.   For instance, our algorithm for estimating reordering probabilities from monolingual data ({\bf --/M}) adds 5 BLEU points, which is 73\% of the potential recovery going from the model ({\bf --/--}) to the model with bilingual reordering features ({\bf --/B}). 
+Experiments 5-10 show how much our monolingual equivalents could recover when the monolingual corpora are drawn from the two sides of the bitext.   Our algorithm for estimating reordering probabilities from monolingual data ({\bf --/M}) adds 5 BLEU points, which is 73\% of the potential recovery going from the model ({\bf --/--}) to the model with bilingual reordering features ({\bf --/B}). 
 
 Of the {\bf t}emporal, {\bf o}rthographic, and {\bf c}ontextual monolingual features the temporal feature performs the best.  Together ({\bf M/--}), they recover more than each individually.  Combining monolingually estimated reordering and phrase table  features ({\bf M/M}) yields a total gain of 13.5 BLEU points, or over 75\% of the BLEU score loss that occurred when we dropped all features from the phrase table. 
 %Our monolingual features successfully recover much of the information contained in the features derived from bitext.  %Note that the achieved score is equivalent to a standard bilingually estimated system trained on a parallel corpus of roughly 500,000 \todo{is this still the same?} words (learning curve is omitted due to space constraints).
-However, this is with ``monolingual'' corpora which have practically identical phrasal and temporal distributions. 
+%However, this is with ``monolingual'' corpora which have practically identical phrasal and temporal distributions. 
 
 % ccb - squeezing for space
 \vspace{-.2cm}
@@ -647,7 +648,10 @@ Most work on learning translations from monolingual texts only examine small num
 %In this work, we make an important step toward eliminating the need for large volumes of expensive parallel text in statistical machine translation. In particular, we have shown that orthogonal cues present in plentiful and cheap monolingual data can be used to estimate a set of informative similarity and reordering phrase pair feature scores. Using these features instead of standard bilingually estimated features results in only 18\% performance loss. Moreover, the monolingual features contain a useful signal not captured by the standard bilingual estimation; when added to the standard feature set, they account for about 1.5 BLEU point gain.
 
 
-We have demonstrated a novel set of techniques for successfully estimating phrase-based SMT parameters from {\it monolingual} corpora, potentially circumventing the need for large bitexts, which are expensive to obtain for new languages and domains. We evaluated the performance of our algorithms in a full end-to-end translation system. Assuming that a bilingual-corpus-derived phrase table is available, we were able to recover over 82\% of BLEU loss from stripping bilingual-corpus-derived phrase-table probabilities by utilizing our monolingually-estimated features instead. We also showed that our monolingual features add 1.5 BLEU points when combined with standard bilingually estimated features.  Thus our  techniques have both stand-alone efficacy when large bilingual corpora are not available, and make a significant contribution to combined ensemble performance when they are.
+We have demonstrated a novel set of techniques for successfully estimating phrase-based SMT parameters from {\it monolingual} corpora, potentially circumventing the need for large bitexts. 
+%, which are expensive to obtain for new languages and domains. 
+%We evaluated the performance of our algorithms in a full end-to-end translation system. 
+Assuming that a bilingual-corpus-derived phrase table is available, we were able to recover over 82\% of BLEU loss from stripping bilingual-corpus-derived phrase-table probabilities by utilizing our monolingually-estimated features instead. We also showed that our monolingual features add 1.5 BLEU points when combined with standard bilingually estimated features.  Thus our  techniques have both stand-alone efficacy when large bilingual corpora are not available, and make a significant contribution to combined ensemble performance when they are.
 
 
 
