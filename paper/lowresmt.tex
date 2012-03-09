@@ -165,7 +165,7 @@ We use the same log linear formulation and MERT but propose alternatives derived
 %\vskip 0.1in
 \begin{center}
 %\vspace{-.35cm}
-\includegraphics[width=0.8 \linewidth]{../figures/reorderfeats/reorderfeats.pdf}
+\includegraphics[width=0.9\linewidth]{../figures/reorderfeats/reorderfeats.pdf}
 \caption{The reordering probabilities from the phrase-based models are estimated from bilingual data by calculating how often in the parallel corpus a phrase pair $(f, e)$ is orientated with the preceding phrase pair in the 3 types of orientations (monotone, swapped, and discontinuous). }
 \label{fig:reorderfeats} 
 \end{center}
@@ -267,10 +267,11 @@ w_{k} = n_{f,k} \times (log( {n / n_{k}}) + 1)
 
 \paraheader{Temporal similarity.} In addition to contextual similarity, phrases in two languages may be scored in terms of their temporal similarity \cite{Schafer:2002,Klementiev:2006b,alfonseca-ciaramita-hall:2009:EMNLP}.  The intuition is that news stories in different languages will tend to discuss the same world events on the same day.  The frequencies of translated phrases over time give them particular signatures that will tend to spike on the same dates.  For instance, if the phrase {\it asian tsunami} is used frequently during a particular time span, the Spanish translation {\it maremoto asi\'{a}tico} is likely to also be used frequently during that time. \figref{fig:temporal} illustrates how the temporal distribution of {\it terrorist} is more similar to Spanish {\it terrorista} than to other Spanish phrases.  We calculate the temporal similarity between a pair of phrases $t(f, e)$ using the method defined by \newcite{Klementiev:2006b}.   We generate a temporal signature for each phrase by sorting the set of (time-stamped) documents in the monolingual corpus into a sequence of equally sized temporal bins and then counting the number of phrase occurrences in each bin.  In our experiments, we set the window size to 1 day, so the size of temporal signatures is equal to the number of days spanned by our corpus.  We use cosine distance to compare the normalized temporal signatures for a pair of phrases  $(f, e)$.
 
+
+\vspace{-.1cm}
 \paraheader{Topic similarity. }%\mtodo{Spin this as a new feature! Also: explain it in a little more detail} 
  Phrases and their translations are likely to appear in articles written about the same topic in two languages.  Thus, topic or category information associated with monolingual data can also be used to indicate similarity between a phrase and its candidate translation.  In order to score a pair of phrases, we collect their topic signatures by counting their occurrences in each topic and then comparing the resulting vectors.  We again use the cosine similarity measure on the normalized topic signatures.  In our experiments, we use interlingual links between Wikipedia articles to estimate topic similarity.  We treat each linked article pair as a topic and collect counts for each phrase across all articles in its corresponding language.  Thus, the size of a phrase topic signature is the number of article pairs with interlingual links in Wikipedia, and each component contains the number of times the phrase appears in (the appropriate side of) the corresponding pair.  Our Wikipedia-based topic similarity feature, $w(f, e)$, is similar in spirit to polylingual topic models \cite{Mimno:2009}, but it is scalable to full bilingual lexicon induction.
 
-%\vspace{-.1cm}
 \subsection{Lexical similarity features}  \label{sect:lexfeats}
 
 In addition to the three phrase similarity features used in our model -- $c(f, e), t(f, e)$ and $w(f, e)$ -- we include four additional {\it lexical similarity features} for each of phrase pair.  The first three lexical features $c_{lex}(f, e), t_{lex}(f, e)$ and $w_{lex}(f, e)$ are the lexical equivalents of the phrase-level {\it contextual, temporal} and {\it wikipedia topic} similarity scores.  They score the similarity of individual words within the phrases.  To compute these lexical similarity features, we average similarity scores over all possible word alignments across the two phrases. 
@@ -353,7 +354,7 @@ The three phrasal and four lexical similarity scores are incorporated into the  
 %\vskip 0.1in
 \begin{center}
 %\vspace{-.85cm}
-\includegraphics[width=0.8 \linewidth]{../figures/monoreord/monoreord.pdf}
+\includegraphics[width=0.9 \linewidth]{../figures/monoreord/monoreord.pdf}
 %\vspace{-.25cm}
 \caption{Collecting phrase orientation statistics for a English-German phrase pair (\emq{profile}, \emq{Profils}) from non-parallel sentences (the German sentence translates as  \emq{Creating a Facebook profile is easy}). %The longest preceding phrase \emq{Facebook} in source, has a phrase table translation \emq{in Facebook} appearing after the target phrase.
 }
