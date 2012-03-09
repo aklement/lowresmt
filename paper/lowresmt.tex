@@ -260,7 +260,7 @@ w_{k} = n_{f,k} \times (log( {n / n_{k}}) + 1)
 
 \begin{figure}[t]
 \includegraphics[width= \linewidth]{../figures/temporal/temporal.pdf}
-\caption{Temporal histograms of the English phrase {\em terrorist}, its Spanish translation {\em terrorista}, and {\em riqueza} (wealth) collected from monolingual texts spanning a 13 year period. While the correct translation has a good temporal match, the non-translation {\em y riqueza} has a distinctly different signature.}
+\caption{Temporal histograms of the English phrase {\em terrorist}, its Spanish translation {\em terrorista}, and {\em riqueza} (wealth) collected from monolingual texts spanning a 13 year period. While the correct translation has a good temporal match, the non-translation {\em riqueza} has a distinctly different signature.}
 \label{fig:temporal}
 \vspace{-0.3cm}
 \end{figure}
@@ -584,7 +584,7 @@ Finally, we supplement the standard bilingually estimated model parameters with 
 
 \newcite{Carbonell2006} described a data-driven MT system that used no parallel text. It produced translation lattices using a bilingual dictionary and scored them using an n-gram language model.  Their method has no notion of translation similarity aside from a  bilingual dictionary.
 
-\newcite{ravi-knight:2011:ACL-HLT} treat MT without parallel training data as a decipherment task.  They learn a word substation cipher from monolingual texts, allowing them to translate hundreds of unique word types in time expression and subtitle text domains. Their method has not been applied to broader domains of text. 
+\newcite{ravi-knight:2011:ACL-HLT} treat MT without parallel training data as a decipherment task and learn a translation model from monolingual text. They translate corpora of Spanish time expressions and subtitles, which both have a limited vocabulary, into English. Their method has not been applied to broader domains of text.
 
 Most work on learning translations from monolingual texts only examine small numbers of frequent words. \newcite{Huang2005} and \newcite{daumeiii-jagarlamudi:2011:ACL-HLT2011} are exceptions that improve MT by mining translations for OOV items. 
 
