@@ -526,6 +526,17 @@ Note that end-to-end translation quality is robust to substantially reducing dic
 The context vectors for words and phrases incorporate co-occurrence counts using a two-word window on either side.
 
 
+\begin{figure}[t]
+\vskip 0.2in
+\begin{center}
+\includegraphics[width=\linewidth]{../figures/monolingual.pdf}
+\caption{Performance of monolingual features derived from truly monolingual corpora. Over 82\% of the BLEU score loss can be recovered.}
+\label{fig:realmonolingual}
+\end{center}
+\vskip -0.2in
+\end{figure}
+
+
 The title of our paper uses the word {\it towards} because we assume that an inventory of phrase pairs is given. 
 Future work will explore inducing the phrase table itself from monolingual texts.  
 Across all of our experiments, we use the phrase table that the bilingual model learned from the Europarl parallel corpus.  We keep its phrase pairs, but we drop all of its scores.  Table \ref{table:training-data+phrase-table} gives details of the phrase pairs.  In our experiments, we estimated similarity and reordering scores for more than 3 million phrase pairs.  For each source phrase, the set of possible translations was constrained and likely to contain good translations.  However, the average number of possible translations was high (ranging from nearly 100 translations for each unigram to 14 for each trigram).  These contain a lot of noise and result in low end-to-end translation quality without good estimates of translation quality, as the experiments in Section \ref{sect:exp:lesions} show.
@@ -534,7 +545,7 @@ Across all of our experiments, we use the phrase table that the bilingual model 
 
 
 % ccb - squeezing for space
-\vspace{-.15cm}
+%\vspace{-.15cm}
 \section{Experimental Results} \label{sect:results}
 
 Figures \ref{fig:lesionreplacement} and \ref{fig:realmonolingual} give experimental results.  Figure \ref{fig:lesionreplacement} shows the performance of the standard phrase-based model when each of the  bilingually estimated features are removed.  It shows how much of the performance loss can be recovered using our monolingual features when they are estimated from the Europarl training corpus but treating each side as an independent, monolingual corpus.  Figure \ref{fig:realmonolingual} shows the recovery when using truly monolingual corpora to estimate the parameters. 
@@ -547,16 +558,6 @@ Figures \ref{fig:lesionreplacement} and \ref{fig:realmonolingual} give experimen
 
 Experiments 1-4 remove bilingually estimated parameters from the standard model.  For Spanish-English, the relative contribution of the phrase-table features (which include the phrase translation probabilities $\phi$ and the lexical weights $w$) is greater than the reordering probabilities.   When the reordering probability $p_o(\textnormal{orientation}|f,e)$ is eliminated and replaced with a simple distance-based distortion feature that does not require a bitext to estimate, the score dips only marginally since word order in English and Spanish is similar.  However, when both the reordering and the phrase table features are dropped, leaving only the LM feature and the phrase penalty, the resulting translation quality is abysmal, with the score dropping a total of over 17 BLEU points.   
 
-
-\begin{figure}[t]
-\vskip 0.2in
-\begin{center}
-\includegraphics[width=\linewidth]{../figures/monolingual.pdf}
-\caption{Performance of monolingual features derived from truly monolingual corpora. Over 82\% of the BLEU score loss can be recovered.}
-\label{fig:realmonolingual}
-\end{center}
-\vskip -0.2in
-\end{figure}
 
 % ccb - squeezing for space
 %\vspace{-.2cm}
